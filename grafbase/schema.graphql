@@ -1,0 +1,39 @@
+type Programme @model @search {
+  name: String! @unique
+  bookings: [Booking]
+  schedule: [Schedule]
+  open: Boolean @default(value: true)
+  maxPerSession: Int @default(value: 20)
+}
+
+type Schedule @model @search {
+  date: Date!
+  startTime: DateTime!
+  duration: Int @default(value: 40)
+  hosts: [Coach]
+  attendees: [Attendee]
+}
+
+type Coach @model @search {
+  name: String! @unique
+  email: Email!
+  mobile: PhoneNumber
+}
+
+type Attendee @model @search {
+  name: String!
+  email: Email!
+  mobile: String
+  bookingReference: String! @unique
+}
+
+type Booking @model @search {
+  programme: String!
+  name: String!
+  email: Email!
+  mobile: String
+  membershipCard: String
+  isMember: Boolean @default(value: false)
+  bookingReference: String! @unique
+  data: JSON!
+}
