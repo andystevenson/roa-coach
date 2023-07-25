@@ -1,17 +1,36 @@
 type Programme @model @search {
   name: String! @unique
-  bookings: [Booking]
-  schedule: [Schedule]
+  start: Date!
+  end: Date!
   open: Boolean @default(value: true)
-  maxPerSession: Int @default(value: 20)
+  attendees: [Attendee]
+  session: [Session]
+  coaches: [ProgrammeCoach]
+  maxPerSession: Int! @default(value: 20)
 }
 
-type Schedule @model @search {
+type Session @model @search {
+  programme: Programme!
   date: Date!
-  startTime: DateTime!
-  duration: Int @default(value: 40)
-  hosts: [Coach]
-  attendees: [Attendee]
+  start: DateTime!
+  end: DateTime!
+  hosts: [SessionCoach]
+  attendees: [SessionAttendee]
+}
+
+type ProgrammeCoach @model @search {
+  programme: Programme!
+  coach: Coach!
+}
+
+type SessionCoach @model @search {
+  programme: Programme!
+  coach: Coach!
+}
+
+type SessionAttendee @model @search {
+  session: Session!
+  attendee: Attendee!
 }
 
 type Coach @model @search {
@@ -21,19 +40,12 @@ type Coach @model @search {
 }
 
 type Attendee @model @search {
+  programme: Programme!
   name: String!
   email: Email!
   mobile: String
-  bookingReference: String! @unique
-}
-
-type Booking @model @search {
-  programme: String!
-  name: String!
-  email: Email!
-  mobile: String
-  membershipCard: String
-  isMember: Boolean @default(value: false)
-  bookingReference: String! @unique
+  booking: String! @unique
+  member: Boolean @default(value: false)
+  paid: Boolean @default(value: false)
   data: JSON!
 }

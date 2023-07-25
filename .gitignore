@@ -1,5 +1,6 @@
 # ignore the graphiql
 graphiql.html
+local-graphiql.html
 # Logs
 logs
 *.log
