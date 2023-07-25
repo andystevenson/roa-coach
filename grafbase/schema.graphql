@@ -47,5 +47,10 @@ type Attendee @model @search {
   booking: String! @unique
   member: Boolean @default(value: false)
   paid: Boolean @default(value: false)
+  payment: Payment
   data: JSON!
+}
+
+type Payment @model @search {
+  booking: String! @unique
 }
