@@ -4,7 +4,7 @@ type Programme @model @search {
   end: Date!
   open: Boolean @default(value: true)
   attendees: [Attendee]
-  session: [Session]
+  sessions: [Session]
   coaches: [ProgrammeCoach]
   maxPerSession: Int! @default(value: 20)
 }
