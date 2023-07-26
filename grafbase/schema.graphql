@@ -32,6 +32,7 @@ type SessionCoach @model @search {
 type SessionAttendee @model @search {
   session: Session!
   attendee: Attendee!
+  # changed to make this mandatory
 }
 
 type Coach @model @search {
