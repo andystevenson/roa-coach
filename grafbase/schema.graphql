@@ -32,7 +32,6 @@ type SessionCoach @model @search {
 type SessionAttendee @model @search {
   session: Session!
   attendee: Attendee!
-  # changed to make this mandatory
 }
 
 type Coach @model @search {
@@ -48,11 +47,15 @@ type Attendee @model @search {
   mobile: String
   booking: String! @unique
   member: Boolean @default(value: false)
-  payment: Payment
+  payment: AttendeePayment
   data: JSON!
 }
 
 type Payment @model @search {
   reference: String! @unique
-  booking: Attendee!
+}
+
+type AttendeePayment @model @search {
+  attendee: Attendee!
+  payment: Payment!
 }
