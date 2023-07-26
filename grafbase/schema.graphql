@@ -53,5 +53,5 @@ type Attendee @model @search {
 
 type Payment @model @search {
   reference: String! @unique
-  booking: Attendee
+  booking: Attendee!
 }
