@@ -2,11 +2,12 @@ type Programme @model @search {
   name: String! @unique
   start: Date!
   end: Date!
+  maxPerSession: Int! @default(value: 20)
   open: Boolean @default(value: true)
   attendees: [Attendee]
   sessions: [Session]
   coaches: [ProgrammeCoach]
-  maxPerSession: Int! @default(value: 20)
+  launched: Boolean @default(value: false)
 }
 
 type Session @model @search {
@@ -46,7 +47,6 @@ type Attendee @model @search {
   mobile: String
   booking: String! @unique
   member: Boolean @default(value: false)
-  paid: Boolean @default(value: false)
   payment: Payment
   data: JSON!
 }
