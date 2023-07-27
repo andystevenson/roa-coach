@@ -7,6 +7,7 @@ type Programme @model @search {
   attendees: [Attendee]
   sessions: [Session]
   coaches: [ProgrammeCoach]
+  dates: [ProgrammeDate]
   launched: Boolean @default(value: false)
 }
 
@@ -25,7 +26,7 @@ type ProgrammeCoach @model @search {
 }
 
 type SessionCoach @model @search {
-  programme: Programme!
+  session: Session!
   coach: Coach!
 }
 
@@ -53,9 +54,18 @@ type Attendee @model @search {
 
 type Payment @model @search {
   reference: String! @unique
+  time: DateTime!
 }
 
 type AttendeePayment @model @search {
   attendee: Attendee!
   payment: Payment!
+}
+
+type ProgrammeDate @model @search {
+  programme: Programme!
+  date: Date!
+  start: DateTime!
+  end: DateTime!
+  repeatable: Boolean @default(value: false)
 }
