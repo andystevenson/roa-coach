@@ -62,7 +62,7 @@ export const createCoaches = async () => {
 
 export const findCoachByName = async (name) => {
   const query = `query FindCoach {
-                  coachSearch(first: 100, filter: {name: {eq: "${name}"}}) {
+                  coachSearch(first: 1, filter: {name: {eq: "${name}"}}) {
                     edges {
                       node {
                         id
@@ -74,6 +74,5 @@ export const findCoachByName = async (name) => {
   const list = await graphql(query)
   const id = list.data?.coachSearch?.edges[0]?.node.id
   log({ id })
-
   return id
 }

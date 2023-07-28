@@ -53,8 +53,11 @@ type Attendee @model @search {
 }
 
 type Payment @model @search {
-  reference: String! @unique
+  booking: String! @unique
   time: DateTime!
+  price: Float
+  quantity: Int
+  unitPrice: Float
 }
 
 type AttendeePayment @model @search {
