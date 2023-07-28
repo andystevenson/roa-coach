@@ -71,7 +71,11 @@ export const deleteMany = async (typeName, ids) => {
 export const deleteAll = async (typeName) =>
   await deleteMany(typeName, await listAllIds(typeName))
 
-await deleteAll('sessionAttendee')
-await deleteAll('attendee')
-await listAllIds('attendee')
-await listAllIds('sessionAttendee')
+// await deleteAll('attendeePayment')
+// await deleteAll('payment')
+// await deleteAll('sessionAttendee')
+// await deleteAll('attendee')
+// await listAllIds('attendee')
+// await listAllIds('sessionAttendee')
+// await listAllIds('payment')
+// await listAllIds('attendeePayment')
