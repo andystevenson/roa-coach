@@ -48,7 +48,7 @@ const createSessionCoaches = async (programme) => {
 
 const listAllSessionCoaches = async () => {
   const list = await listAll('sessionCoachCollection')
-  log(inspect(list, { colors: true, depth: null }))
+  // log(inspect(list, { colors: true, depth: null }))
 }
 
 const deleteAllSessionCoaches = async () => {
@@ -62,7 +62,7 @@ const deleteAllSessionCoaches = async () => {
                   }
                 }`
   const list = await graphql(query)
-  log(inspect(list, { colors: true, depth: null }))
+  // log(inspect(list, { colors: true, depth: null }))
 }
 
 const createAllSessionCoaches = async () => {

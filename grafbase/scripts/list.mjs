@@ -2,7 +2,7 @@ import graphql from './graphql.mjs'
 import { log } from 'node:console'
 import { inspect } from 'node:util'
 
-const Debug = true
+const Debug = false
 export const listAll = async (typeName) => {
   const collection = `${typeName}Collection`
 

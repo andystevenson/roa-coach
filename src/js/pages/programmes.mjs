@@ -56,6 +56,10 @@ const init = async () => {
   }
 }
 
-await init()
-
-// await init()
+;(async () => {
+  try {
+    await init()
+  } catch (error) {
+    console.error('init failed', error)
+  }
+})()

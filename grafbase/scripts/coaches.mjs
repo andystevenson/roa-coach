@@ -16,7 +16,7 @@ export const listCoaches = async () => {
                   }
                 }`
   const list = await graphql(query)
-  console.log(inspect(list, { colors: true, depth: null }))
+  // console.log(inspect(list, { colors: true, depth: null }))
   return list
 }
 
@@ -34,7 +34,7 @@ export const deleteCoaches = async () => {
                   }
                 }`
   const list = await graphql(query)
-  console.log(inspect(list, { colors: true, depth: null }))
+  // console.log(inspect(list, { colors: true, depth: null }))
   return list
 }
 
@@ -56,7 +56,7 @@ export const createCoaches = async () => {
                     }
                   }`
   const list = await graphql(query)
-  console.log(inspect(list, { colors: true, depth: null }))
+  // console.log(inspect(list, { colors: true, depth: null }))
   return list
 }
 

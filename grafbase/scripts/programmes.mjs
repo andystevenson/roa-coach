@@ -113,7 +113,7 @@ export const deleteProgrammes = async () => {
                   }
                 }`
   const list = await graphql(query)
-  log(inspect(list, { colors: true, depth: null }))
+  // log(inspect(list, { colors: true, depth: null }))
   return list
 }
 
@@ -181,7 +181,7 @@ export const getCoachesFromNodes = (queryResult) => {
     'coaches',
     (object) => object.coach,
   )
-  inspect(result)
+  // inspect(result)
   return result
 }
 
@@ -203,7 +203,7 @@ export const getSessionsFromNodes = (queryResult) => {
       return object
     },
   )
-  inspect(result)
+  // inspect(result)
   return result
 }
 

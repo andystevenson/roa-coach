@@ -197,7 +197,7 @@ export const createSessions = async (programmeId, sessions) => {
                   }
                 }`
   const list = await graphql(query)
-  console.log(inspect(list, { colors: true, depth: null }))
+  // console.log(inspect(list, { colors: true, depth: null }))
   return list
 }
 

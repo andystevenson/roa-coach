@@ -30,7 +30,7 @@ export const createProgrammeCoaches = async (programmeId, coachIds) => {
                 }`
 
   const programmeCoaches = await graphql(query)
-  log(inspect(programmeCoaches, { colors: true, depth: null }))
+  // log(inspect(programmeCoaches, { colors: true, depth: null }))
   return programmeCoaches
 }
 
@@ -68,7 +68,7 @@ export const deleteAllProgrammeCoaches = async () => {
                   }
                 }`
   const list = await graphql(query)
-  log(inspect(list, { colors: true, depth: null }))
+  // log(inspect(list, { colors: true, depth: null }))
   return list
 }
 
