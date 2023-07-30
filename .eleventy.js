@@ -5,6 +5,9 @@ const EleventyVitePlugin = require('@11ty/eleventy-plugin-vite')
 const vite = {
   viteOptions: {
     assetsInclude: ['**/*.xml'],
+    build: {
+      minify: false,
+    },
     resolve: {
       alias: {
         '/@input': `${process.cwd()}/src`,
