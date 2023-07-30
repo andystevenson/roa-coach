@@ -1,0 +1,25 @@
+.attendees {
+  background-color: var(--surface-1);
+  &[open] {
+    scale: 1.01;
+
+    > section {
+      display: grid;
+      grid-template-columns: repeat(5, max-content);
+
+      > span:nth-child(n + 5) {
+        text-align: center;
+      }
+
+      > span:nth-child(-n + 5) {
+        text-align: center;
+        font-weight: bold;
+        border-bottom: 2px solid var(--text-1);
+      }
+
+      > details > summary {
+        padding-block: unset;
+      }
+    }
+  }
+}

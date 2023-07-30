@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>{{title}}</title>
+
+    {% include "partials/meta-tags.njk" %}
+  </head>
+
+  <body class="{{page.fileSlug}}">
+    {{content | safe}}
+  </body>
+
+</html>

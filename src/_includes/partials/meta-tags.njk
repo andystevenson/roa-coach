@@ -1,0 +1,48 @@
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="{{ eleventy.generator }}">
+
+<meta name="description" content="{{ description }} - {{title}}, squash" />
+
+
+<meta name="keywords" content="{{ title }}, squash" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Google / Search Engine Tags -->
+<meta itemprop="name" content="Rob Owen Academy">
+
+<meta itemprop="description" content="{{ description }} - {{title}}, squash">
+
+<meta itemprop="image" content="{{ site }}/roa-social-image.png">
+
+<!-- Facebook Meta Tags -->
+<meta property="og:site_name" content="{{ title }} - Solihull - West Warwickshire Sports Complex - Olton" />
+<meta property="og:url" content="{{ site }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ title }} - Solihull - {{ company  }}">
+<meta property="og:description"
+    content="{{ description }}">
+<meta property="og:image" content="{{ site  }}/roa-social-image.png">
+
+<!-- Twitter Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ company  }}">
+<meta name="twitter:description"
+    content="{{ description  }}">
+<meta name="twitter:image" content="{{ site }}/west-warwicks-social-image.png">
+
+<!-- favicon  -->
+<!-- https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!-- 32×32 -->
+<link rel="apple-touch-icon" type="image/png" href="/favicon-180.png">
+<!-- 180×180 -->
+
+<!-- manifest -->
+<link rel="manifest" href="/manifest.webmanifest">
+
+<link rel="stylesheet" href="/@input/sass/styles.scss">
+
+{% if script %}
+  <script src="/@input/js/pages/{{script}}" type="module" defer></script>
+{% endif %}

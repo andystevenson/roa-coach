@@ -1,11 +1,12 @@
 import 'dotenv/config'
 import process from 'node:process'
+import endpoint from './endpoint.mjs'
 
 const graphql = async (query, variables = null) => {
   const body = variables ? { query, variables } : { query }
 
   try {
-    const response = await fetch(process.env.ROA_GRAFBASE, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -19,6 +20,7 @@ const graphql = async (query, variables = null) => {
     throw Error(response.statusText)
   } catch (error) {
     console.error(error)
+    throw error
   }
 }
 

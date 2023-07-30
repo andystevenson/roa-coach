@@ -1,0 +1,34 @@
+:where(html) {
+  --brand: var(--orange-6);
+  --link: currentColor;
+  --link-visited: var(--orange-9);
+  --h1: var(--brand);
+}
+
+[data-theme='light'] {
+  --brand: var(--orange-6);
+  --link: currentColor;
+  --link-visited: var(--orange-9);
+  --h1: var(--brand);
+}
+
+[data-theme='dark'] {
+  --brand: var(--orange-5);
+  --link: var(--green-4);
+  --link-visited: var(--green-7);
+  --h1: var(--green-9);
+}
+
+:where(a) {
+  &:where([href]) {
+    text-decoration-color: var(--green-3);
+
+    &:where(:visited) {
+      text-decoration-color: var(--green-9);
+    }
+  }
+
+  &:where(:not(:hover)) {
+    text-decoration: inherit;
+  }
+}

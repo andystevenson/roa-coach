@@ -1,0 +1,4 @@
+{
+  "layout": "roa.njk",
+  "permalink": "{{page.fileSlug}}/index.html"
+}

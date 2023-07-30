@@ -1,0 +1,24 @@
+.programme {
+  inline-size: 100%;
+  > details {
+    box-shadow: var(--shadow-4);
+
+    margin-block-end: var(--size-2);
+    &:last-of-type {
+      margin-block-end: unset;
+    }
+  }
+
+  &[open] > summary {
+    font-weight: bolder;
+    text-align: center;
+    border: 5px double;
+    &::marker {
+      white-space: pre;
+    }
+    span {
+      // text-shadow: 1px 1px 2px var(--green-12);
+      margin-top: -50px;
+    }
+  }
+}

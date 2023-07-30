@@ -1,0 +1,22 @@
+# example netlify.toml
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "_site"
+
+[dev]
+  command = "npm run dev"
+  functions = "netlify/functions"
+  publish = "_site"
+  # framework = "eleventy"
+  targetPort = 8080
+  port = 8888
+
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+
+
