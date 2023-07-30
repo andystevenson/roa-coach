@@ -166,7 +166,9 @@ export const getAttendeesFromNodes = (queryResult) => {
     'programme',
     'attendees',
     (attendee) => {
-      attendee.payment = attendee.payment.payment
+      attendee.payment = attendee.payment
+        ? attendee.payment.payment
+        : attendee.payment
       return attendee
     },
   )
@@ -193,7 +195,9 @@ export const getSessionsFromNodes = (queryResult) => {
     (object) => {
       object.attendees = nodesToData(object.attendees.edges).map((attendee) => {
         attendee.attendee.id = attendee.id
-        attendee.attendee.payment = attendee.attendee.payment.payment
+        attendee.attendee.payment = attendee.attendee.payment
+          ? attendee.attendee.payment.payment
+          : attendee.attendee.payment
         return attendee.attendee
       })
       object.hosts = nodesToData(object.hosts.edges).map((host) => {
