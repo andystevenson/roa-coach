@@ -1,4 +1,11 @@
 // TODO:  this should be moved to main sass reset
+
+body {
+  display: unset;
+  place-items: unset;
+  padding: unset;
+  // padding: unset;
+}
 :focus-visible {
   outline-style: solid;
 }
@@ -7,13 +14,6 @@ button {
   --_text: var(--text-1);
   --_bg: var(--surface-1);
   --_ink-shadow: none;
-}
-
-body {
-  align-content: start;
-  overflow-x: hidden;
-  padding-block-start: 2vmin;
-  padding-block-end: 0;
 }
 
 ul {

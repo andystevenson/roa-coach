@@ -1,8 +1,8 @@
 ---
   layout: base.njk
 ---
-<h1>{{title}}</h1>
-
-<div id="{{page.fileSlug}}-root"></div>
-
-{% include "partials/spinner.njk" %}
+{% include "partials/body-header.njk" %}
+<main class="contents">
+  {{content | safe}}
+</main>
+{% include "partials/body-footer.njk" %}

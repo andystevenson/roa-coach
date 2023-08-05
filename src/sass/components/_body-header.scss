@@ -1,0 +1,34 @@
+#body-header {
+  position: fixed;
+  top: 0px;
+  inline-size: 100%;
+  background-color: var(--surface-1);
+  border-block-end: 1px solid var(--text-2);
+  box-shadow: var(--shadow-3);
+  > section {
+    // background-color: burlywood;
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    grid-auto-flow: column;
+  }
+
+  #logo {
+    img {
+      max-block-size: var(--size-fluid-4);
+    }
+  }
+
+  #controls {
+    gap: 0.5em;
+    border: unset;
+    box-sizing: unset;
+    padding-block: unset;
+    border-radius: unset;
+    box-shadow: unset;
+
+    #userName {
+      font-size: var(--font-size-fluid-0);
+    }
+  }
+}

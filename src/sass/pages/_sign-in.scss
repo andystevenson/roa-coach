@@ -1,0 +1,47 @@
+.sign-in {
+  > :is(header, main, footer) {
+    display: none;
+  }
+
+  main > controls {
+    display: grid;
+  }
+
+  [aria-hidden] {
+    pointer-events: initial;
+  }
+
+  .cl-modalBackdrop {
+    background-color: transparent;
+    // align-items: center;
+  }
+
+  .cl-logoBox {
+    img {
+      width: 100px;
+      height: 60px;
+    }
+  }
+  .cl-headerSubtitle {
+    display: none;
+  }
+
+  .cl-footerActionText {
+    place-self: center;
+  }
+
+  .cl-alert {
+    border: 4px double red;
+    background-color: var(--surface-1);
+
+    > * {
+      display: none;
+    }
+
+    &::after {
+      content: 'Please "Sign up"';
+      inline-size: 100%;
+      text-align: center;
+    }
+  }
+}

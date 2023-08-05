@@ -1,0 +1,20 @@
+#controls {
+  display: none;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 1em;
+  border: var(--border-size-3) solid var(--surface-3);
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-3);
+  padding-inline: var(--size-3);
+  padding-block: var(--size-3);
+
+  > * {
+    display: none;
+  }
+}
+
+#delete {
+  background-color: var(--red-7);
+  color: antiquewhite;
+}

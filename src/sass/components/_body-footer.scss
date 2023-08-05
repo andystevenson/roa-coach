@@ -1,0 +1,10 @@
+#body-footer {
+  // background-color: pink;
+  border-block-start: 1px solid var(--text-2);
+  box-shadow: var(--shadow-3);
+  padding-block: var(--size-3);
+  inline-size: 100%;
+  > section {
+    place-content: center;
+  }
+}

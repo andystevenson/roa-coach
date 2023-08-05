@@ -5,7 +5,7 @@ const { statSync } = require('fs')
 module.exports = {
   title: (data) => {
     const { fileSlug } = data?.page
-    const result = fileSlug ? `ROA - ${fileSlug}` : 'ROA'
+    const result = fileSlug ? fileSlug : 'ROA'
     return result
   },
   script: (data) => {

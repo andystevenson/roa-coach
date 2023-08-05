@@ -7,10 +7,6 @@
       display: grid;
       grid-template-columns: repeat(5, max-content);
 
-      > span:nth-child(n + 5) {
-        text-align: center;
-      }
-
       > span:nth-child(-n + 5) {
         text-align: center;
         font-weight: bold;
