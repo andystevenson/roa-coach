@@ -5,12 +5,12 @@ const publishableKey =
   'pk_test_cmVmaW5lZC10b21jYXQtNTEuY2xlcmsuYWNjb3VudHMuZGV2JA'
 
 const Elements = {
-  controls: document.getElementById('controls'),
+  controls: document.getElementById('signIn'),
   signOut: document.getElementById('signOut'),
-  manage: document.getElementById('manage'),
-  deleteMe: document.getElementById('delete'),
-  userName: document.getElementById('userName'),
-  mounted: document.getElementById('mounted'),
+  manage: document.getElementById('signIn-manage'),
+  deleteMe: document.getElementById('signIn-delete'),
+  userName: document.getElementById('signIn-userName'),
+  mounted: document.getElementById('signIn-mounted'),
 }
 
 const ElementsOk = Object.values(Elements).every((element) => element)

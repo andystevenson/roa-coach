@@ -1,20 +1,22 @@
-#controls {
-  display: none;
+#controls,
+#signIn {
   grid-auto-flow: column;
   align-items: center;
+  justify-content: end;
+  min-inline-size: 10ch;
+  place-self: center;
   gap: 1em;
   border: var(--border-size-3) solid var(--surface-3);
   border-radius: var(--radius-3);
   box-shadow: var(--shadow-3);
-  padding-inline: var(--size-3);
   padding-block: var(--size-3);
-
-  > * {
-    display: none;
-  }
 }
 
-#delete {
+#signIn {
+  display: none;
+  padding-inline: var(--size-fluid-2);
+}
+#signIn-delete {
   background-color: var(--red-7);
   color: antiquewhite;
 }

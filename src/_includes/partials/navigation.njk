@@ -1,3 +1,9 @@
 {% if nav %}
-  <nav id="{{nav.id}}"></nav>
+  <nav {{"id="+nav.id if nav.id}}>
+    <ul>
+      {% for page in nav.pages %}
+        <li><a href="/{{page}}/">{{page}}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
 {% endif %}

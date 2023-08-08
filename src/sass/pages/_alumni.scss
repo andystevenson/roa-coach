@@ -1,0 +1,8 @@
+#alumni-details {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+#alumni-contact {
+  grid-auto-rows: max-content;
+}

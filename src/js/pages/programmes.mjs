@@ -1,3 +1,4 @@
+import './protected-page.mjs'
 import { handleAttendees } from './handlers/attendees.mjs'
 import { handleCoaches } from './handlers/coaches.mjs'
 import { handleSessions } from './handlers/sessions.mjs'
@@ -41,7 +42,7 @@ const programmesHTML = (programmes) => {
 
   const parser = new DOMParser()
   const doc = parser.parseFromString(
-    `<section class="programme">${details.join('')}</section>`,
+    `<section class="programmes">${details.join('')}</section>`,
     'text/html',
   )
   Root.replaceWith(doc.querySelector('section'))

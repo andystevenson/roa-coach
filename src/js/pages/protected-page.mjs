@@ -14,8 +14,6 @@ const Elements = {
 }
 
 const ElementsOk = Object.values(Elements).every((element) => element)
-const ElementDisplay = 'inline-block'
-const ElementDisplayNone = 'none'
 
 if (!ElementsOk) {
   console.error(`login page layout not as expected!`)
@@ -23,20 +21,19 @@ if (!ElementsOk) {
 
 const enableControls = (user) => {
   const { controls, userName, mounted } = Elements
-  controls.style.display = 'grid'
+  controls.removeAttribute('hidden')
+  userName.removeAttribute('hidden')
+  mounted.removeAttribute('hidden')
 
-  userName.style.display = ElementDisplay
   userName.textContent = user.firstName
-  mounted.style.display = ElementDisplay
   clerk.mountUserButton(mounted)
 }
 
 const disableControls = () => {
   const { controls, userName, mounted } = Elements
-  controls.style.display = ElementDisplayNone
-
-  userName.style.display = ElementDisplayNone
-  mounted.style.display = ElementDisplayNone
+  controls.addAttribute('hidden', '')
+  userName.addAttribute('hidden', '')
+  mounted.addAttribute('hidden', '')
 }
 
 async function manageChange({ user }) {

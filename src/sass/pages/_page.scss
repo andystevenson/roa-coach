@@ -1,3 +1,6 @@
 main {
   margin-block-start: calc(var(--size-fluid-4) + 1rem);
+  min-block-size: 85vh;
+  min-block-size: 85svh;
+  grid-auto-rows: min-content;
 }

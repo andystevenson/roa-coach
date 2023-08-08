@@ -1,0 +1,11 @@
+nav {
+  ul {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--size-fluid-2);
+    a,
+    a:visited {
+      color: unset;
+    }
+  }
+}

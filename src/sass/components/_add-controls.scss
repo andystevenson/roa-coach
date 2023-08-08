@@ -1,0 +1,9 @@
+.add-controls {
+  grid-auto-flow: column;
+  [id^='add'] {
+    place-self: end;
+  }
+  > * {
+    place-self: center;
+  }
+}
