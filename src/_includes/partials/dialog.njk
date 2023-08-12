@@ -1,0 +1,20 @@
+{% if dialog %}
+  {% set type = dialog.type + "-modal" %}
+  <dialog id="{{type}}">
+    <form id="{{type}}-form" method="dialog">
+      <header>
+        {% set button = {icon: {name: 'x'}, id: type + "-close", type: "button" } %}
+        {% include "partials/button.njk" %}
+        <p id="{{type}}-title"></p>
+      </header>
+      {{dialog.content | safe}}
+      <p id="{{type}}-error"></p>
+      <footer id="{{type}}-actions">
+        {% set button = {name: "cancel", id: type + "-cancel", type: "reset", icon: {name: 'x'} } %}
+        {% include "partials/button.njk" %}
+        {% set button = {name: dialog.type, id: type + "-submit", type: "submit", icon: {name: '+'} } %}
+        {% include "partials/button.njk" %}
+      </footer>
+    </form>
+  </dialog>
+{% endif %}

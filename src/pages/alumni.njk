@@ -1,32 +1,9 @@
-{% extends "partials/add-modal.njk" %}
-{% block addForm %}
-  <section id="alumni-details">
-    <section id="alumni-contact">
-      <label for="name">
-        <span>Name</span>
-        <input type="text" name="name" id="name"
-          title="Please enter a full name"
-          placeholder="Full Name ... e.g.: Joe Bloggs" autofocus required>
-      </label>
-      <label for="email">
-        <span>Email</span>
-        <input type="email" name="email" id="email"
-          title="Please enter a valid email address"
-          placeholder="e.g.: someone@example.com">
-      </label>
-      <label for="mobile">
-        <span>Mobile</span>
-        <input type="text" name="mobile" id="mobile"
-          title="Please enter your contact number"
-          placeholder="Mobile Number ... e.g.: 07920 027695">
-      </label>
-      <label for="bio">
-        <span>Bio</span>
-        <textarea name="bio" id="bio" rows="5" maxlength="2048"
-          title="Please a biography of the player"
-          placeholder="Say something interesting...."></textarea>
-      </label>
-    </section>
-    {% include "partials/add-modal-image.njk" %}
-  </section>
-{% endblock addForm %}
+{% set modal = {
+  target: "alumni",
+  dialogs: ["create","update"],
+  inputs: ["name","email","mobile","bio","image"]} %}
+
+{% include "partials/inputs.njk" %}
+{% include "partials/modals.njk" %}
+
+<div id="root"></div>

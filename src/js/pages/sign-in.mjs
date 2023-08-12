@@ -18,13 +18,12 @@ const ElementDisplay = 'inline-block'
 const ElementDisplayNone = 'none'
 
 if (!ElementsOk) {
-  console.error(`login page layout not as expected!`)
+  console.error(`sign-in page layout not as expected!`)
 }
 
 const handleSignOut = async () => {
   if (clerk) {
     await clerk.signOut(() => {
-      console.log('handleSignOut', clerk, clerk?.user)
       window.location.reload()
     })
   }
@@ -63,20 +62,8 @@ const enableControls = (user) => {
   clerk.mountUserButton(mounted)
 }
 
-let CloseModalTimeout = null
-
-const handleCloseModal = () => {
-  clearTimeout(CloseModalTimeout)
-  const modalClose = document.querySelector('.cl-modalCloseButton')
-  console.log('handleCloseModal', { modalClose })
-  modalClose?.addEventListener('click', () => {
-    window.location.reload()
-  })
-}
-
 const openSignIn = () => {
   clerk?.openSignIn()
-  CloseModalTimeout = setTimeout(handleCloseModal, 500)
 }
 
 const disableControls = () => {
@@ -94,12 +81,9 @@ const disableControls = () => {
 
   userName.style.display = ElementDisplayNone
   mounted.style.display = ElementDisplayNone
-
-  console.log('hasChildNodes', mounted.hasChildNodes())
 }
 
 function manageChange({ user }) {
-  console.log('manageChange >>>', clerk, user, clerk?.isReady(), '<<<')
   if (!clerk) return
   if (!ElementsOk) return
   if (!clerk.isReady()) return
@@ -126,8 +110,20 @@ const startClerk = async () => {
   }
 }
 
+// mutation observer for cl-modalCloseButton, reload the page
+
+const closeModal = () => window.location.reload()
+
+const watchForCloseModalButton = () => {
+  // brute force way to watch for the creation of .cl-modalCloseButton
+  const modalClose = document.querySelector('.cl-modalCloseButton')
+  modalClose?.removeEventListener('click', closeModal)
+  modalClose?.addEventListener('click', closeModal)
+}
+
+// Create an observer instance watching for the creation of the button
+const observer = new MutationObserver(watchForCloseModalButton)
+observer.observe(document.body, { subtree: true, childList: true })
 ;(async () => {
   await startClerk()
 })()
-
-addEventListener('pageshow', (e) => console.log({ e }))

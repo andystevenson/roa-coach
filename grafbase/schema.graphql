@@ -1,3 +1,22 @@
+type Alumni @model @search {
+  name: String! @unique
+  email: Email
+  mobile: String
+  bio: String
+  psa: String
+  image: URL
+  thumbnail: URL
+}
+
+type Coach @model @search {
+  name: String! @unique
+  email: Email!
+  mobile: String
+  bio: String
+  image: URL
+  thumbnail: URL
+}
+
 type Programme @model @search {
   name: String! @unique
   category: String @default(value: "junior")
@@ -13,6 +32,13 @@ type Programme @model @search {
   prices: [ProgrammePrice]
   notes: [ProgrammeNote]
   launched: Boolean @default(value: false)
+  poster: URL
+}
+
+type Attendee @model {
+  programme: Programme!
+  player: Player!
+  payment: AttendeePayment
 }
 
 type Session @model @search {
@@ -23,6 +49,17 @@ type Session @model @search {
   description: String
   hosts: [SessionCoach]
   attendees: [SessionAttendee]
+}
+
+type Player @model @search {
+  name: String! @unique
+  email: Email!
+  mobile: String
+  member: Boolean @default(value: false)
+  card: String
+  notes: [PlayerNote]
+  image: URL
+  thumbnail: URL
 }
 
 type ProgrammeCoach @model @search {
@@ -40,23 +77,6 @@ type SessionAttendee @model @search {
   attendee: Attendee!
 }
 
-type Coach @model @search {
-  name: String! @unique
-  email: Email!
-  mobile: PhoneNumber
-  bio: String
-}
-
-type Player @model @search {
-  name: String! @unique
-  email: Email!
-  mobile: String
-  member: Boolean @default(value: false)
-  card: String
-  notes: [PlayerNote]
-  data: JSON
-}
-
 type PlayerNote @model @search {
   note: String!
   player: Player!
@@ -65,20 +85,6 @@ type PlayerNote @model @search {
 type ProgrammeNote @model @search {
   note: String!
   player: Player!
-}
-
-type Alumni @model @search {
-  name: String! @unique
-  email: Email
-  mobile: String
-  bio: String
-  psa: String
-}
-
-type Attendee @model {
-  programme: Programme!
-  player: Player!
-  payment: AttendeePayment
 }
 
 type Payment @model @search {
@@ -104,7 +110,7 @@ type ProgrammeDate @model {
 }
 
 type Price @model {
-  threshold: Int! @default(value: 1)
+  threshold: Int @default(value: 1)
   unitPrice: Float
 }
 

@@ -1,0 +1,12 @@
+{% if modal %}
+  <section class="create-controls">
+    {% set button = {name: "create", id: "create", icon: {name: '+'} } %}
+    {% include "partials/button.njk" %}
+  </section>
+
+  {% for dialogType in modal.dialogs %}
+    {% set dialog = { type: dialogType, content: modal[dialogType] } %}
+    {% include "partials/dialog.njk" %}
+  {% endfor %}
+
+{% endif %}

@@ -1,0 +1,93 @@
+[id$='modal-actions'] {
+  grid-auto-flow: column;
+  justify-content: space-between;
+
+  button[type='submit'] {
+    position: relative;
+    &.loading {
+      > span,
+      > svg {
+        opacity: 0.1;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        width: 32px;
+        height: 32px;
+        border: 5px solid transparent;
+        border-block-start-color: var(--text-2);
+        border-radius: 50%;
+        animation: spin 1s ease-in-out infinite;
+
+        @keyframes spin {
+          from {
+            rotate: 0turn;
+          }
+          to {
+            rotate: 1turn;
+          }
+        }
+      }
+    }
+  }
+}
+
+[id$='modal-title'] {
+  margin-block-end: var(--size-3);
+}
+
+[id$='modal-error'] {
+  &:empty {
+    display: none;
+  }
+
+  background-color: red;
+  color: white;
+  padding-block: var(--size-2);
+  box-shadow: var(--shadow-3);
+}
+
+[id$='modal-details'] {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+[id$='modal-image'] {
+  box-shadow: var(--shadow-3);
+  display: grid;
+  grid-template-areas: 'content';
+  cursor: pointer;
+  margin-inline-start: var(--size-2);
+  > * {
+    grid-area: content;
+  }
+
+  input {
+    display: none;
+  }
+
+  p {
+    place-self: start;
+  }
+
+  img {
+    block-size: 100%;
+    inline-size: 100%;
+    min-block-size: 30vh;
+    object-fit: cover;
+    &[src^='data:image/svg'] {
+      object-fit: contain;
+      opacity: 0.5;
+    }
+  }
+
+  button {
+    border: unset;
+    background-color: transparent;
+    > * {
+      opacity: 0.5;
+    }
+  }
+}

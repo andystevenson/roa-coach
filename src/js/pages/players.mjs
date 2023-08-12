@@ -1,1 +1,1 @@
-import './add-modal.mjs'
+import './modals.mjs'

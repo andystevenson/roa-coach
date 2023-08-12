@@ -4,3 +4,7 @@ main {
   min-block-size: 85svh;
   grid-auto-rows: min-content;
 }
+
+#root {
+  overflow-x: auto;
+}

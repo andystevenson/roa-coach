@@ -1,8 +1,25 @@
-#alumni-details {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+.alumni {
+  gap: var(--size-fluid-1);
 }
 
-#alumni-contact {
-  grid-auto-rows: max-content;
+.alumnus {
+  &:first-of-type {
+    margin-inline-start: var(--size-2);
+  }
+  &:last-of-type {
+    margin-inline-end: var(--size-2);
+  }
+
+  margin-block: var(--size-2);
+  > button {
+    display: grid;
+    grid-template-areas: 'content';
+    padding: unset;
+    > img {
+      grid-area: content;
+    }
+    > h3 {
+      grid-area: content;
+    }
+  }
 }

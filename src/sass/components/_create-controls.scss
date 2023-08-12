@@ -1,6 +1,6 @@
-.add-controls {
+.create-controls {
   grid-auto-flow: column;
-  [id^='add'] {
+  [id^='create'] {
     place-self: end;
   }
   > * {

@@ -1,8 +1,5 @@
 import Clerk from '@clerk/clerk-js'
 
-const pathname = window.location.pathname
-const pageName = window.location.pathname.slice(0, pathname.lastIndexOf('/'))
-console.log(`welcome to ROA page ${pageName}`)
 let clerk = null
 const publishableKey =
   'pk_test_cmVmaW5lZC10b21jYXQtNTEuY2xlcmsuYWNjb3VudHMuZGV2JA'
@@ -21,6 +18,7 @@ if (!ElementsOk) {
 
 const enableControls = (user) => {
   const { controls, userName, mounted } = Elements
+
   controls.removeAttribute('hidden')
   userName.removeAttribute('hidden')
   mounted.removeAttribute('hidden')
@@ -31,9 +29,10 @@ const enableControls = (user) => {
 
 const disableControls = () => {
   const { controls, userName, mounted } = Elements
-  controls.addAttribute('hidden', '')
-  userName.addAttribute('hidden', '')
-  mounted.addAttribute('hidden', '')
+
+  controls.setAttribute('hidden', '')
+  userName.setAttribute('hidden', '')
+  mounted.setAttribute('hidden', '')
 }
 
 async function manageChange({ user }) {
@@ -48,7 +47,7 @@ async function manageChange({ user }) {
   }
   // hide elements and remove 'click' listeners
   disableControls()
-  clerk.navigate('/sign-in/')
+  await clerk.navigate('/sign-in/')
 
   return
 }
@@ -64,6 +63,13 @@ const startClerk = async () => {
   }
 }
 
+window.addEventListener('offline', (e) => {
+  console.warn(`network offline`)
+})
+
+window.addEventListener('online', (e) => {
+  console.warn(`network online`)
+})
 ;(async () => {
   await startClerk()
 })()

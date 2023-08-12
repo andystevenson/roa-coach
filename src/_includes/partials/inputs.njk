@@ -1,0 +1,67 @@
+{% if modal %}
+  {% set types = modal.inputs %}
+  {% for dialog in modal.dialogs %}
+      {% set inputs %}
+        <section id="{{dialog}}-modal-details">
+          <section id="{{dialog}}-modal-contact">
+
+            {% if _.includes(types, "name") %}
+              <label for="{{dialog}}-modal-name">
+                <span>Name</span>
+                <input type="text" name="name" id="{{dialog}}-modal-name"
+                  title="Please enter a full name"
+                  placeholder="Full Name ... e.g.: Joe Bloggs" autofocus required>
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "email") %}
+              <label for="{{dialog}}-modal-email">
+                <span>Email</span>
+                <input type="email" name="email" id="{{dialog}}-modal-email"
+                  title="Please enter a valid email address"
+                  placeholder="e.g.: someone@example.com">
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "mobile") %}
+              <label for="{{dialog}}-modal-mobile">
+                <span>Mobile</span>
+                <input type="text" name="mobile" id="{{dialog}}-modal-mobile"
+                  title="Please enter your contact number"
+                  placeholder="Mobile Number ... e.g.: 07920 027695">
+              </label>  
+            {% endif %}
+
+            {% if _.includes(types, "card") %}
+              <label for="{{dialog}}-modal-card">
+                <span>Card</span>
+                <input type="text" name="card" id="{{dialog}}-modal-card"
+                  title="Please enter your membership card number"
+                  placeholder="e.g. 009999">
+              </label>  
+            {% endif %}
+
+            {% if _.includes(types, "bio") %}
+              <label for="{{dialog}}-modal-bio">
+                <span>Bio</span>
+                <textarea name="bio" id="{{dialog}}-modal-bio" rows="5" maxlength="2048"
+                  title="Please add a biography of the player"
+                  placeholder="Say something interesting...."></textarea>
+              </label>
+            {% endif %}
+          </section>
+          {% if _.includes(types, "image") %}
+            <section id="{{dialog}}-modal-image" title="{{dialog}} {{target}} image">
+              <input type="file" id="{{dialog}}-modal-image-selector" accept="image/*" name="file" hidden>
+              <p id="{{dialog}}-modal-image-status"></p>
+              <img id="{{dialog}}-modal-image-img" src="">
+              {% set button = {name:"image", type: "button", icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+            </section>
+          {% endif %}
+        </section>
+      {% endset %}
+      {% set updateModal = _.set(modal, dialog, inputs) %}
+  {% endfor %}
+
+{% endif %}
