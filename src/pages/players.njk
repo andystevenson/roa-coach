@@ -1,0 +1,9 @@
+{% set modal = {
+  target: "players",
+  dialogs: ["create","update"],
+  inputs: ["name","email","mobile","bio","image"]} %}
+
+{% include "partials/inputs.njk" %}
+{% include "partials/modals.njk" %}
+
+<div id="root"></div>

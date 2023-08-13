@@ -1,6 +1,7 @@
 [id$='modal-actions'] {
   grid-auto-flow: column;
   justify-content: space-between;
+  margin-block-start: var(--size-2);
 
   button[type='submit'] {
     position: relative;
@@ -90,4 +91,12 @@
       opacity: 0.5;
     }
   }
+}
+
+[id$='modal-delete'] {
+  color: red;
+}
+
+[id='create-modal-delete'] {
+  display: none;
 }

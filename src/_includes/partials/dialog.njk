@@ -12,6 +12,8 @@
       <footer id="{{type}}-actions">
         {% set button = {name: "cancel", id: type + "-cancel", type: "reset", icon: {name: 'x'} } %}
         {% include "partials/button.njk" %}
+        {% set button = {name: "delete", id: type + "-delete", type: "reset", icon: {name: 'delete'} } %}
+        {% include "partials/button.njk" %}
         {% set button = {name: dialog.type, id: type + "-submit", type: "submit", icon: {name: '+'} } %}
         {% include "partials/button.njk" %}
       </footer>

@@ -1,5 +1,7 @@
 .create-controls {
   grid-auto-flow: column;
+  padding-block-start: var(--size-2);
+  padding-inline-end: var(--size-2);
   [id^='create'] {
     place-self: end;
   }

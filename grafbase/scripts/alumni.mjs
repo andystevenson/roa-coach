@@ -63,12 +63,20 @@ const validateInput = ({
 }) => {
   id = id?.trim() ? id.trim() : null
   name = name?.trim().replaceAll(/\s+/g, ' ').toLowerCase()
-  email = email?.trim() ? email.trim() : null
-  mobile = mobile?.trim() ? mobile.trim() : null
+  email = email?.trim()
+    ? email.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    : null
+  mobile = mobile?.trim()
+    ? mobile.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    : null
   bio = bio?.trim() ? bio.trim() : null
-  psa = psa?.trim() ? psa.trim() : null
-  image = image?.trim() ? image.trim() : null
-  thumbnail = thumbnail?.trim() ? thumbnail.trim() : null
+  psa = psa?.trim() ? psa.trim().replaceAll(/\s+/g, ' ').toLowerCase() : null
+  image = image?.trim()
+    ? image.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    : null
+  thumbnail = thumbnail?.trim()
+    ? thumbnail.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    : null
   return { id, name, email, mobile, bio, psa, image, thumbnail }
 }
 
@@ -84,7 +92,7 @@ export const createAlumni = async (input) => {
                             $email: Email, 
                             $mobile: String, 
                             $bio: String, 
-                            $psa: String, 
+                            $psa: URL, 
                             $image: URL,
                             $thumbnail: URL) {
                   alumniCreate(
@@ -125,7 +133,7 @@ export const updateAlumni = async (input) => {
                             $email: Email, 
                             $mobile: String, 
                             $bio: String, 
-                            $psa: String, 
+                            $psa: URL, 
                             $image: URL,
                             $thumbnail: URL) {
                   alumniUpdate(

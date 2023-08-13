@@ -3,14 +3,21 @@ type Alumni @model @search {
   email: Email
   mobile: String
   bio: String
-  psa: String
+  psa: URL
   image: URL
   thumbnail: URL
+}
+
+enum Role {
+  ProgrammeLead
+  HeadCoach
+  AssistanCoach
 }
 
 type Coach @model @search {
   name: String! @unique
   email: Email!
+  role: Role
   mobile: String
   bio: String
   image: URL
@@ -57,9 +64,9 @@ type Player @model @search {
   mobile: String
   member: Boolean @default(value: false)
   card: String
-  notes: [PlayerNote]
   image: URL
   thumbnail: URL
+  notes: [PlayerNote]
 }
 
 type ProgrammeCoach @model @search {

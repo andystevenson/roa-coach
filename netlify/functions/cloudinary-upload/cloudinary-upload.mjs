@@ -29,10 +29,11 @@ const handler = async ({ httpMethod, body }) => {
     let path = url.slice(0, url.lastIndexOf('.'))
 
     const parts = path.match(pathRegex)
-    uploaded.optimised = `${parts[1]}f_auto,q_auto/v1${parts[3]}`
-    uploaded.portrait = `${parts[1]}c_fill,f_auto,g_face:center,h_600,q_auto,w_300/v1${parts[3]}`
-    uploaded.thumbnail = `${parts[1]}c_fill,f_auto,g_face:center,h_250,q_auto,w_250/v1${parts[3]}`
-    uploaded.banner = `${parts[1]}c_fill,g_auto,h_150,w_600/v1${parts[3]}`
+    const [fullPath, asset, version, filename] = parts
+    uploaded.optimised = `${asset}f_auto,q_auto/${version}${filename}`
+    uploaded.portrait = `${asset}c_fill,f_auto,g_face:center,h_600,q_auto,w_300/${version}${filename}`
+    uploaded.thumbnail = `${asset}c_fill,f_auto,g_face:center,h_250,q_auto,w_250/${version}${filename}`
+    uploaded.banner = `${asset}c_fill,g_auto,h_150,w_600/${version}${filename}`
     console.log({
       name,
       kebabed,
@@ -41,6 +42,10 @@ const handler = async ({ httpMethod, body }) => {
       title,
       uploaded,
       parts,
+      fullPath,
+      asset,
+      version,
+      filename,
       image: image.slice(0, 40),
     })
     // const attendees = await listAttendees(programme)
