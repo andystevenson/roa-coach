@@ -1,23 +1,68 @@
-import { formattedName } from './utilities.mjs'
 import { Title } from './page-info.mjs'
-import { offline } from './network-status.mjs'
+import { offline, online } from './network-status.mjs'
 import handleImage from './handle-image.mjs'
-import { apiFetch } from './utilities.mjs'
+import { objectHTML } from './handlers/collection.mjs'
+import { apiFetch, elementFromHTML, formattedName } from './utilities.mjs'
+
+const NetworkDownError = {
+  message: 'your network connection is down',
+  cause: {},
+}
 
 export const handleLayout = (Elements, ImageElements) => {
+  const setDefaultImage = handleImage(ImageElements)
+
+  const handleOffline = () => {
+    errorMessage(NetworkDownError)
+    setDefaultImage()
+  }
+
+  const handleOnline = () => {
+    clearErrorMessage()
+    setDefaultImage()
+  }
+
   const errorMessage = (error) => {
     let { message, cause } = error
+    console.log(`errorMessage`, { message, cause })
+
     if (cause) {
       let { duplicate, name } = cause
-      if (duplicate) message = `"${name}" already exists as ${Title}`
-      Elements.error.textContent = message
-      return
+      if (duplicate) {
+        message = `"${name}" already exists as ${Title}`
+        Elements.error.textContent = message
+        return
+      }
+
+      if (message === 'db failed') {
+        const { path } = cause
+        if (path.endsWith('Update')) {
+          const name = formattedName(Elements.form.dataset.name)
+          message = `"${name}" cannot be updated as it has been deleted by another user!`
+        }
+        Elements.error.textContent = message
+        return
+      }
     }
 
     // prettify timeout errors
     if (message.toLowerCase().includes('timeout')) {
-      message = `server timed out, which means the action may not have completed`
+      message = `db server timed out, which means the action may not have completed`
+      Elements.error.textContent = message
+      return
     }
+
+    // prettify object deleted errors
+    if (message.toLowerCase().includes('has already been deleted!')) {
+      Elements.error.textContent = message
+      return
+    }
+
+    if (message.toLowerCase().includes('has been deleted')) {
+      Elements.error.textContent = message
+      return
+    }
+
     message = `Application Error: ${message}`
     Elements.error.textContent = message
     console.error(error)
@@ -29,11 +74,16 @@ export const handleLayout = (Elements, ImageElements) => {
 
   const formData = () => {
     const data = new FormData(Elements.form)
+
     const dataset = Elements.form.dataset
     if ('id' in dataset) {
       const id = dataset.id
       data.append('id', id)
     }
+
+    // the file input object should never be sent
+    data.delete('file')
+
     data.append('action', Elements.type)
     data.append('pathname', Elements.pathname)
     data.append('page', Elements.page)
@@ -61,26 +111,38 @@ export const handleLayout = (Elements, ImageElements) => {
   }
 
   const openModal = async () => {
-    console.log('openModal', Elements.modal)
     clearErrorMessage()
     if (offline()) errorMessage(NetworkDownError)
     setDefaultImage()
     Elements.title.textContent = Title
 
-    if (Elements.type === 'update') {
+    let request = null
+    if (Elements.type === 'update' && online()) {
       // read data before opening the modal
-      const request = formData()
+      request = formData()
       request.action = 'read'
-      const response = await apiFetch(Elements.api, request)
-      console.log('openModal update response', response)
-      updateForm(response)
+      request.name = Elements.form.dataset.name
+      const id = Elements.form.dataset.id
+      try {
+        const response = await apiFetch(Elements.api, request)
+        updateForm(response)
+      } catch (error) {
+        // the read action failed for some reason
+        const { message, cause } = error
+        console.error('read db failed', { message, cause, request })
+        if (message.includes('db object not found')) {
+          updateForm(request)
+          error.message = `"${formattedName(request.name)}" has been deleted`
+          const displayElement = document.getElementById(id)
+          displayElement?.remove()
+        }
+        errorMessage(error)
+      }
     }
     Elements.modal.showModal()
   }
 
   const closeModal = () => {
-    console.log('closeModal', Elements.modal, Elements.form)
-
     clearErrorMessage()
     setDefaultImage()
     Elements.form.reset()
@@ -90,10 +152,14 @@ export const handleLayout = (Elements, ImageElements) => {
 
   const startLoading = () => Elements.submit.classList.add('loading')
   const stopLoading = () => Elements.submit.classList.remove('loading')
-  const listView = () =>
+
+  const listView = () => {
     Elements.root.firstElementChild?.classList.add('list-view')
-  const personView = () =>
+  }
+
+  const personView = () => {
     Elements.root.firstElementChild?.classList.remove('list-view')
+  }
 
   const search = (e) => {
     const searchName = e.target.value.toLowerCase()
@@ -112,9 +178,93 @@ export const handleLayout = (Elements, ImageElements) => {
     })
   }
 
-  Elements.search.addEventListener('input', search)
+  const updateList = (response) => {
+    const collection = Elements.collection
+    const object = Elements.object
+    response.collection = collection
+    response.object = object
 
-  const setDefaultImage = handleImage(ImageElements)
+    const newElement = elementFromHTML(objectHTML(response))
+
+    if (Elements.type === 'update') {
+      const { id } = response
+      const updatingElement = document.getElementById(id)
+      updatingElement?.replaceWith(newElement)
+      return
+    }
+
+    // create
+    Elements.root.firstElementChild.appendChild(newElement)
+  }
+
+  const uploadImage = async (request) => {
+    if (ImageElements.image) {
+      request.image = ImageElements.img.src
+
+      const updated = ImageElements.image.dataset.updated
+      if (!updated) {
+        console.log('image did not update')
+        // nothing to upload to cloudinary
+        return
+      }
+      console.log('image src', ImageElements.img.src.slice(0, 30))
+      request.uploaded = await apiFetch('/api/cloudinary-upload', request)
+      request.image = request.uploaded.portrait
+      request.thumbnail = request.uploaded.thumbnail
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (offline()) return errorMessage(NetworkDownError)
+    try {
+      startLoading()
+
+      const request = formData()
+
+      await uploadImage(request)
+
+      console.warn('submitting....', { request })
+
+      const response = await apiFetch(Elements.api, request, Elements.method)
+      updateList(response)
+      // console.warn(response)
+      stopLoading()
+
+      closeModal()
+    } catch (error) {
+      const { cause, message } = error
+      console.error('filling in error', { message, cause })
+      errorMessage(error)
+      stopLoading()
+      // closeModal()
+    }
+  }
+
+  const handleDelete = async (e) => {
+    if (offline()) return errorMessage(NetworkDownError)
+
+    const button = e.target.closest('button')
+    const id = button.dataset.id
+    const displayElement = document.getElementById(id)
+
+    if (!displayElement) {
+      // this means the read request to openModel failed and the object has already been deleted in the database
+
+      const name = formattedName(button.dataset.name)
+      const message = `"${name}" has already been deleted!`
+      errorMessage(new Error(message))
+      return
+    }
+
+    displayElement?.remove()
+    const request = formData()
+    request.action = 'delete'
+    request.id = id
+    const response = await apiFetch(Elements.api, request, 'DELETE')
+    console.log('handleDelete', { response })
+    closeModal()
+  }
 
   if (Elements.type === 'update') {
     const invokingUpdate = (e) => {
@@ -122,9 +272,13 @@ export const handleLayout = (Elements, ImageElements) => {
       const className = `.${Elements.object}`
       const alumnus = target.closest(className)
       const id = alumnus.id
+      const name = alumnus.getAttribute('name')
+      Elements.form.dataset.name = name
       Elements.form.dataset.id = id
       Elements.delete.dataset.id = id
+      Elements.delete.dataset.name = name
       Elements.submit.dataset.id = id
+      Elements.submit.dataset.name = name
       openModal()
     }
 
@@ -140,6 +294,23 @@ export const handleLayout = (Elements, ImageElements) => {
     const observer = new MutationObserver(watchForNewAlumnus)
     observer.observe(Elements.root, { subtree: true, childList: true })
   }
+
+  if (Elements.type === 'create') {
+    Elements.create.addEventListener('click', openModal)
+    Elements.listView.addEventListener('click', listView)
+    Elements.personView.addEventListener('click', personView)
+  }
+
+  Elements.close.addEventListener('click', closeModal)
+  Elements.cancel.addEventListener('click', closeModal)
+
+  Elements.form.addEventListener('submit', handleSubmit)
+  Elements.delete.addEventListener('click', handleDelete)
+
+  Elements.search.addEventListener('input', search)
+
+  window.addEventListener('offline', handleOffline)
+  window.addEventListener('online', handleOnline)
 
   return {
     openModal,

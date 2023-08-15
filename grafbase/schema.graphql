@@ -36,7 +36,7 @@ type Programme @model @search {
   sessions: [Session]
   coaches: [ProgrammeCoach]
   dates: [ProgrammeDate]
-  prices: [ProgrammePrice]
+  prices: [Price]
   notes: [ProgrammeNote]
   launched: Boolean @default(value: false)
   poster: URL
@@ -45,7 +45,7 @@ type Programme @model @search {
 type Attendee @model {
   programme: Programme!
   player: Player!
-  payment: AttendeePayment
+  payments: [AttendeePayment]
 }
 
 type Session @model @search {
@@ -91,7 +91,12 @@ type PlayerNote @model @search {
 
 type ProgrammeNote @model @search {
   note: String!
-  player: Player!
+  programme: Programme!
+}
+
+type SessionNote @model @search {
+  note: String!
+  session: Session!
 }
 
 type Payment @model @search {
@@ -101,6 +106,7 @@ type Payment @model @search {
   quantity: Int
   unitPrice: Float
   inCash: Boolean @default(value: false)
+  stripe: ID
 }
 
 type AttendeePayment @model {
@@ -117,11 +123,8 @@ type ProgrammeDate @model {
 }
 
 type Price @model {
+  programme: Programme!
   threshold: Int @default(value: 1)
   unitPrice: Float
-}
-
-type ProgrammePrice @model {
-  programme: Programme!
-  price: Price!
+  stripe: ID
 }

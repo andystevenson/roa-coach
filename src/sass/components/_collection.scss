@@ -35,7 +35,7 @@
       }
 
       @media (--lg-n-above) {
-        grid-template-columns: 3ch 2fr 2fr 1fr 6ch 3fr 2ch;
+        grid-template-columns: 3ch 20fr 20fr 13fr 6ch 30fr 2ch;
       }
       align-items: center;
       inline-size: 100%;
@@ -133,6 +133,7 @@
     display: grid;
     grid-template-areas: 'content';
     padding: unset;
+
     > img {
       min-inline-size: var(--size-content-1);
       grid-area: content;

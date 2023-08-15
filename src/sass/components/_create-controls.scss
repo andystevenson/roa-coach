@@ -18,7 +18,7 @@
 }
 
 #search-control {
-  border: 1px solid var(--text-1);
+  border: 1px solid var(--gray-6);
   border-radius: 100vw;
   padding-inline: var(--size-2);
   display: flex;
@@ -28,6 +28,7 @@
     scale: 0.8;
   }
   input {
+    translate: 0 -2px;
     background-color: transparent;
     border-radius: 100vw;
     padding-inline-end: unset;

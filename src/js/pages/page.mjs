@@ -2,7 +2,7 @@ import './modals.mjs'
 import { apiFetch, elementFromHTML } from './utilities.mjs'
 import { Page, Pathname, Title, Api } from './page-info.mjs'
 import { collectionHTML, annotateCollection } from './handlers/collection.mjs'
-
+import './nav.mjs'
 const listAll = async () => {
   const root = document.getElementById('root')
   const action = 'list'
