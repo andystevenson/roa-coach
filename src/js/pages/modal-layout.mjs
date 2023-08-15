@@ -17,7 +17,10 @@ export const layout = (type) => {
     api: Api,
     method: type === 'update' ? 'PUT' : 'POST',
     root: document.getElementById('root'),
-    create: document.getElementById('create'), // special case of Page level add
+    create: document.getElementById('create'),
+    listView: document.getElementById('list-view'),
+    personView: document.getElementById('person-view'),
+    search: document.getElementById('search'),
     modal: document.getElementById(name),
     title: document.getElementById(`${name}-title`),
     close: document.getElementById(`${name}-close`),
@@ -41,7 +44,7 @@ export const layout = (type) => {
     img: document.getElementById(`${imageName}-img`),
   }
 
-  console.log({ Elements, ImageElements })
+  // console.log({ Elements, ImageElements })
   let LayoutExpected = Object.values(Elements).every((element) => element)
 
   if (!LayoutExpected) {

@@ -1,11 +1,42 @@
-.create-controls {
-  grid-auto-flow: column;
+#create-controls {
   padding-block-start: var(--size-2);
   padding-inline-end: var(--size-2);
   [id^='create'] {
     place-self: end;
   }
-  > * {
-    place-self: center;
+}
+
+#list-controls {
+  display: flex;
+  align-items: end;
+  > button:first-of-type {
+    margin-inline-start: auto;
   }
+  gap: var(--size-1);
+  padding-block-end: var(--size-1);
+  border-block-end: var(--border-size-1) solid var(--text-1);
+}
+
+#search-control {
+  border: 1px solid var(--text-1);
+  border-radius: 100vw;
+  padding-inline: var(--size-2);
+  display: flex;
+  gap: unset;
+
+  button {
+    scale: 0.8;
+  }
+  input {
+    background-color: transparent;
+    border-radius: 100vw;
+    padding-inline-end: unset;
+    &:focus-visible {
+      outline-style: none;
+    }
+  }
+}
+
+.search-hidden {
+  display: none;
 }

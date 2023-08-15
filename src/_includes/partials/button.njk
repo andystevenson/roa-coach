@@ -1,5 +1,9 @@
 {% if button %}
-  <button {{"id="+button.id if button.id}} {{"type="+button.type if button.type}}>
+  <button {{"id="+button.id if button.id}} 
+          {{"type="+button.type if button.type}}
+          {{"class="+button.class if button.class}}
+          {{"title="+button.title if button.title}}
+          >
 
     {% if button.icon %}
       {% set icon = button.icon %}

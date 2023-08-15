@@ -85,10 +85,34 @@ export const handleLayout = (Elements, ImageElements) => {
     setDefaultImage()
     Elements.form.reset()
     Elements.modal.close()
+    Elements.search.dispatchEvent(new Event('input'))
   }
 
   const startLoading = () => Elements.submit.classList.add('loading')
   const stopLoading = () => Elements.submit.classList.remove('loading')
+  const listView = () =>
+    Elements.root.firstElementChild?.classList.add('list-view')
+  const personView = () =>
+    Elements.root.firstElementChild?.classList.remove('list-view')
+
+  const search = (e) => {
+    const searchName = e.target.value.toLowerCase()
+    const searchList = Array.from(
+      Elements.root.querySelectorAll('.object[name]'),
+    )
+    const objectList = searchList.map((object) => {
+      const gName = object.getAttribute('name')
+      const match = gName.includes(searchName)
+      return { object, match }
+    })
+    objectList.forEach((searchObject) => {
+      const { object, match } = searchObject
+      match && object.classList.remove('search-hidden')
+      !match && object.classList.add('search-hidden')
+    })
+  }
+
+  Elements.search.addEventListener('input', search)
 
   const setDefaultImage = handleImage(ImageElements)
 
@@ -105,12 +129,10 @@ export const handleLayout = (Elements, ImageElements) => {
     }
 
     const watchForNewAlumnus = (mutations) => {
-      console.log('watch for alumnus', mutations)
-      const actions = Array.from(Elements.root.querySelectorAll('.action'))
-      console.log({ actions })
+      const actions = Array.from(
+        Elements.root.querySelectorAll('.update-action'),
+      )
       actions.forEach((action) => {
-        console.log('action on', action)
-        // action.removeEventListener('click', openModal)
         action.addEventListener('click', invokingUpdate)
       })
     }
@@ -126,6 +148,8 @@ export const handleLayout = (Elements, ImageElements) => {
     clearErrorMessage,
     startLoading,
     stopLoading,
+    listView,
+    personView,
     setDefaultImage,
     formData,
   }

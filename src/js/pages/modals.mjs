@@ -12,8 +12,6 @@ const NetworkDownError = {
 }
 
 const handleModal = (type) => {
-  const action = type
-
   const { Elements, ImageElements } = layout(type)
   const {
     openModal,
@@ -22,6 +20,8 @@ const handleModal = (type) => {
     clearErrorMessage,
     startLoading,
     stopLoading,
+    listView,
+    personView,
     setDefaultImage,
     formData,
   } = handleLayout(Elements, ImageElements)
@@ -36,7 +36,12 @@ const handleModal = (type) => {
     setDefaultImage()
   }
 
-  type === 'create' && Elements.create.addEventListener('click', openModal)
+  if (type === 'create') {
+    Elements.create.addEventListener('click', openModal)
+    Elements.listView.addEventListener('click', listView)
+    Elements.personView.addEventListener('click', personView)
+  }
+
   Elements.close.addEventListener('click', closeModal)
   Elements.cancel.addEventListener('click', closeModal)
 
@@ -64,8 +69,7 @@ const handleModal = (type) => {
 
   const uploadImage = async (request) => {
     if (ImageElements.image) {
-      if (!request.image) request.image = ImageElements.default
-      if (!request.thumbnail) request.thumbnail = ImageElements.thumbnail
+      request.image = ImageElements.img.src
 
       const updated = ImageElements.image.dataset.updated
       if (!updated) {
@@ -73,7 +77,6 @@ const handleModal = (type) => {
         // nothing to upload to cloudinary
         return
       }
-      request.image = ImageElements.img.src
       console.log('image src', ImageElements.img.src.slice(0, 30))
       request.uploaded = await apiFetch('/api/cloudinary-upload', request)
       request.image = request.uploaded.portrait

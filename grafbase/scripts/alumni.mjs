@@ -2,7 +2,7 @@ import graphql from './graphql.mjs'
 import { inspect } from './utilities.mjs'
 import kebabCase from 'lodash.kebabcase'
 
-const getPsa = async (name) => {
+const getPsa = (name) => {
   const player = kebabCase(name)
   const url = `https://www.psaworldtour.com/player/${player}/`
   // const response = await fetch(url)
@@ -11,6 +11,11 @@ const getPsa = async (name) => {
   // console.log('getPsa', { url, redirected, result })
   return url
 }
+
+const getThumbnail = (url) => {
+  return url
+}
+
 export const listAlumni = async () => {
   const query = `query ListAlumni {
                   alumniCollection(first: 100) {
@@ -64,27 +69,31 @@ const validateInput = ({
   id = id?.trim() ? id.trim() : null
   name = name?.trim().replaceAll(/\s+/g, ' ').toLowerCase()
   email = email?.trim()
-    ? email.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    ? email.trim().replaceAll(/\s+/g, '').toLowerCase()
     : null
   mobile = mobile?.trim()
-    ? mobile.trim().replaceAll(/\s+/g, ' ').toLowerCase()
+    ? mobile.trim().replaceAll(/\s+/g, '').toLowerCase()
     : null
   bio = bio?.trim() ? bio.trim() : null
-  psa = psa?.trim() ? psa.trim().replaceAll(/\s+/g, ' ').toLowerCase() : null
-  image = image?.trim()
-    ? image.trim().replaceAll(/\s+/g, ' ').toLowerCase()
-    : null
-  thumbnail = thumbnail?.trim()
-    ? thumbnail.trim().replaceAll(/\s+/g, ' ').toLowerCase()
-    : null
+  psa = psa?.trim() ? psa.trim() : getPsa(name)
+  image = image?.trim() ? image.trim() : null
+  thumbnail = thumbnail?.trim() ? thumbnail.trim() : getThumbnail(image)
+  console.log('validate', {
+    id,
+    name,
+    email,
+    mobile,
+    bio,
+    psa,
+    image,
+    thumbnail,
+  })
   return { id, name, email, mobile, bio, psa, image, thumbnail }
 }
 
 export const createAlumni = async (input) => {
   let { name, email, mobile, bio, psa, image, thumbnail } = validateInput(input)
-  if (!psa) {
-    psa = await getPsa(name)
-  }
+
   const variables = { name, email, mobile, bio, psa, image, thumbnail }
 
   const query = `mutation CreateAlumni(

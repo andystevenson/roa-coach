@@ -1,4 +1,17 @@
 :root {
-  --site-max-width: 2520px;
   --site-max-width: 800px;
+  @media (--lg-n-above) {
+    --site-max-width: 1024px;
+  }
+}
+
+@media (--OSdark) {
+  button {
+    --_highlight: var(--_highlight-light);
+  }
+}
+
+a[href] {
+  color: var(--text-1);
+  text-decoration: none;
 }

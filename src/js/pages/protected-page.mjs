@@ -36,7 +36,7 @@ const disableControls = () => {
 }
 
 async function manageChange({ user }) {
-  console.log('manageChange >>>', clerk, user, clerk?.isReady(), '<<<')
+  // console.log('manageChange >>>', clerk, user, clerk?.isReady(), '<<<')
   if (!clerk) return
   if (!ElementsOk) return
   if (!clerk.isReady()) return

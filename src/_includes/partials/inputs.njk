@@ -49,6 +49,14 @@
                   placeholder="Say something interesting...."></textarea>
               </label>
             {% endif %}
+
+            {% if _.includes(types, "psa") %}
+              <input type="hidden" id="{{dialog}}-modal-psa" name="psa" value="" />
+            {% endif %}
+            
+            {% if _.includes(types, "thumbnail") %}
+              <input type="hidden" id="{{dialog}}-modal-thumbnail" name="thumbnail" value="" />
+            {% endif %}
           </section>
           {% if _.includes(types, "image") %}
             <section id="{{dialog}}-modal-image" title="{{dialog}} {{target}} image">

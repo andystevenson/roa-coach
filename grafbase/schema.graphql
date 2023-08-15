@@ -17,9 +17,9 @@ enum Role {
 type Coach @model @search {
   name: String! @unique
   email: Email!
-  role: Role
   mobile: String
   bio: String
+  role: Role
   image: URL
   thumbnail: URL
 }

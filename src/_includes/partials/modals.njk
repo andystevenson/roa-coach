@@ -1,7 +1,19 @@
 {% if modal %}
-  <section class="create-controls">
+  <section id="create-controls">
     {% set button = {name: "create", id: "create", icon: {name: '+'} } %}
     {% include "partials/button.njk" %}
+    <section id="list-controls">
+      <section id="search-control">
+        <input type="search" placeholder="Search for a name..." id="search">
+        {% set button = {name: "", id: "open-search", class: "icon", icon: {name: 'search'} } %}
+        {% include "partials/button.njk" %}
+      </section>
+      {% set button = {name: "", id: "list-view", class: "icon", icon: {name: 'list'} } %}
+      {% include "partials/button.njk" %}
+      {% set button = {name: "", id: "person-view", class: "icon", icon: {name: 'person'} } %}
+      {% include "partials/button.njk" %}
+    </section>
+
   </section>
 
   {% for dialogType in modal.dialogs %}
