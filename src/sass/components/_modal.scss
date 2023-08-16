@@ -100,3 +100,23 @@
 [id='create-modal-delete'] {
   display: none;
 }
+
+[id$='modal-db-dates'] {
+  gap: unset;
+  display: grid;
+  grid-template-columns: 1ch 1fr 4ch 1ch 1fr;
+  align-items: center;
+  input {
+    font-size: var(--font-size-00);
+    background-color: transparent;
+    padding: unset;
+    margin: unset;
+    padding-inline-start: 0.1rem;
+    &:focus-within {
+      outline: unset;
+    }
+  }
+  svg {
+    place-self: center;
+  }
+}

@@ -35,9 +35,14 @@ export const nextFriday = (start = today) => nextDay(5, start)
 export const nextSaturday = (start = today) => nextDay(6, start)
 
 // utilities
-export const ordinalDate = (date) => date.format('dddd, Do MMMM, YYYY')
-export const ordinalDateTime = (date) =>
-  date.format('dddd, Do MMMM, YYYY HH:mm:ss')
+export const ordinalDate = (date) => {
+  if (typeof date === 'string') return ordinalDate(dayjs(date))
+  return date.format('dddd, Do MMMM, YYYY')
+}
+export const ordinalDateTime = (date) => {
+  if (typeof date === 'string') return ordinalDateTime(dayjs(date))
+  return date.format('dddd, Do MMMM, YYYY HH:mm:ss')
+}
 
 export const nearestDay = (...days) => {
   const nextDays = days

@@ -3,6 +3,7 @@ import { offline, online } from './network-status.mjs'
 import handleImage from './handle-image.mjs'
 import { objectHTML } from './handlers/collection.mjs'
 import { apiFetch, elementFromHTML, formattedName } from './utilities.mjs'
+import { ordinalDateTime } from '../../../grafbase/scripts/dates.mjs'
 
 const NetworkDownError = {
   message: 'your network connection is down',
@@ -105,6 +106,11 @@ export const handleLayout = (Elements, ImageElements) => {
       if (element) {
         let value = response[property]
         if (property === 'name') value = formattedName(value)
+        if (property === 'createdAt' || property === 'updatedAt') {
+          const oDateTime = ordinalDateTime(value)
+          console.log({ property, value, oDateTime })
+          value = oDateTime
+        }
         element.value = value
       }
     }

@@ -49,6 +49,8 @@ export const readAlumni = async ({ id }) => {
                     psa
                     image
                     thumbnail
+                    createdAt
+                    updatedAt
                   }
                 }`
   const read = await graphql(query)
@@ -78,16 +80,16 @@ const validateInput = ({
   psa = psa?.trim() ? psa.trim() : getPsa(name)
   image = image?.trim() ? image.trim() : null
   thumbnail = thumbnail?.trim() ? thumbnail.trim() : getThumbnail(image)
-  console.log('validate', {
-    id,
-    name,
-    email,
-    mobile,
-    bio,
-    psa,
-    image,
-    thumbnail,
-  })
+  // console.log('validate', {
+  //   id,
+  //   name,
+  //   email,
+  //   mobile,
+  //   bio,
+  //   psa,
+  //   image,
+  //   thumbnail,
+  // })
   return { id, name, email, mobile, bio, psa, image, thumbnail }
 }
 
@@ -123,6 +125,8 @@ export const createAlumni = async (input) => {
                       psa
                       image
                       thumbnail
+                      createdAt
+                      updatedAt
                     }
                   }
                 }`
