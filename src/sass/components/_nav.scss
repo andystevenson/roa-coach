@@ -1,4 +1,5 @@
 nav {
+  --_speed: 200ms;
   ul {
     display: grid;
     grid-auto-flow: column;
@@ -13,7 +14,8 @@ nav {
         right: 50%;
         left: 50%;
         border-block-end: 4px double var(--green-10);
-        transition: right 0.5s ease-in-out, left 0.5s ease-in-out;
+        transition: right var(--_speed) ease-in-out,
+          left var(--_speed) ease-in-out;
       }
 
       &:hover::after {
@@ -22,12 +24,15 @@ nav {
       }
 
       &.active-page {
+        font-weight: var(--font-weight-6);
+
         &::after {
           content: '';
           position: absolute;
           inset: 0;
           border-block-end: 2px solid var(--green-10);
-          transition: right 0.5s ease-in-out, left 0.5s ease-in-out;
+          transition: right var(--_speed) ease-in-out,
+            left var(--_speed) ease-in-out;
         }
 
         &:hover::after {

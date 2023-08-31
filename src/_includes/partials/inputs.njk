@@ -14,6 +14,84 @@
               </label>          
             {% endif %}
 
+            {% if _.includes(types, "programme") %}
+              <label for="{{dialog}}-modal-programme">
+                <span>Programme</span>
+                <input type="text" programme="programme" id="{{dialog}}-modal-programme"
+                  title="Please choose a unique programme name"
+                  placeholder="e.g.: Summer Camps 2023" autofocus required>
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "role") %}
+              <label for="{{dialog}}-modal-role">
+                <span>Role</span>
+                <select id="{{dialog}}-modal-role" name="role">
+                  <option value="AssistantCoach">Assistant Coach</option>
+                  <option value="HeadCoach" selected>Head Coach</option>
+                  <option value="ProgrammeLead">Programme Lead</option>
+                </select>
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "category") %}
+              <label for="{{dialog}}-modal-category">
+                <span>Category</span>
+                <select id="{{dialog}}-modal-category" name="category">
+                  <option value="Junior" selected>Junior</option>
+                  <option value="Adult">Adult</option>
+                </select>
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "dob") %}
+              <label for="{{dialog}}-modal-dob">
+                <span>Date of Birth</span>
+                <input type="date" name="dob" required/>
+              </label>       
+            {% endif %}
+
+            {% if _.includes(types, "start") %}
+              <label for="{{dialog}}-modal-start">
+                <span>Start</span>
+                <input type="date" name="start"/>
+              </label>       
+            {% endif %}
+
+            {% if _.includes(types, "end") %}
+              <label for="{{dialog}}-modal-end">
+                <span>End</span>
+                <input type="date" name="end"/>
+              </label>       
+            {% endif %}
+
+            {% if _.includes(types, "maxPerSession") %}
+              <label for="{{dialog}}-modal-maxPerSession">
+                <span>Max Per Session</span>
+                <input type="number" name="maxPerSession" min="1" max="50" value="20"/>
+              </label>       
+            {% endif %}
+
+            {% if _.includes(types, "open") %}
+              <label for="{{dialog}}-modal-open">
+                <span>Open</span>
+                <select id="{{dialog}}-modal-open" name="open">
+                  <option value="true" selected>open</option>
+                  <option value="false">closed</option>
+                </select>
+              </label>          
+            {% endif %}
+
+            {% if _.includes(types, "launched") %}
+              <label for="{{dialog}}-modal-launched">
+                <span>Launched</span>
+                <select id="{{dialog}}-modal-launched" name="launched">
+                  <option value="true">launched</option>
+                  <option value="false" selected>in development</option>
+                </select>
+              </label>          
+            {% endif %}
+
             {% if _.includes(types, "email") %}
               <label for="{{dialog}}-modal-email">
                 <span>Email</span>
@@ -26,10 +104,14 @@
             {% if _.includes(types, "mobile") %}
               <label for="{{dialog}}-modal-mobile">
                 <span>Mobile</span>
-                <input type="text" name="mobile" id="{{dialog}}-modal-mobile"
+                <input type="tel" name="mobile" id="{{dialog}}-modal-mobile"
                   title="Please enter a contact number"
                   placeholder="Mobile Number ... e.g.: 07920 027695">
               </label>  
+            {% endif %}
+
+            {% if _.includes(types, "member") %}
+              <input type="hidden" name="member" id="{{dialog}}-modal-member" value="">
             {% endif %}
 
             {% if _.includes(types, "card") %}
@@ -44,9 +126,20 @@
             {% if _.includes(types, "bio") %}
               <label for="{{dialog}}-modal-bio">
                 <span>Bio</span>
-                <textarea name="bio" id="{{dialog}}-modal-bio" rows="5" maxlength="2048"
-                  title="Please add a biography of the player"
+                <textarea name="bio" id="{{dialog}}-modal-bio" rows="5" 
+                  maxlength="2048"
+                  title="Please add a biography"
                   placeholder="Say something interesting...."></textarea>
+              </label>
+            {% endif %}
+
+            {% if _.includes(types, "description") %}
+              <label for="{{dialog}}-modal-description">
+                <span>Description</span>
+                <textarea name="description" id="{{dialog}}-modal-description" rows="5" 
+                  maxlength="2048"
+                  title="Please add a description"
+                  placeholder="Describe the programme...."></textarea>
               </label>
             {% endif %}
 
@@ -60,18 +153,22 @@
 
             {% if _.includes(types, "db-dates") %}
               <section id="{{dialog}}-modal-db-dates">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-c-circle" viewBox="0 0 16 16">
-                  <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
-                </svg>
-                <input type="text" name="createdAt" value="" readonly>
-                <span></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
-                </svg>
-                <input type="text" name="updatedAt" value="" readonly>
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-c-circle" viewBox="0 0 16 16">
+                    <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
+                  </svg>
+                  <input type="text" name="createdAt" value="" readonly>
+                </div>
+                <div>
+                  <input type="text" name="updatedAt" value="" readonly>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+                  </svg>
+                </div>
               </section>
             {% endif %}
           </section>
+
           {% if _.includes(types, "image") %}
             <section id="{{dialog}}-modal-image" title="{{dialog}} {{target}} image">
               <input type="file" id="{{dialog}}-modal-image-selector" accept="image/*" name="file" hidden>
@@ -81,6 +178,84 @@
               {% include "partials/button.njk" %}
             </section>
           {% endif %}
+
+          {% if _.includes(types, "dates") %}
+            <details id="{{dialog}}-modal-dates">
+              <summary id="{{dialog}}-modal-dates-summary">dates</summary>
+              {% set addId = dialog + "-modal-dates-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-dates-detail">
+              </section>
+            </details>
+          {% endif %}
+
+          {% if _.includes(types, "prices") %}
+            <details id="{{dialog}}-modal-prices">
+              <summary id="{{dialog}}-modal-prices-summary">prices</summary>
+              {% set addId = dialog + "-modal-prices-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-prices-detail">
+              </section>
+            </details>
+          {% endif %}
+
+          {% if _.includes(types, "coaches") %}
+            <details id="{{dialog}}-modal-coaches">
+              <summary id="{{dialog}}-modal-coaches-summary">coaches</summary>
+              {% set addId = dialog + "-modal-coaches-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-coaches-detail">
+              </section>
+            </details>
+          {% endif %}
+
+          {% if _.includes(types, "attendees") %}
+            <details id="{{dialog}}-modal-attendees">
+              <summary id="{{dialog}}-modal-attendees-summary">attendees</summary>
+              {% set addId = dialog + "-modal-attendees-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-attendees-detail">
+              </section>
+            </details>
+          {% endif %}
+          
+          {% if _.includes(types, "sessions") %}
+            <details id="{{dialog}}-modal-sessions">
+              <summary id="{{dialog}}-modal-sessions-summary">sessions</summary>
+              {% set addId = dialog + "-modal-sessions-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-sessions-detail">
+              </section>
+            </details>
+          {% endif %}
+
+          {% if _.includes(types, "payments") %}
+            <details id="{{dialog}}-modal-payments">
+              <summary id="{{dialog}}-modal-payments-summary">payments</summary>
+              {% set addId = dialog + "-modal-payments-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-payments-detail">
+              </section>
+            </details>
+          {% endif %}
+
+          {% if _.includes(types, "notes") %}
+            <details id="{{dialog}}-modal-notes">
+              <summary id="{{dialog}}-modal-notes-summary">notes</summary>
+              {% set addId = dialog + "-modal-notes-add" %}
+              {% set button = {id: addId, type: "button", class: 'icon', icon: {name: '+'} } %}
+              {% include "partials/button.njk" %}
+              <section id="{{dialog}}-modal-notes-detail">
+              </section>
+            </details>
+          {% endif %}
+
         </section>
       {% endset %}
       {% set updateModal = _.set(modal, dialog, inputs) %}

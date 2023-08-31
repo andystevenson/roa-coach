@@ -27,7 +27,7 @@ const parseParts = (message) => {
   return { duplicate, name, parts }
 }
 
-export default analyse = (errors = []) => {
+export const analyse = (errors = []) => {
   if (errors.length === 0) return { reason: 'nothing', cause: 'nothing' }
   if (errors.length === 1) {
     let { path, message } = errors[0]
@@ -41,3 +41,5 @@ export default analyse = (errors = []) => {
     }
   }
 }
+
+export default analyse

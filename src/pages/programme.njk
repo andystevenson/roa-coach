@@ -1,0 +1,9 @@
+{% set modal = {
+  target: "programme",
+  dialogs: ["create","update"],
+  inputs: ["programme","category","start","end","maxPerSession","open","launched","description","image","dates","prices","coaches","attendees","sessions","payments","notes","db-dates"]} %}
+
+{% include "partials/inputs.njk" %}
+{% include "partials/modals.njk" %}
+
+<div id="root"></div>

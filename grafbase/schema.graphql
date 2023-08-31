@@ -8,70 +8,90 @@ type Alumni @model @search {
   thumbnail: URL
 }
 
-enum Role {
-  ProgrammeLead
-  HeadCoach
-  AssistanCoach
-}
-
 type Coach @model @search {
   name: String! @unique
-  email: Email!
+  role: Role
+  email: Email
   mobile: String
   bio: String
-  role: Role
   image: URL
   thumbnail: URL
 }
 
+enum Role {
+  ProgrammeLead
+  HeadCoach
+  AssistantCoach
+}
+
 type Programme @model @search {
   name: String! @unique
-  category: String @default(value: "junior")
-  description: String
+  category: Category
   start: Date!
   end: Date!
   maxPerSession: Int @default(value: 20)
   open: Boolean @default(value: true)
-  attendees: [Attendee]
-  sessions: [Session]
-  coaches: [ProgrammeCoach]
+  launched: Boolean @default(value: false)
+  description: String
+  image: URL
   dates: [ProgrammeDate]
   prices: [Price]
+  coaches: [ProgrammeCoach]
+  attendees: [Attendee]
+  sessions: [Session]
+  payments: [Payment]
   notes: [ProgrammeNote]
-  launched: Boolean @default(value: false)
-  poster: URL
+}
+
+enum Category {
+  Junior
+  Adult
 }
 
 type Attendee @model {
   programme: Programme!
   player: Player!
-  payments: [AttendeePayment]
-}
-
-type Session @model @search {
-  programme: Programme!
-  date: Date!
-  start: DateTime!
-  end: DateTime!
-  description: String
-  hosts: [SessionCoach]
-  attendees: [SessionAttendee]
 }
 
 type Player @model @search {
   name: String! @unique
-  email: Email!
+  dob: Date!
+  email: Email
   mobile: String
   member: Boolean @default(value: false)
   card: String
   image: URL
   thumbnail: URL
   notes: [PlayerNote]
+  payments: [Payment]
 }
 
-type ProgrammeCoach @model @search {
+type PlayerNote @model @search {
+  note: String!
+  player: Player!
+}
+
+type Payment @model @search {
   programme: Programme!
-  coach: Coach!
+  player: Player!
+  booking: String! @unique
+  time: DateTime
+  price: Float
+  quantity: Int
+  unitPrice: Float
+  inCash: Boolean @default(value: false)
+  stripe: ID
+}
+
+type Session @model @search {
+  programme: Programme!
+  date: Date!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  hosts: [SessionCoach]
+  attendees: [SessionAttendee]
+  notes: [SessionNote]
 }
 
 type SessionCoach @model @search {
@@ -81,17 +101,7 @@ type SessionCoach @model @search {
 
 type SessionAttendee @model @search {
   session: Session!
-  attendee: Attendee!
-}
-
-type PlayerNote @model @search {
-  note: String!
   player: Player!
-}
-
-type ProgrammeNote @model @search {
-  note: String!
-  programme: Programme!
 }
 
 type SessionNote @model @search {
@@ -99,19 +109,14 @@ type SessionNote @model @search {
   session: Session!
 }
 
-type Payment @model @search {
-  booking: String! @unique
-  time: DateTime!
-  price: Float
-  quantity: Int
-  unitPrice: Float
-  inCash: Boolean @default(value: false)
-  stripe: ID
+type ProgrammeCoach @model @search {
+  programme: Programme!
+  coach: Coach!
 }
 
-type AttendeePayment @model {
-  attendee: Attendee!
-  payment: Payment!
+type ProgrammeNote @model @search {
+  note: String!
+  programme: Programme!
 }
 
 type ProgrammeDate @model {

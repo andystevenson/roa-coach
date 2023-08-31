@@ -12,6 +12,9 @@
   targetPort = 8080
   port = 8889
 
+[[redirects]]
+  from = "/api/get-card"
+  to = "https://westwarwicks.info/api/get-card"
 
 [[redirects]]
   from = "/api/*"

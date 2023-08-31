@@ -1,0 +1,1448 @@
+{
+  "name": "pdhsports",
+  "logo": "https://www.pdhsports.com/themes/pdhsports/css/i/mobile-spritex2.png",
+  "products": [
+    {
+      "company": "pdhsports",
+      "title": "Blackstorm Ti SLS Squash Racket",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": "59.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre XT Revelation Pro Lite Squash Racket",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre XT Revelation 125 Squash Racket",
+      "balance": "head-light",
+      "manufacturer": "dunlop",
+      "price": 79.95
+    },
+    {
+      "company": "pdhsports",
+      "title": "Comp Mini Squash Racket Green",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 16.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aerogel 4D Elite Squash Racket",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 74.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre+ Revelation Pro Squash Racket Ali Farag",
+      "level": "expert",
+      "balance": "head-heavy",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre+ Evolution Pro Nick Matthew Squash Racket",
+      "level": "expert",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation Pro Squash Racket",
+      "balance": "head-heavy",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": "119.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation 125 Squash Racket",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 103.95
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation 135 Squash Racket",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation Junior Squash Racket",
+      "balance": "even",
+      "length": 25,
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation Pro LTD Edition Squash Racket",
+      "balance": "head-heavy",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 123.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Revelation Pro Lite LTD Edition Squash Racket",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 99.95
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Ultimate 132 Squash Racket 2022",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 135.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Elite 135 Squash Racket 2022",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 108.45
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Iconic 130 Squash Racket 2022",
+      "balance": "even",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 95.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Evolution 120 Squash Racket 2022",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 101.94
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Evolution 130 Squash Racket 2022",
+      "balance": "even",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 103.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Core Pro 130 Squash Racket",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Pu Absorbent Replacement Grip X 24 Assorted",
+      "manufacturer": "dunlop",
+      "price": 39.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fun Mini Squash Racket Red",
+      "length": "22-inches",
+      "manufacturer": "dunlop",
+      "price": 17.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Play Mini Squash Racket Orange",
+      "length": "235-inches",
+      "manufacturer": "dunlop",
+      "price": 17.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Thermo 12 Racket Bag Black Black",
+      "bagsize": "12-rackets",
+      "manufacturer": "dunlop",
+      "price": 95.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Thermo 8 Racket Bag Black Black",
+      "bagsize": "8-rackets",
+      "manufacturer": "dunlop",
+      "price": 83.99,
+      "bagsizeWait": "8-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Team 12 Racket Thermo Bag Black Black",
+      "bagsize": "12-rackets",
+      "manufacturer": "dunlop",
+      "price": 75.99,
+      "bagsizeWait": "12-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Team 8 Racket Thermo Bag Black Black",
+      "bagsize": "8-rackets",
+      "manufacturer": "dunlop",
+      "price": 67.99,
+      "bagsizeWait": "8-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Team 3 Racket Thermo Bag Black Black",
+      "bagsize": "3-rackets",
+      "manufacturer": "dunlop",
+      "price": 43.99,
+      "bagsizeWait": "3-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Thermo 12 Racket Bag Black Red",
+      "bagsize": "12-rackets",
+      "manufacturer": "dunlop",
+      "price": 95.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Thermo 8 Racket Bag Black Red",
+      "bagsize": "8-rackets",
+      "manufacturer": "dunlop",
+      "price": 83.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Long Backpack Black Red",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 59.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Long Backpack Black",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 59.99,
+      "bagsizeWait": "backpack"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Backpack Black Red",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 47.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Team Backpack Black",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 39.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Performance Backpack Black",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 47.99,
+      "bagsizeWait": "backpack"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX Performance Thermo 12 Racket Bag Black Yellow 2022",
+      "bagsize": "12-rackets",
+      "manufacturer": "dunlop",
+      "price": 87.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX Performance Thermo 8 Racket Bag Black Yellow 2022",
+      "bagsize": "8-rackets",
+      "manufacturer": "dunlop",
+      "price": 75.99,
+      "bagsizeWait": "8-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX Performance Backpack Black Yellow 2022",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 43.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Tennis Drawstring Cover Black",
+      "manufacturer": "dunlop",
+      "price": 9.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Club 3 Racket Bag Black",
+      "bagsize": "3-rackets",
+      "manufacturer": "dunlop",
+      "price": 31.99,
+      "bagsizeWait": "3-rackets"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX Club Backpack Black",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": "39.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "PSA Series Performance Thermo 12 Racket Bag LTD Edition",
+      "bagsize": "12-rackets",
+      "manufacturer": "dunlop",
+      "price": 59.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "PSA Series Performance Backpack LTD Edition",
+      "bagsize": "backpack",
+      "manufacturer": "dunlop",
+      "price": 39.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Double Yellow Dot Squash Balls And Dunlop PU Replacement Grips Bundle",
+      "manufacturer": "dunlop",
+      "price": 59.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Competition Squash Ball - 3 Ball Tube. Single Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": 7.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Competition Squash Ball - 1 Dozen. Single Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Progress Squash Ball",
+      "manufacturer": "dunlop",
+      "price": "3.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Progress Squash Balls - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Competition Squash Ball - 1 Ball, Single Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": "3.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro White Squash Ball - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Red Mini Squash FUN Balls 3 Pack",
+      "manufacturer": "dunlop",
+      "price": 7.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Orange Mini Squash FUN Balls 3 Pack",
+      "manufacturer": "dunlop",
+      "price": 7.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Squash Ball - 1 Dozen Double Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Squash Ball - 1 Ball. Double Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": "3.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Squash Ball - 3 Ball Tube - Double Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": 7.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Intro Squash Ball - 1 Ball",
+      "manufacturer": "dunlop",
+      "price": "3.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Intro Squash Ball - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Squash Balls - Double Yellow Dot - 2 Balls",
+      "manufacturer": "dunlop",
+      "price": 4.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Mini Squash Balls Pink Pack Of 3",
+      "manufacturer": "dunlop",
+      "price": 4.45
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Squash Ball 3 Ball Blister Pack",
+      "manufacturer": "dunlop",
+      "price": "7.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Mini Squash Balls Pink - 1 Ball",
+      "manufacturer": "dunlop",
+      "price": 1.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Mini Squash Balls Pink Box Of 12",
+      "manufacturer": "dunlop",
+      "price": 15.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sweating Blood My Life In Squash By World Champion Nick Matthew",
+      "manufacturer": "dunlop",
+      "price": "10.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "I-Armor Protective Eyewear Red Black",
+      "manufacturer": "dunlop",
+      "price": 19.95
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Protective Eyewear",
+      "manufacturer": "dunlop",
+      "price": 24.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Water Bottle 700ml Black White",
+      "manufacturer": "dunlop",
+      "price": "10.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Water Bottle And Pro Ball Bundle",
+      "manufacturer": "dunlop",
+      "price": "17.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Iconic Power 18g Squash String Set Black",
+      "manufacturer": "dunlop",
+      "price": 10.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Iconic Pro AF Squash String Set Black 1.22mm",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Iconic Pro AF Squash String Set Natural 1.22mm",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Iconic Pro AF Squash String Set Black 1.18mm",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Iconic Pro AF Squash String Set Natural 1.18mm",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Competition Racketball Balls - 3 Ball Box Blue Yellow Dot",
+      "manufacturer": "dunlop",
+      "price": 8.95
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Racketball Balls - 3 Ball Box Black Double Dot",
+      "manufacturer": "dunlop",
+      "price": 8.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre+ Evolution Racketball Racket",
+      "balance": "head-heavy",
+      "length": 22,
+      "manufacturer": "dunlop",
+      "price": 93.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre+ Ultimate Racketball Racket",
+      "balance": "head-heavy",
+      "length": 22,
+      "manufacturer": "dunlop",
+      "price": "112.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Hyperfibre+ Revelation Racketball Racket",
+      "balance": "head-light",
+      "length": 22,
+      "manufacturer": "dunlop",
+      "price": 101.25
+    },
+    {
+      "company": "pdhsports",
+      "title": "Sonic Ti Racketball Racket",
+      "balance": "head-light",
+      "length": 22,
+      "manufacturer": "dunlop",
+      "price": "22.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Blackstorm Ti Rage Racketball Racket",
+      "level": "beginner intermediate",
+      "balance": "even",
+      "length": 22,
+      "manufacturer": "dunlop",
+      "price": 44.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Club Champ Table Tennis Balls 3 Pack",
+      "manufacturer": "dunlop",
+      "price": 1.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Tour 40 Table Tennis Balls 3 Pack",
+      "manufacturer": "dunlop",
+      "price": 3.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Rage Table Tennis Bat",
+      "manufacturer": "dunlop",
+      "price": 6.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Evolution 1000 Table Tennis Bat",
+      "manufacturer": "dunlop",
+      "price": 15.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Evolution 3000 Table Tennis Bat",
+      "manufacturer": "dunlop",
+      "price": "31.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Revolution 5000 Table Tennis Bat",
+      "manufacturer": "dunlop",
+      "price": 49.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fort 40+ Tournament Table Tennis Balls 3 Pack",
+      "manufacturer": "dunlop",
+      "price": "4.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "BT Nitro Power Table Tennis Bat",
+      "manufacturer": "dunlop",
+      "price": "5.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Club Champ Table Tennis Balls 6 Pack",
+      "manufacturer": "dunlop",
+      "price": 4.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Flux Table Tennis Bat",
+      "level": "beginner",
+      "manufacturer": "dunlop",
+      "price": 9.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Woven Shorts Navy",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 24.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Woven Shorts White",
+      "gender": "mens",
+      "clothingsize": "large small",
+      "manufacturer": "dunlop",
+      "price": 24.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Nick Matthew Performance T-Shirt Orange",
+      "gender": "mens",
+      "manufacturer": "dunlop",
+      "price": 22.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Nick Matthew Performance T-Shirt Yellow",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 22.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Jacket Red",
+      "gender": "mens",
+      "clothingsize": "small xx-large",
+      "manufacturer": "dunlop",
+      "price": 41.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Pant Navy",
+      "gender": "mens",
+      "clothingsize": "large small",
+      "manufacturer": "dunlop",
+      "price": 32.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Pant Black",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 32.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Woven Shorts Black",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 24.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Knitted Jacket Royal Blue",
+      "gender": "womens",
+      "clothingsize": "large x-small",
+      "manufacturer": "dunlop",
+      "price": 41.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Knitted Jacket Red",
+      "gender": "womens",
+      "clothingsize": "large medium x-small",
+      "manufacturer": "dunlop",
+      "price": 41.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Knitted Pant Black",
+      "gender": "womens",
+      "clothingsize": "medium small x-large x-small",
+      "manufacturer": "dunlop",
+      "price": 32.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Skirt Navy",
+      "gender": "womens",
+      "clothingsize": "large",
+      "manufacturer": "dunlop",
+      "price": "17.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Skirt Black",
+      "gender": "womens",
+      "clothingsize": "x-large",
+      "manufacturer": "dunlop",
+      "price": "17.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Skirt White",
+      "gender": "womens",
+      "clothingsize": "large x-large",
+      "manufacturer": "dunlop",
+      "price": "17.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Crew Tee White",
+      "gender": "womens",
+      "clothingsize": "x-large",
+      "manufacturer": "dunlop",
+      "price": 14.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Crew Tee Royal Blue",
+      "gender": "womens",
+      "clothingsize": "large x-large x-small",
+      "manufacturer": "dunlop",
+      "price": 14.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Crew Tee Red",
+      "gender": "womens",
+      "clothingsize": "medium x-large",
+      "manufacturer": "dunlop",
+      "price": 14.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Tank White",
+      "gender": "womens",
+      "clothingsize": "large",
+      "manufacturer": "dunlop",
+      "price": 14.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Club Tank Red",
+      "gender": "womens",
+      "clothingsize": "large medium x-small",
+      "manufacturer": "dunlop",
+      "price": 14.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Zip Hoodie Grey",
+      "gender": "womens",
+      "clothingsize": "large medium",
+      "manufacturer": "dunlop",
+      "price": 24.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Women's Essential Crew Tee White",
+      "gender": "womens",
+      "clothingsize": "large medium",
+      "manufacturer": "dunlop",
+      "price": 10.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Tee 1 Black",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Tee 1 Tango Red",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Tee 2 Navy",
+      "gender": "mens",
+      "clothingsize": "small",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Tee 2 White",
+      "gender": "mens",
+      "clothingsize": "medium x-large",
+      "manufacturer": "dunlop",
+      "price": 27.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Practice Long Sleeve Top White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": 27.99,
+      "clothingsizeWait": "large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Shorts Black",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": 27.99,
+      "clothingsizeWait": "medium large x-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Game Shorts White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": 27.99,
+      "clothingsizeWait": "large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Practice Tracksuit Jacket Black",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": 31.99,
+      "clothingsizeWait": "medium large x-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Practice Tracksuit Pant Black",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": 39.99,
+      "clothingsizeWait": "medium large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Crew Tee 2022 Black White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large xx-large",
+      "manufacturer": "dunlop",
+      "price": 20.99,
+      "clothingsizeWait": "large xx-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Crew Tee 2022 Navy White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large xx-large",
+      "manufacturer": "dunlop",
+      "price": 20.99,
+      "clothingsizeWait": "small medium large x-large xx-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Crew Tee 2022 Red White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large xx-large",
+      "manufacturer": "dunlop",
+      "price": 20.99,
+      "clothingsizeWait": "small xx-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Crew Tee 2022 Royal Blue Navy",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large xx-large",
+      "manufacturer": "dunlop",
+      "price": 20.99,
+      "clothingsizeWait": "medium large xx-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Crew Tee 2022 White Black",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large xx-large",
+      "manufacturer": "dunlop",
+      "price": 20.99,
+      "clothingsizeWait": "medium large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Polo 2022 White Black",
+      "gender": "mens",
+      "clothingsize": "small x-large",
+      "manufacturer": "dunlop",
+      "price": 29.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Jacket 2022 Black White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": "44.90",
+      "clothingsizeWait": "medium large x-large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Jacket 2022 Red White",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": "44.90",
+      "clothingsizeWait": "small"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Men's Club Knitted Jacket 2022 Royal Blue Navy",
+      "gender": "mens",
+      "clothingsize": "large medium small x-large",
+      "manufacturer": "dunlop",
+      "price": "44.90",
+      "clothingsizeWait": "medium large"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX 200 Tour 18x20 Tennis Racket 2021 Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8) grip-4-(4-1-2)",
+      "manufacturer": "dunlop",
+      "price": "192.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX 200 Tour 16x19 Tennis Racket 2021 Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "192.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX 200 Tennis Racket 2021 Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8) grip-4-(4-1-2)",
+      "manufacturer": "dunlop",
+      "price": "188.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX 200 LS Tennis Racket 2021 Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-1-(4-1-8) grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "170.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "CX 400 Tour Tennis Racket 2021 Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "170.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 300 Tennis Racket 2022 Frame Only",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-1-(4-1-8) grip-2-(4-1-4) grip-3-(4-3-8) grip-4-(4-1-2)",
+      "manufacturer": "dunlop",
+      "price": "170.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 300 LS Tennis Racket 2022 Frame Only",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-1-(4-1-8) grip-2-(4-1-4)",
+      "manufacturer": "dunlop",
+      "price": "165.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 300 Lite Tennis Racket 2022 Frame Only",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "length": 27,
+      "manufacturer": "dunlop",
+      "price": "152.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 600 Tennis Racket 2022 Frame Only",
+      "balance": "head-light",
+      "length": 2725,
+      "grip": "grip-2-(4-1-4)",
+      "manufacturer": "dunlop",
+      "price": "160.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Srixon FX 500 Lite Tennis Racket Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "143.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Srixon FX 700 Tennis Racket Frame Only",
+      "balance": "even",
+      "length": 275,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "129.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Srixon FX 500 LS Tennis Racket Frame Only",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4) grip-3-(4-3-8)",
+      "manufacturer": "dunlop",
+      "price": "152.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Srixon FX 500 Tour Tennis Racket Frame Only",
+      "level": "expert intermediate",
+      "balance": "head-light",
+      "length": 27,
+      "grip": "grip-2-(4-1-4)",
+      "manufacturer": "dunlop",
+      "price": "156.90"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fort All Court Tournament Tennis Balls - 4 Ball Can",
+      "manufacturer": "dunlop",
+      "price": 6.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fort All Court Tournament Tennis Balls - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": "16.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Australian Open Tennis Balls - 4 Ball Can",
+      "manufacturer": "dunlop",
+      "price": 5.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Australian Open Tennis Balls - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 15.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "ATP Tennis Balls - Dozen",
+      "manufacturer": "dunlop",
+      "price": "18.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Orange Junior Tennis Balls Stage 2 - 3 Ball Tube",
+      "manufacturer": "dunlop",
+      "price": 3.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Red Junior Tennis Balls Stage 3  - 3 Pack",
+      "manufacturer": "dunlop",
+      "price": "4.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "ATP Tennis Balls - 4 Ball Can",
+      "manufacturer": "dunlop",
+      "price": 6.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "ATP Championship Tennis Balls 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "ATP Championship Tennis Balls 4 Ball Can",
+      "manufacturer": "dunlop",
+      "price": 6.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Explosive Tour 1.25mm Tennis String Set Grey",
+      "manufacturer": "dunlop",
+      "price": 13.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Tennis Ball Pick Up Tube",
+      "manufacturer": "dunlop",
+      "price": 19.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Nitro 19 Junior Tennis Racket",
+      "length": 19,
+      "manufacturer": "dunlop",
+      "price": 16.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Nitro 21 Junior Tennis Racket",
+      "length": 21,
+      "manufacturer": "dunlop",
+      "price": 16.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Nitro 23 Junior Tennis Racket",
+      "length": 23,
+      "manufacturer": "dunlop",
+      "price": 16.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Nitro 25 Junior Tennis Racket",
+      "length": 25,
+      "manufacturer": "dunlop",
+      "price": 16.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 23 Inch Junior Tennis Racket",
+      "manufacturer": "dunlop",
+      "price": 21.25
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 25 Inch Junior Tennis Racket",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 21.25
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 21 Inch Junior Tennis Racket",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 21.25
+    },
+    {
+      "company": "pdhsports",
+      "title": "SX 19 Inch Junior Tennis Racket",
+      "length": 19,
+      "manufacturer": "dunlop",
+      "price": 21.25
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Pro Padel Racket 2023",
+      "level": "expert",
+      "balance": "head-heavy",
+      "manufacturer": "dunlop",
+      "price": 229.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Padel Racket 2023",
+      "level": "expert",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 212.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-star Lite Padel Racket 2023",
+      "level": "expert intermediate",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 182.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Team Padel Racket 2023",
+      "level": "expert intermediate",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 144.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Galactica Pro Padel Racket 2022",
+      "balance": "head-heavy",
+      "manufacturer": "dunlop",
+      "price": 179.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Galactica Padel Racket 2022",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": "165.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Galactica Lite Padel Racket 2022",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": "150.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Galactica Team Padel Racket 2022",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": "127.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Inferno Carbon Extreme Padel Racket",
+      "balance": "head-heavy",
+      "manufacturer": "dunlop",
+      "price": "142.00"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Pro Padel Racket",
+      "level": "expert",
+      "balance": "head-heavy",
+      "manufacturer": "dunlop",
+      "price": 129.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Padel Racket",
+      "level": "expert",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 119.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-Star Team Padel Racket",
+      "level": "expert intermediate",
+      "manufacturer": "dunlop",
+      "price": 79.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Aero-star Lite Padel Racket",
+      "level": "expert intermediate",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 99.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Speed Attack Padel Racket",
+      "level": "expert intermediate",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 89.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Blitz Attack Padel Racket",
+      "level": "expert intermediate",
+      "balance": "even",
+      "manufacturer": "dunlop",
+      "price": 104.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Padel Balls - 3 Ball Can",
+      "manufacturer": "dunlop",
+      "price": 4.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Pro Padel Balls - Dozen",
+      "manufacturer": "dunlop",
+      "price": 15.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fort Padel Balls - 3 Ball Tube",
+      "manufacturer": "dunlop",
+      "price": "6.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Fort Padel Balls - Dozen",
+      "manufacturer": "dunlop",
+      "price": "24.70"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Paletero Elite Thermo Padel Bag Black Yellow",
+      "manufacturer": "dunlop",
+      "price": 63.75
+    },
+    {
+      "company": "pdhsports",
+      "title": "Padel Tour Pro Replacement Grip Black",
+      "manufacturer": "dunlop",
+      "price": 5.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Padel Tour Pro Overgrips",
+      "manufacturer": "dunlop",
+      "price": 4.49
+    },
+    {
+      "company": "pdhsports",
+      "title": "Padel Protection Tape Transparent",
+      "manufacturer": "dunlop",
+      "price": 5.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Stage 1 Green Junior Tennis Balls - 60 Ball Bucket",
+      "manufacturer": "dunlop",
+      "price": 71.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Stage 2 Orange Junior Tennis Balls - 60 Ball Bucket",
+      "manufacturer": "dunlop",
+      "price": 74.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Stage 1 Green Junior Tennis Balls - 3 Ball Tube",
+      "manufacturer": "dunlop",
+      "price": 3.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Stage 1 Green Junior Tennis Balls - 1 Dozen",
+      "manufacturer": "dunlop",
+      "price": 15.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Boys' Club Crew Tee Navy",
+      "gender": "boys",
+      "manufacturer": "dunlop",
+      "price": "12.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Boys' Club Crew Tee White",
+      "gender": "boys",
+      "manufacturer": "dunlop",
+      "price": "12.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Boys' Club Crew Tee Red",
+      "gender": "boys",
+      "manufacturer": "dunlop",
+      "price": "12.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Girls' Club Crew Tee Red",
+      "gender": "girl",
+      "manufacturer": "dunlop",
+      "price": "12.50"
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Hoodie Orange Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 20.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Hoodie Grey Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 20.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Hoodie Colbalt Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 20.99
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Tee Orange Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 10.39
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Tee Grey Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 10.39
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Tee Colbalt Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 10.39
+    },
+    {
+      "company": "pdhsports",
+      "title": "Junior Essential Tee White Anthracite",
+      "gender": "junior",
+      "manufacturer": "dunlop",
+      "price": 10.39
+    }
+  ]
+}

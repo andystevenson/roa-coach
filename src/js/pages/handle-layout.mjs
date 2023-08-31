@@ -4,6 +4,7 @@ import handleImage from './handle-image.mjs'
 import { objectHTML } from './handlers/collection.mjs'
 import { apiFetch, elementFromHTML, formattedName } from './utilities.mjs'
 import { ordinalDateTime } from '../../../grafbase/scripts/dates.mjs'
+// import { handleNotes, addExistingNotes } from './handle-notes.mjs'
 
 const NetworkDownError = {
   message: 'your network connection is down',
@@ -91,7 +92,14 @@ export const handleLayout = (Elements, ImageElements) => {
     data.append('title', Title)
     data.append('collection', Elements.collection)
     data.append('object', Elements.object)
-    return Object.fromEntries(data.entries())
+    let entries = Object.fromEntries(data.entries())
+    for (const property in entries) {
+      if (property.startsWith('ignore.')) {
+        delete entries[property]
+        console.log('formData ... ignoring!!!', property)
+      }
+    }
+    return entries
   }
 
   const updateForm = (response) => {
@@ -102,6 +110,7 @@ export const handleLayout = (Elements, ImageElements) => {
         ImageElements.img.src = response.image
         continue
       }
+
       const element = form.querySelector(`[name=${property}]`)
       if (element) {
         let value = response[property]
@@ -116,8 +125,24 @@ export const handleLayout = (Elements, ImageElements) => {
     }
   }
 
+  const clearDetails = () => {
+    // the details container contains all the fields requiring 'specific' editors
+    console.log('clearDetails....')
+    const details = document.querySelector(
+      `[id$="${Elements.type}-modal-details"]`,
+    )
+    const collection = Array.from(details.querySelectorAll(`[id$="-detail"]`))
+
+    for (const contents of collection) {
+      const detail = contents.closest('details')
+      detail.removeAttribute('open')
+      contents.innerHTML = ''
+    }
+  }
+
   const openModal = async () => {
     clearErrorMessage()
+    clearDetails()
     if (offline()) errorMessage(NetworkDownError)
     setDefaultImage()
     Elements.title.textContent = Title
@@ -146,6 +171,14 @@ export const handleLayout = (Elements, ImageElements) => {
       }
     }
     Elements.modal.showModal()
+  }
+
+  const closeOpenDetails = () => {
+    // in the context of an 'update' this flushes out any dbActions that need doing
+    const openDetails = Elements.form.querySelectorAll('details[open]')
+    console.log('closeOpenDetails', openDetails)
+
+    openDetails.forEach((detail) => detail.removeAttribute('open'))
   }
 
   const closeModal = () => {
@@ -232,6 +265,8 @@ export const handleLayout = (Elements, ImageElements) => {
 
       console.warn('submitting....', { request })
 
+      closeOpenDetails()
+
       const response = await apiFetch(Elements.api, request, Elements.method)
       updateList(response)
       // console.warn(response)
@@ -248,6 +283,7 @@ export const handleLayout = (Elements, ImageElements) => {
   }
 
   const handleDelete = async (e) => {
+    console.log('handleDelete', e.target)
     if (offline()) return errorMessage(NetworkDownError)
 
     const button = e.target.closest('button')
@@ -263,6 +299,8 @@ export const handleLayout = (Elements, ImageElements) => {
       return
     }
 
+    // essential we don't trigger sub updates on deletion
+    clearDetails()
     displayElement?.remove()
     const request = formData()
     request.action = 'delete'
@@ -288,7 +326,7 @@ export const handleLayout = (Elements, ImageElements) => {
       openModal()
     }
 
-    const watchForNewAlumnus = (mutations) => {
+    const watchForNewUpdateActions = (mutations) => {
       const actions = Array.from(
         Elements.root.querySelectorAll('.update-action'),
       )
@@ -297,7 +335,7 @@ export const handleLayout = (Elements, ImageElements) => {
       })
     }
 
-    const observer = new MutationObserver(watchForNewAlumnus)
+    const observer = new MutationObserver(watchForNewUpdateActions)
     observer.observe(Elements.root, { subtree: true, childList: true })
   }
 

@@ -88,6 +88,12 @@
   }
   .bio {
     display: none;
+    &:has(p:empty) {
+      summary::after {
+        content: ' (not provided)';
+        font-weight: lighter;
+      }
+    }
     @media (--lg-n-above) {
       display: block;
       background-color: unset;

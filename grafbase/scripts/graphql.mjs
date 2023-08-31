@@ -25,7 +25,7 @@ const graphql = async (query, variables = null) => {
       console.warn({ data, errors })
       // if we got errors let the application deal with it
       if (errors) throw Error(`db failed`, { cause: analyse(errors) })
-      console.warn({ data, errors })
+      // console.warn({ data, errors })
 
       const key = Object.keys(data)[0]
       if (data && data[key]) {

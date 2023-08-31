@@ -1,0 +1,30 @@
+.programme {
+  dialog {
+    max-inline-size: unset;
+  }
+
+  [id$='modal-details'] {
+    grid-template-columns: 1fr 1fr;
+
+    > details {
+      position: relative;
+      grid-column: span 2;
+
+      summary {
+        font-size: var(--font-size-1);
+      }
+
+      > button {
+        position: absolute;
+        top: var(--size-2);
+        right: var(--size-2);
+        background: transparent;
+      }
+    }
+  }
+
+  [id$='modal-image'] img {
+    max-inline-size: 50vh;
+    object-fit: unset;
+  }
+}

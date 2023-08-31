@@ -7,5 +7,15 @@ const handleModal = (type) => {
   handleLayout(Elements, ImageElements)
 }
 
-handleModal('create')
-handleModal('update')
+export const modals = (handlers = {}) => {
+  handleModal('create')
+  handleModal('update')
+
+  for (const property in handlers) {
+    console.log('modals handling', property)
+    const handler = handlers[property]
+    handler(property)
+  }
+}
+
+export default modals

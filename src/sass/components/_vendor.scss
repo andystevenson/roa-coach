@@ -1,0 +1,42 @@
+section.vendors {
+  position: relative;
+}
+
+section.vendor {
+  background-color: var(--surface-2);
+  padding-inline: var(--size-2);
+  padding-block: var(--size-2);
+  box-shadow: var(--shadow-3);
+
+  header {
+    background-color: var(--text-2);
+  }
+
+  .vendor-logo {
+    max-block-size: var(--size-9);
+    margin-inline: auto;
+    padding-block: var(--size-1);
+  }
+
+  .vendor-category {
+    overflow-x: auto;
+  }
+
+  .vendor-category-section {
+    summary {
+      font-size: var(--font-size-2);
+    }
+  }
+}
+
+#dunlop {
+  header {
+    background-color: #121212;
+  }
+}
+
+#iprosports {
+  header {
+    background-color: whitesmoke;
+  }
+}
