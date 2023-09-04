@@ -1,0 +1,11 @@
+[id$='prices-detail'] {
+  .price-content {
+    display: flex;
+    gap: var(--size-2);
+
+    label {
+      display: flex;
+      gap: var(--size-2);
+    }
+  }
+}

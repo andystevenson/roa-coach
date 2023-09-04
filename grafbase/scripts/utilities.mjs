@@ -5,11 +5,13 @@ import { inspect as utilInspect } from 'node:util'
 export const inspect = (data, consoleFunction = log) =>
   consoleFunction(utilInspect(data, { colors: true, depth: null }))
 
+// TODO: obsolete
 export const dataFromSearch = (queryResult, typeName) => {
   const edges = get(queryResult, `data.${typeName}Search.edges`)
   return edges && edges.length > 0 ? edges : null
 }
 
+// TODO: obsolete
 export const dataFromSearchFieldCollection = (
   queryResult,
   typeName,

@@ -5,4 +5,3 @@ const run = async () => {
 }
 
 run()
-import './page.mjs'

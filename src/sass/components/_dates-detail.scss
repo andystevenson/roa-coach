@@ -1,0 +1,32 @@
+[id$='dates-detail'] {
+  .date-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--size-2);
+
+    label {
+      display: flex;
+      gap: var(--size-2);
+    }
+
+    span {
+      inline-size: max-content;
+      white-space: nowrap;
+    }
+
+    input,
+    select {
+      --_offset: 85%;
+
+      inline-size: 100%;
+    }
+
+    input[type='checkbox'] {
+      inline-size: unset;
+    }
+
+    input[type='time'] {
+      --_offset: 82%;
+    }
+  }
+}

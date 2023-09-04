@@ -1,19 +1,19 @@
-type Alumni @model @search {
+type Alumni @model {
   name: String! @unique
   email: Email
   mobile: String
-  bio: String
+  bio: String @length(min: 0, max: 2048)
   psa: URL
   image: URL
   thumbnail: URL
 }
 
-type Coach @model @search {
+type Coach @model {
   name: String! @unique
-  role: Role
+  role: Role @default(value: AssistantCoach)
   email: Email
   mobile: String
-  bio: String
+  bio: String @length(max: 2048)
   image: URL
   thumbnail: URL
 }
@@ -24,9 +24,9 @@ enum Role {
   AssistantCoach
 }
 
-type Programme @model @search {
+type Programme @model {
   name: String! @unique
-  category: Category
+  category: Category @default(value: Junior)
   start: Date!
   end: Date!
   maxPerSession: Int @default(value: 20)
@@ -53,7 +53,7 @@ type Attendee @model {
   player: Player!
 }
 
-type Player @model @search {
+type Player @model {
   name: String! @unique
   dob: Date!
   email: Email
@@ -63,15 +63,14 @@ type Player @model @search {
   image: URL
   thumbnail: URL
   notes: [PlayerNote]
-  payments: [Payment]
 }
 
-type PlayerNote @model @search {
+type PlayerNote @model {
   note: String!
   player: Player!
 }
 
-type Payment @model @search {
+type Payment @model {
   programme: Programme!
   player: Player!
   booking: String! @unique
@@ -83,7 +82,7 @@ type Payment @model @search {
   stripe: ID
 }
 
-type Session @model @search {
+type Session @model {
   programme: Programme!
   date: Date!
   startTime: DateTime!
@@ -94,42 +93,54 @@ type Session @model @search {
   notes: [SessionNote]
 }
 
-type SessionCoach @model @search {
+type SessionCoach @model {
   session: Session!
   coach: Coach!
 }
 
-type SessionAttendee @model @search {
+type SessionAttendee @model {
   session: Session!
   player: Player!
 }
 
-type SessionNote @model @search {
+type SessionNote @model {
   note: String!
   session: Session!
 }
 
-type ProgrammeCoach @model @search {
+type ProgrammeCoach @model {
   programme: Programme!
   coach: Coach!
 }
 
-type ProgrammeNote @model @search {
+type ProgrammeNote @model {
   note: String!
   programme: Programme!
 }
 
+enum Day {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}
+
 type ProgrammeDate @model {
   programme: Programme!
-  date: Date!
-  start: DateTime!
-  end: DateTime!
+  date: Date
+  day: Day
+  startTime: DateTime!
+  endTime: DateTime!
   repeatable: Boolean @default(value: false)
 }
 
 type Price @model {
   programme: Programme!
+  unitPrice: Float @default(value: 20.00)
   threshold: Int @default(value: 1)
-  unitPrice: Float
+  members: Boolean @default(value: true)
   stripe: ID
 }

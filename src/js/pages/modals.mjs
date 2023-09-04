@@ -1,6 +1,7 @@
 import './protected-page.mjs'
 import layout from './modal-layout.mjs'
 import handleLayout from './handle-layout.mjs'
+import HandleDetails from './handle-details.mjs'
 
 const handleModal = (type) => {
   const { Elements, ImageElements } = layout(type)
@@ -14,7 +15,7 @@ export const modals = (handlers = {}) => {
   for (const property in handlers) {
     console.log('modals handling', property)
     const handler = handlers[property]
-    handler(property)
+    new handler(property)
   }
 }
 

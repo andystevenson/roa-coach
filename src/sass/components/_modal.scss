@@ -1,3 +1,16 @@
+select,
+textarea {
+  border-color: gray;
+  background-color: var(--surface-3);
+}
+
+textarea {
+  inline-size: 100%;
+  &:focus-visible {
+    outline: unset;
+  }
+}
+
 [id$='modal-actions'] {
   grid-auto-flow: column;
   justify-content: space-between;
@@ -85,6 +98,8 @@
       object-fit: contain;
       opacity: 0.5;
     }
+    border-radius: var(--radius-2);
+    overflow: hidden;
   }
 
   button {
@@ -145,48 +160,48 @@
   display: none;
 }
 
-[id$='modal-notes'] {
-  grid-column: span 2;
-  position: relative;
+[id$='modal-details'] {
+  grid-template-columns: 2fr 1.5fr;
+  accent-color: transparent;
 
-  &[open] {
-    border: 1px solid var(--text-1);
-  }
-
-  summary {
-    font-size: var(--font-size-1);
-  }
-
-  details {
+  > details {
     position: relative;
+    grid-column: span 2;
+
     &[open] {
       border: 1px solid var(--text-1);
     }
-    textarea {
-      inline-size: 100%;
-      &:focus-visible {
-        outline: unset;
-      }
+
+    summary {
+      font-size: var(--font-size-1);
+    }
+
+    > button {
+      position: absolute;
+      top: var(--size-2);
+      right: var(--size-2);
+      background: transparent;
     }
   }
+}
 
-  [id$='modal-notes-add'] {
-    position: absolute;
-    top: var(--size-2);
-    right: var(--size-2);
-    border-radius: 50%;
-    background: transparent;
-  }
+[id$='-detail'] {
+  border-radius: var(--radius-2);
 
-  [id$='modal-notes-detail'] {
-    > section {
-      position: relative;
-      button {
-        position: absolute;
-        top: var(--size-2);
-        right: var(--size-2);
-        background: transparent;
+  > section {
+    position: relative;
+
+    > details {
+      &[open] {
+        border: 1px solid var(--text-1);
       }
+    }
+
+    > button {
+      position: absolute;
+      top: var(--size-2);
+      right: var(--size-2);
+      background-color: transparent;
     }
   }
 }

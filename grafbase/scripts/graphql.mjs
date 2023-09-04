@@ -22,7 +22,7 @@ const graphql = async (query, variables = null) => {
     if (response.ok) {
       const { data, errors } = await response.json()
 
-      console.warn({ data, errors })
+      // console.warn({ data, errors })
       // if we got errors let the application deal with it
       if (errors) throw Error(`db failed`, { cause: analyse(errors) })
       // console.warn({ data, errors })
@@ -31,10 +31,16 @@ const graphql = async (query, variables = null) => {
       if (data && data[key]) {
         if (key.endsWith('Collection')) return edgesToData(data[key])
 
+        if (key.endsWith('Create'))
+          return edgesToData(Object.values(data[key])[0])
+
+        if (key.endsWith('CreateMany'))
+          return edgesToData(Object.values(data[key])[0])
+
         if (key.endsWith('Update'))
           return edgesToData(Object.values(data[key])[0])
 
-        if (key.endsWith('Create'))
+        if (key.endsWith('UpdateMany'))
           return edgesToData(Object.values(data[key])[0])
 
         if (key.endsWith('Delete')) return data[key].deletedId

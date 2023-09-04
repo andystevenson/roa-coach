@@ -1,4 +1,5 @@
 import { formattedName } from '../utilities.mjs'
+import startCase from 'lodash.startcase'
 
 export const objectHTML = (record) => {
   const { object, id, name, email, mobile, bio, image, psa, thumbnail } = record
@@ -61,22 +62,81 @@ export const annotateCollection = (records, collection, object) => {
 const inputsHTML = (inputs) => {
   const html = []
   for (const field of inputs) {
-    const { name, type, db, value, placeholder, required } = field
+    const { name, type, property, db, value, placeholder, required } = field
     // format attributes
+    let id = name ? `id="${name}"` : ''
     let fname = name ? `name="${name}"` : ''
     let ftype = type ? `type="${type}"` : ''
     let fdb = db ? `data-db="${db}"` : ''
     let fplaceholder = placeholder ? `placeholder="${placeholder}"` : ''
     let frequired = required ? `required` : ''
     let fvalue = value ? `value="${value}"` : ''
+    let fproperty = startCase(property)
 
     console.log({ fname, fdb, fplaceholder, frequired, fvalue })
 
     let template = null
     if (type === 'textarea') {
-      template = `<textarea ${fname} ${ftype} ${fdb} ${fplaceholder} ${frequired}>${
+      template = `<textarea data-type="textarea" ${fname} ${ftype} ${fdb} ${fplaceholder} ${frequired}>${
         value ?? ''
       }</textarea>`
+    }
+
+    if (type === 'int') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <input data-type="int" ${fname} type="number" min="0" step="1" ${fdb} ${fplaceholder} ${frequired} ${fvalue}/>
+      </label>`
+    }
+
+    if (type === 'float') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <input data-type="float" ${fname} type="number" min="0.00" step="0.01" ${fdb} ${fplaceholder} ${frequired} ${fvalue}/>
+      </label>`
+    }
+
+    if (type === 'date') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <input data-type="date" ${fname} ${ftype} ${fdb} ${fplaceholder} ${frequired} ${fvalue}/>
+      </label>`
+    }
+
+    if (type === 'time') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <input data-type="time" ${fname} ${ftype} ${fdb} ${fplaceholder} ${frequired} ${fvalue}/>
+      </label>`
+    }
+
+    if (type === 'boolean') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <input data-type="boolean" ${fname} type="checkbox" ${fdb} ${fplaceholder} ${frequired} ${fvalue}/>
+      </label>`
+    }
+
+    if (type === 'day-of-week') {
+      template = `
+      <label for="${name}">
+        <span>${fproperty}</span>
+        <select ${fname} data-type="day-of-week">
+          <option>choose a day</option>
+          <option value="monday">monday</option>
+          <option value="tuesday">tuesday</option>
+          <option value="wednesday">wednesday</option>
+          <option value="thursday">thursday</option>
+          <option value="friday">friday</option>
+          <option value="saturday">saturday</option>
+          <option value="sunday">sunday</option>
+        </select>
+      </label>`
     }
 
     template && html.push(template)
@@ -89,9 +149,9 @@ export const detailHTML = ({ summary, inputs }) => {
   const fields = inputsHTML(inputs)
   const html = `
   <section>
-    <details>
+    <details open>
       <summary>${summary}</summary>
-      ${fields}
+      <div class="${summary}-content">${fields}</div>
     </details>
     <button type="button" class="icon" title="delete note">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
