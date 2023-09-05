@@ -1,4 +1,4 @@
-import { inspect } from '../scripts/utilities.mjs'
+import { inspect } from './utilities.mjs'
 // parse a grafbase graphql scheam
 class Schema {
   constructor(schema) {

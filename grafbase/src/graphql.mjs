@@ -49,7 +49,8 @@ const graphql = async (query, variables = null) => {
         return edgesToData(Object.values(data)[0])
       }
 
-      throw new Error(`db object not found`, { cause: request })
+      // throw new Error(`db object not found`, { cause: request })
+      return null
     }
 
     // a network error occurred

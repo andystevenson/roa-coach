@@ -10,14 +10,7 @@ class GrafbaseClient {
   }
 
   #init() {
-    console.log('grafbase client')
     this.#populate()
-    console.log(
-      'model type',
-      this.modelTypes.length,
-      this.schema.types.length,
-      // this.actions,
-    )
   }
 
   #populate() {

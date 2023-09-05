@@ -1,6 +1,6 @@
 import camelCase from 'lodash.camelcase'
 import { stripIndent } from 'common-tags'
-import graphql from '../scripts/graphql.mjs'
+import graphql from './graphql.mjs'
 
 class TypeActions {
   constructor(type, actions) {
@@ -11,6 +11,7 @@ class TypeActions {
     this.idprefix = this.typename.toLowerCase()
     this.collectionName = this.typename + 'Collection'
     this.collections = type.fields.filter((field) => field.collection)
+    this.collectionActions = []
     this.responseFields = type.fields
       .filter((field) => !field.collection && field.builtin)
       .map((field) => field.name)
@@ -23,14 +24,12 @@ class TypeActions {
 
   // private functions
   #addCollectionActions() {
-    console.log('actions for', this.type.name)
-
     this.collections.forEach((collection) => {
       const { name } = collection
       this[name] = async function (request) {
         const typedef = collection
         const element = this.actions[typedef.element]
-        console.log(`${name} in ${this.type.name} with`, request)
+
         if (request.subaction === 'list') {
           const query = stripIndent`
           query ${this.name}${name} {
@@ -44,8 +43,8 @@ class TypeActions {
               }
             }
           }`
-          const result = await graphql(query)
-          return result
+          const list = await graphql(query)
+          return list[name]
         }
 
         if (request.subaction === 'ids') {
@@ -63,17 +62,21 @@ class TypeActions {
           }`
 
           // await & return
-          const result = await graphql(query)
-          return result
+          const ids = await graphql(query)
+          return ids[name].map((id) => id.id)
         }
 
         if (request.subaction === 'delete') {
           // list all the objects
           // make a request to delete them
-          const idsRequest = { id: request.id, subaction: 'ids' }
+          const idsRequest = {
+            ...request,
+            subaction: 'ids',
+          }
           const ids = await this[name](idsRequest)
           // transform the ids into a delete request
-          const deleteRequest = {}
+          const deleteRequest = { ...idsRequest }
+          ids.forEach((id) => (deleteRequest[`delete.${id}`] = 'delete me'))
           const deleteMany = await element.deleteMany(deleteRequest)
           return deleteMany
         }
@@ -83,6 +86,7 @@ class TypeActions {
         const deleteMany = await element.deleteMany(request)
         return { createMany, updateMany, deleteMany }
       }
+      this.collectionActions.push(this[name])
     })
   }
 
@@ -143,12 +147,25 @@ class TypeActions {
 
   #input(request = {}) {
     // gather the inputs from the request
+    const { type } = request
     const values = this.inputFields.reduce((inputs, field) => {
-      const { name } = field
+      const { name, nullable } = field
 
       if (name in request) {
         let value = request[name]
         inputs.push([name, this.#inputValue(value, field)])
+        return inputs
+      }
+
+      // missing input
+      if (!nullable) {
+        if (`${type}!` === field.type) {
+          // we have a relation link to parent... fill it in!
+          const { id } = request
+          if (id) {
+            inputs.push([name, this.#inputValue(id, field)])
+          }
+        }
       }
       return inputs
     }, [])
@@ -172,7 +189,14 @@ class TypeActions {
       }
     }
 
-    requests = requests.map((request) => this.#input(request))
+    const { id, type } = request
+    // if there was an originator of this request, keep them in the forwarded request
+    requests = requests.map((request) => ({
+      id,
+      type,
+      ...request,
+    }))
+    requests = requests.map((request) => `{${this.#input(request)}}`)
     return { count: requests.length, input: `input: [${requests}]` }
   }
 
@@ -192,6 +216,13 @@ class TypeActions {
       }
     }
 
+    const { id, type } = request
+    // if there was an originator of this request, keep them in the forwarded request
+    requests = Object.values(requests).map((request) => ({
+      id,
+      type,
+      ...request,
+    }))
     requests = Object.values(requests).map(
       (request) => `{${this.#update(request)}}`,
     )
@@ -205,20 +236,26 @@ class TypeActions {
     // these are then gathered up and put into individual inputs
 
     let requests = []
-    console.log({ request })
 
     for (const property in request) {
       if (property.startsWith(`delete.${this.idprefix}`)) {
         const [_, id] = property.split('.')
-        console.log({ property, _, id })
         requests.push({ id })
       }
     }
 
-    requests = requests.map((request) => this.#delete(request))
+    requests = requests.map((request) => `{${this.#delete(request)}}`)
     return { count: requests.length, input: `input: [${requests}]` }
   }
 
+  #collections(request, parent) {
+    this.collectionActions.forEach((action) => {
+      const collectionRequest = structuredClone(request)
+      collectionRequest.id = parent.id
+      const run = action.bind(this)
+      run(collectionRequest)
+    })
+  }
   // actions
   async list() {
     const query = stripIndent`
@@ -248,8 +285,9 @@ class TypeActions {
       }
     }`
 
-    let result = await graphql(mutation)
-    return result
+    let created = await graphql(mutation)
+    this.#collections(request, created)
+    return created
   }
 
   async createMany(request) {
@@ -294,8 +332,9 @@ class TypeActions {
       }
     }`
 
-    let result = await graphql(mutation)
-    return result
+    let updated = await graphql(mutation)
+    this.#collections(request, updated)
+    return updated
   }
 
   async updateMany(request) {
@@ -322,8 +361,9 @@ class TypeActions {
       }
     }`
     // TODO: delete any collections
-    let result = await graphql(mutation)
-    return result
+    this.#collections({ ...request, subaction: 'delete' }, { ...request })
+    let deleted = await graphql(mutation)
+    return deleted
   }
 
   async deleteMany(request) {
