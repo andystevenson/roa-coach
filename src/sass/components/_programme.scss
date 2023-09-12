@@ -1,6 +1,5 @@
-.programme {
-  inline-size: 100%;
-  [id$='modal-details'] {
-    grid-template-columns: 1fr 1fr;
+.Programme-inputs {
+  label[for$='-stripe'] {
+    display: none;
   }
 }

@@ -12,8 +12,8 @@
   > button:first-of-type {
     margin-inline-start: auto;
   }
-  gap: var(--size-1);
-  padding-block-end: var(--size-1);
+  gap: var(--size-2);
+  padding-block-end: var(--size-2);
   border-block-end: var(--border-size-1) solid var(--text-1);
 }
 
@@ -23,18 +23,18 @@
   padding-inline: var(--size-2);
   display: flex;
   gap: unset;
-
+  &:focus-within {
+    margin-inline-start: var(--size-1);
+    outline: 2px solid green;
+  }
   button {
     scale: 0.8;
   }
   input {
-    translate: 0 -2px;
     background-color: transparent;
     border-radius: 100vw;
     padding-inline-end: unset;
-    &:focus-visible {
-      outline-style: none;
-    }
+    outline: none;
   }
 }
 

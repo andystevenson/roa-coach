@@ -1,4 +1,3 @@
-import { inspect } from './utilities.mjs'
 // parse a grafbase graphql scheam
 class Schema {
   constructor(schema) {
@@ -135,7 +134,7 @@ class Schema {
           return { ...directives, unique: true }
 
         if (directive.startsWith('default')) {
-          return { ...directives, default: Schema.parseDefault(directive) }
+          return { ...directives, defaultValue: Schema.parseDefault(directive) }
         }
 
         if (directive.startsWith('length')) {
@@ -202,7 +201,8 @@ class Schema {
         ...Schema.parseFields(fields),
       }
       if (base.typedef === 'type') {
-        base.fields = Schema.InternalFields.concat(base.fields)
+        const internals = structuredClone(Schema.InternalFields)
+        base.fields = internals.concat(base.fields)
       }
       return base
     })

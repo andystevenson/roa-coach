@@ -15,7 +15,7 @@
     "@11ty/eleventy": "^2.0.1",
     "@11ty/eleventy-plugin-vite": "^4.0.0",
     "@andystevenson/lib": "^0.2.16",
-    "@andystevenson/sass": "^0.1.13",
+    "@andystevenson/sass": "^0.1.14",
     "@andystevenson/theme-toggle": "^0.1.5",
     "@clerk/clerk-js": "^4.54.2",
     "@types/node": "^20.4.5",
@@ -37,13 +37,15 @@
     "lodash.get": "^4.4.2",
     "lodash.kebabcase": "^4.1.1",
     "lodash.range": "^3.2.0",
+    "lodash.snakecase": "^4.1.1",
     "lodash.startcase": "^4.4.0",
     "open-props": "^1.5.10",
     "pluralize": "^8.0.0",
     "postcss-custom-media": "^10.0.0",
     "postcss-jit-props": "^1.0.13",
     "sass": "^1.64.1",
-    "stripe": "^12.16.0"
+    "stripe": "^12.16.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "grafbase": "^0.30.0",

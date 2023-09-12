@@ -2,5 +2,25 @@
   layout: base.njk
 ---
 {% include "partials/body-header.njk" %}
-<main class="contents">{{content | safe}}</main>
+<main class="contents">
+  <section id="create-controls">
+    {% set button = {name: "create", id: "create", icon: {name: '+'} } %}
+    {% include "partials/button.njk" %}
+    <section id="list-controls">
+      <section id="search-control">
+        <input type="search" placeholder="Search for a name..." id="search">
+        {% set button = {name: "", id: "open-search", class: "icon", icon: {name: 'search'}, tabindex: "-1" } %}
+        {% include "partials/button.njk" %}
+      </section>
+      {% set button = {name: "", id: "list-view", class: "icon", icon: {name: 'list'} } %}
+      {% include "partials/button.njk" %}
+      {% set button = {name: "", id: "person-view", class: "icon", icon: {name: 'person'} } %}
+      {% include "partials/button.njk" %}
+    </section>
+
+  </section>
+  <section id="dialogs"></section>
+  <section id="elements" class="elements media-scroller"></section>
+  {{content | safe}}
+</main>
 {% include "partials/body-footer.njk" %}

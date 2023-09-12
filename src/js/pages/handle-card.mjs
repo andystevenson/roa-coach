@@ -17,20 +17,19 @@ const updateForm = (input, card) => {
   // only update the fields if they havent already been populated
   for (const property in elements) {
     const input = elements[property]
-    const value = input?.value
     if (input) {
-      if (property === 'name' && !value && name)
+      if (property === 'name' && name)
         input.value = name.trim().replace(/\s+/g, ' ')
-      if (property === 'email' && !value && email)
+      if (property === 'email' && email)
         input.value = email.trim().replace(/\s/g, '')
-      if (property === 'mobile' && !value && mobile)
+      if (property === 'mobile' && mobile)
         input.value = mobile.trim().replace(/\s/g, '')
-      if (property === 'dob' && !value && dob) {
+      if (property === 'dob' && dob) {
         const [day, month, year] = dob.split('/')
         input.value = `${year}-${month}-${day}`
       }
       if (property === 'member') {
-        input.value = member
+        input.value = member ? 'Member' : 'NonMember'
       }
     }
   }
@@ -42,7 +41,7 @@ const fetchCard = async (e) => {
   console.log('fetchCard', { input, value })
 
   const card = await getCard(value)
-  if (card.found) {
+  if (card?.found) {
     const [member] = card.found
     if (member) {
       updateForm(input, card.found)
@@ -65,14 +64,17 @@ const fetchCard = async (e) => {
 
 const cardInput = debounce(fetchCard, 200)
 
-const handleCard = () => {
-  const cardElements = Array.from(document.querySelectorAll('[name="card"]'))
+const dialogs = document.getElementById('dialogs')
+
+const watchForCards = () => {
+  const cardElements = Array.from(dialogs.querySelectorAll('[name="card"]'))
   console.log('handleCard', cardElements)
   cardElements.forEach((card) => {
     card.addEventListener('input', cardInput)
   })
 }
 
-export default handleCard
+const observer = new MutationObserver(watchForCards)
+observer.observe(dialogs, { subtree: true, childList: true })
 
-handleCard()
+export default watchForCards

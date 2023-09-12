@@ -3,7 +3,7 @@
 
   <head>
     <title>{{title}}</title>
-    {# deliberately earlu #}
+    {# deliberately early #}
     <script type="module" src="/@input/js/utilities/theme-toggle.js"></script>
 
     {% include "partials/meta-tags.njk" %}
@@ -12,7 +12,7 @@
   <body class="{{page.fileSlug}}">
     {{content | safe}}
     {% include "partials/spinner.njk" %}
-
+    {% include "partials/error-dialog.njk" %}
   </body>
 
 </html>

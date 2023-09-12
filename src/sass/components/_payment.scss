@@ -1,8 +1,28 @@
-.payment {
-  display: grid;
-  grid-template-columns: max-content max-content;
-  span:nth-child(odd) {
-    font-weight: bold;
-    text-align: right;
+.Payment-details {
+  .element-details-content {
+    grid-auto-flow: unset;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    label[for$='-price'],
+    label[for$='-quantity'],
+    label[for$='-unitPrice'],
+    label[for$='-paymentType'] {
+      grid-row: 2;
+    }
+
+    > label[for] input[type] {
+      inline-size: 100%;
+    }
+
+    label[for$='-email'] {
+      grid-row: 1;
+      grid-column: 1/3;
+    }
+  }
+
+  label[for$='-stripe'] {
+    display: none;
+  }
+  label[for$='-booking'] {
+    display: none;
   }
 }

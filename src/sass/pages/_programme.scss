@@ -1,10 +1,28 @@
 .programme {
-  dialog {
+  .dialog {
     max-inline-size: unset;
   }
 
-  [id$='modal-image'] img {
-    max-inline-size: 50vh;
-    object-fit: unset;
+  .dialog-inputs {
+    --_grid-layout: 30ch 45ch;
+    --_grid-gap: var(--size-1) var(--size-3);
+  }
+
+  .Programme-image {
+    --_image-row-end: span 9;
+  }
+
+  .element {
+    min-inline-size: 400px;
+    aspect-ratio: var(--ratio-portrait);
+    img {
+      inline-size: 100%;
+    }
+  }
+  .listview {
+    .element {
+      --_grid-template-columns: 20ch 5ch 8ch 10ch 10ch 60ch;
+      aspect-ratio: unset;
+    }
   }
 }

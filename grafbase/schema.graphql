@@ -2,8 +2,8 @@ type Alumni @model {
   name: String! @unique
   email: Email
   mobile: String
-  bio: String @length(min: 0, max: 2048)
   psa: URL
+  bio: String @length(min: 0, max: 2048)
   image: URL
   thumbnail: URL
 }
@@ -24,23 +24,14 @@ enum Role {
   AssistantCoach
 }
 
-type Programme @model {
-  name: String! @unique
-  category: Category @default(value: Junior)
-  start: Date!
-  end: Date!
-  maxPerSession: Int @default(value: 20)
-  open: Boolean @default(value: true)
-  launched: Boolean @default(value: false)
-  description: String
-  image: URL
-  dates: [ProgrammeDate]
-  prices: [Price]
-  coaches: [ProgrammeCoach]
-  attendees: [Attendee]
-  sessions: [Session]
-  payments: [Payment]
-  notes: [ProgrammeNote]
+enum Open {
+  Open
+  Closed
+}
+
+enum Launched {
+  Launched
+  InDevelopment
 }
 
 enum Category {
@@ -48,9 +39,29 @@ enum Category {
   Adult
 }
 
-type Attendee @model {
-  programme: Programme!
-  player: Player!
+enum Invitation {
+  InviteOnly
+  OpenToAll
+}
+
+type Programme @model {
+  name: String! @unique
+  category: Category @default(value: Junior)
+  invite: Invitation @default(value: OpenToAll)
+  start: Date!
+  end: Date!
+  maxPerSession: Int @default(value: 20)
+  open: Open @default(value: Closed)
+  launched: Launched @default(value: InDevelopment)
+  description: String @length(max: 2048)
+  image: URL
+  stripe: ID
+  days: [ProgrammeDay]
+  prices: [Price]
+  coaches: [ProgrammeCoach]
+  sessions: [Session]
+  payments: [Payment]
+  notes: [ProgrammeNote]
 }
 
 type Player @model {
@@ -58,7 +69,7 @@ type Player @model {
   dob: Date!
   email: Email
   mobile: String
-  member: Boolean @default(value: false)
+  member: Member @default(value: NonMember)
   card: String
   image: URL
   thumbnail: URL
@@ -66,19 +77,26 @@ type Player @model {
 }
 
 type PlayerNote @model {
-  note: String!
+  note: String @length(max: 2048)
   player: Player!
+}
+
+enum PaymentType {
+  Cash
+  Online
 }
 
 type Payment @model {
   programme: Programme!
-  player: Player!
+  player: Player
   booking: String! @unique
+  email: Email
+  date: Date
   time: DateTime
   price: Float
-  quantity: Int
+  quantity: Int @default(value: 1)
   unitPrice: Float
-  inCash: Boolean @default(value: false)
+  paymentType: PaymentType @default(value: Online)
   stripe: ID
 }
 
@@ -87,7 +105,7 @@ type Session @model {
   date: Date!
   startTime: DateTime!
   endTime: DateTime!
-  description: String
+  description: String @length(max: 2048)
   hosts: [SessionCoach]
   attendees: [SessionAttendee]
   notes: [SessionNote]
@@ -104,7 +122,7 @@ type SessionAttendee @model {
 }
 
 type SessionNote @model {
-  note: String!
+  note: String @length(max: 2048)
   session: Session!
 }
 
@@ -114,7 +132,7 @@ type ProgrammeCoach @model {
 }
 
 type ProgrammeNote @model {
-  note: String!
+  note: String @length(max: 2048)
   programme: Programme!
 }
 
@@ -128,19 +146,22 @@ enum Day {
   Sunday
 }
 
-type ProgrammeDate @model {
+type ProgrammeDay @model {
   programme: Programme!
-  date: Date
   day: Day
   startTime: DateTime!
   endTime: DateTime!
-  repeatable: Boolean @default(value: false)
+}
+
+enum Member {
+  Member
+  NonMember
 }
 
 type Price @model {
   programme: Programme!
   unitPrice: Float @default(value: 20.00)
   threshold: Int @default(value: 1)
-  members: Boolean @default(value: true)
+  member: Member @default(value: Member)
   stripe: ID
 }

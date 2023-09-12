@@ -27,21 +27,6 @@ export const apiFetch = async (url, body = null, method = 'POST') => {
   }
 }
 
-export const deleteDetails = (element) =>
-  element.querySelectorAll('section').forEach((section) => section.remove())
-
-export const setListeners = (className, handler) => {
-  const elements = document.querySelectorAll(className)
-  elements.forEach((programme) => programme.addEventListener('toggle', handler))
-}
-
-export const elementFromHTML = (html) => {
-  if (!html) html = `<section></section>`
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(html, 'text/html')
-  return doc.querySelector('section')
-}
-
 export const formattedName = (name) => {
   const nameRegex = /(^\w{1})|(\s+\w{1})|(-\w{1})/g
   return name.replace(nameRegex, (letter) => letter.toUpperCase())

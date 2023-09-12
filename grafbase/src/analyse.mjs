@@ -10,6 +10,7 @@ const pathExcludes = [
 ]
 
 const ReplaceRegex = new RegExp(pathExcludes.join('|'))
+
 const objectName = (path) => {
   return path.replace(ReplaceRegex, '')
 }

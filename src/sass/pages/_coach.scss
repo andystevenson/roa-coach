@@ -1,0 +1,11 @@
+.coach {
+  .Coach-image {
+    --_image-row-end: span 5;
+  }
+
+  .listview {
+    .element {
+      --_grid-template-columns: 3ch 20ch 14ch 25ch 12ch 22ch;
+    }
+  }
+}

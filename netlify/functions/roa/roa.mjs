@@ -1,17 +1,15 @@
 import 'dotenv/config'
-import { Actions } from '../../../grafbase/scripts/alumni.mjs'
+import client from '../../../grafbase/src/GrafbaseClient.mjs'
+import '../../../grafbase/src/GrafbaseEvents.mjs'
+
 const Headers = { 'Content-Type': 'application/json' }
-const FunctionName = 'roa-alumni'
+const FunctionName = 'roa-player'
 
 const Allow = `POST,PUT,DELETE`
 const validateAction = (method, action) => {
-  const validAction = Object.keys(Actions).includes(action)
-  if (!validAction) return false
-  if (method === 'POST' && action === 'list') return true
-  if (method === 'POST' && action === 'read') return true
-  if (method === 'POST' && action === 'create') return true
-  if (method === 'PUT' && action === 'update') return true
   if (method === 'DELETE' && action === 'delete') return true
+  if (method === 'PUT' && action === 'update') return true
+  if (method === 'POST') return true
   return false
 }
 
@@ -43,7 +41,7 @@ const handleRequest = async (request) => {
     }
 
     // okay we're good to go
-    const response = await Actions[action](requestBody)
+    const response = await client.invoke(requestBody)
     // console.log(`${action}`, requestBody)
 
     return {

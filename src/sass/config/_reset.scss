@@ -1,5 +1,3 @@
-// TODO:  this should be moved to main sass reset
-
 body {
   display: unset;
   place-items: unset;
@@ -208,4 +206,16 @@ dialog {
 
 [aria-hidden] {
   pointer-events: revert;
+}
+
+.bicp {
+  font-family: 'bootstrap-icons';
+}
+
+:where(:not(:active):focus-visible) {
+  outline-offset: 2px;
+}
+
+textarea {
+  resize: none;
 }

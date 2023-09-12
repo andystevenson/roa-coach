@@ -1,0 +1,13 @@
+.Session-details {
+  .element-details-content {
+    grid-auto-flow: unset;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    > details {
+      grid-column: 1/-1;
+    }
+    label[for$='-description'] {
+      grid-column: 1/-1;
+    }
+  }
+}

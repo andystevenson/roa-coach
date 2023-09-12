@@ -17,7 +17,7 @@ const handler = async ({ httpMethod, body }) => {
     }
 
     const request = JSON.parse(body)
-    const { name, image, page, pathname, title } = request
+    const { name, image, page } = request
     const kebabed = kebabCase(name)
     const uploaded = await cloudinary.uploader.upload(image, {
       public_id: kebabed,
@@ -31,15 +31,13 @@ const handler = async ({ httpMethod, body }) => {
     const parts = path.match(pathRegex)
     const [fullPath, asset, version, filename] = parts
     uploaded.optimised = `${asset}f_auto,q_auto/${version}${filename}`
-    uploaded.portrait = `${asset}c_fill,f_auto,g_face:center,h_600,q_auto,w_300/${version}${filename}`
+    uploaded.portrait = `${asset}c_fill,f_auto,g_face:center,q_auto/${version}${filename}`
     uploaded.thumbnail = `${asset}c_fill,f_auto,g_face:center,h_250,q_auto,w_250/${version}${filename}`
     uploaded.banner = `${asset}c_fill,g_auto,h_150,w_600/${version}${filename}`
     console.log({
       name,
       kebabed,
       page,
-      pathname,
-      title,
       uploaded,
       parts,
       fullPath,

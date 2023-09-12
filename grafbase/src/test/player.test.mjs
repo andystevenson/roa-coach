@@ -15,8 +15,8 @@ const createWithNotes = {
   type: 'Player',
   name: 'Andy Stevenson',
   dob: '1964-01-30',
-  'playerNote.0.note': 'note 0',
-  'playerNote.1.note': 'note 1',
+  'PlayerNote-0-note': 'note 0',
+  'PlayerNote-1-note': 'note 1',
 }
 
 const update = {
@@ -151,6 +151,109 @@ describe('Player notes', async () => {
 
     result = await client.invoke({ id, ...notesIds })
     expect(result).toHaveLength(2)
+
+    result = await client.invoke({ id, ...deleteOne })
+    expect(result).toEqual(id)
+  })
+
+  test('Player updateMany', async () => {
+    let result = await client.invoke(createWithNotes)
+    expect(result)
+      .toHaveProperty('name', 'Andy Stevenson')
+      .toHaveProperty('email', null)
+
+    const { id } = result
+
+    result = await client.invoke({ id, ...update })
+    expect(result).toHaveProperty('email', 'andystevenson@mac.com')
+
+    result = await client.invoke({ id, ...read })
+    expect(result)
+      .toHaveProperty('email', 'andystevenson@mac.com')
+      .toHaveProperty('name', 'Andy Stevenson')
+
+    result = await client.invoke({ id, ...notes })
+    expect(result)
+      .toHaveProperty('0.note', 'note 0')
+      .toHaveProperty('1.note', 'note 1')
+
+    const updateRequest = { ...notes, subaction: 'update' }
+    const listOfNotes = result
+    listOfNotes.forEach((item) => {
+      const { id, note } = item
+      const inputId = `update-${id}-note`
+      updateRequest[inputId] = `${note} updated`
+    })
+
+    result = await client.invoke({ id, ...updateRequest })
+    const { updateMany } = result
+
+    expect(updateMany)
+      .toHaveProperty('0.note', 'note 0 updated')
+      .toHaveProperty('1.note', 'note 1 updated')
+
+    result = await client.invoke({ id, ...notesIds })
+    expect(result).toHaveLength(2)
+
+    // result = await client.invoke({ id, ...deleteOne })
+    // expect(result).toEqual(id)
+  })
+
+  test('Player createMany, updateMany, deleteMany', async () => {
+    let result = await client.invoke(createWithNotes)
+    expect(result)
+      .toHaveProperty('name', 'Andy Stevenson')
+      .toHaveProperty('email', null)
+
+    const { id } = result
+
+    result = await client.invoke({ id, ...update })
+    expect(result).toHaveProperty('email', 'andystevenson@mac.com')
+
+    result = await client.invoke({ id, ...read })
+    expect(result)
+      .toHaveProperty('email', 'andystevenson@mac.com')
+      .toHaveProperty('name', 'Andy Stevenson')
+
+    result = await client.invoke({ id, ...notes })
+    expect(result)
+      .toHaveProperty('0.note', 'note 0')
+      .toHaveProperty('1.note', 'note 1')
+
+    const newNotes = {
+      'PlayerNote-0-note': 'new note 0',
+      'PlayerNote-1-note': 'new note 1',
+    }
+
+    const updateRequest = { ...notes, subaction: 'update', ...newNotes }
+    const listOfNotes = result
+    {
+      const { id, note } = listOfNotes[0]
+      const inputId = `update-${id}-note`
+      updateRequest[inputId] = `${note} updated`
+    }
+
+    let deleteId = null
+    {
+      const { id } = listOfNotes[1]
+      deleteId = id
+      const inputId = `delete-${id}-note`
+      updateRequest[inputId] = `delete`
+    }
+
+    result = await client.invoke({ id, ...updateRequest })
+    const { createMany, updateMany, deleteMany } = result
+
+    expect(createMany)
+      .toHaveProperty('0.note', 'new note 0')
+      .toHaveProperty('1.note', 'new note 1')
+
+    expect(updateMany).toHaveProperty('0.note', 'note 0 updated')
+
+    expect(deleteMany).toContain(deleteId)
+
+    result = await client.invoke({ id, ...notesIds })
+    expect(result).toHaveLength(3)
 
     result = await client.invoke({ id, ...deleteOne })
     expect(result).toEqual(id)

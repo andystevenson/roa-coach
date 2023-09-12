@@ -3,7 +3,7 @@ import { offline, online } from './network-status.mjs'
 import handleImage from './handle-image.mjs'
 import { objectHTML } from './handlers/collection.mjs'
 import { apiFetch, elementFromHTML, formattedName } from './utilities.mjs'
-import { ordinalDateTime } from '../../../grafbase/scripts/dates.mjs'
+import { ordinalDateTime } from '../../../grafbase/src/dates.mjs'
 // import { handleNotes, addExistingNotes } from './handle-notes.mjs'
 
 const NetworkDownError = {

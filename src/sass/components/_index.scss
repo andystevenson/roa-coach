@@ -4,7 +4,6 @@
 @forward 'attendees';
 @forward 'coaches';
 @forward 'sessions';
-@forward 'payment';
 @forward 'spinner';
 @forward 'body-header';
 @forward 'body-footer';
@@ -19,3 +18,11 @@
 @forward 'checkout';
 @forward 'prices-detail';
 @forward 'dates-detail';
+@forward 'dialog';
+@forward 'element';
+@forward 'PlayerNote';
+@forward 'ProgrammeNote';
+@forward 'Price';
+@forward 'Session';
+@forward 'Payment';
+@forward 'Programme';

@@ -1,11 +1,13 @@
 import GrafbaseSchema from './GrafbaseSchema.mjs'
 import TypeActions from './TypeActions.mjs'
+import EventEmitter from 'node:events'
 
 class GrafbaseClient {
   constructor(schema) {
     this.schema = schema
     this.modelTypes = this.schema.types.filter((type) => type.model)
     this.actions = {}
+    this.emitter = new EventEmitter({ captureRejections: true })
     this.#init()
   }
 
@@ -16,7 +18,12 @@ class GrafbaseClient {
   #populate() {
     // populate the this.actions by creating the required functions
     this.modelTypes.forEach(
-      (type) => (this.actions[type.name] = new TypeActions(type, this.actions)),
+      (type) =>
+        (this.actions[type.name] = new TypeActions(
+          type,
+          this.actions,
+          this.emitter,
+        )),
     )
   }
 
