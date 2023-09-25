@@ -21,6 +21,7 @@ class GrafbaseClient {
       (type) =>
         (this.actions[type.name] = new TypeActions(
           type,
+          this.schema,
           this.actions,
           this.emitter,
         )),
@@ -37,6 +38,30 @@ class GrafbaseClient {
     const result = await Type[action](request)
     // console.log('invoke', result)
     return result
+  }
+
+  async dbclean() {
+    // a dangerous function
+    // essentially goes through every type and deletes them from the database!
+    // an essential tool for testing!
+    for (const type in this.actions) {
+      const action = this.actions[type]
+      await action.clean()
+    }
+  }
+
+  // check if the db is empty
+  async dbIsEmpty() {
+    let empty = true
+    for (const type in this.actions) {
+      const action = this.actions[type]
+      const ids = action.ids()
+      if (ids.length > 0) {
+        empty = false
+        break
+      }
+    }
+    return empty
   }
 }
 

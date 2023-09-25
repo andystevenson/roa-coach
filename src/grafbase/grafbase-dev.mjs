@@ -7,7 +7,10 @@ export async function process() {
   let pid = 0
   try {
     const p = await find('port', 4000)
-    pid = p[0].pid
+    if (p) {
+      pid = p[0].pid
+      return +pid
+    }
   } catch (error) {
     console.error('grafbase process failed!', error.message)
   }
@@ -16,12 +19,7 @@ export async function process() {
 
 export async function stop() {
   try {
-    const pid = await process()
-    if (pid) {
-      kill(pid)
-      // console.log('grafbase stop')
-      return
-    }
+    execSync('kill-port 4000')
     // console.log('grafbase stop did not stop anything!')
   } catch (error) {
     // console.log('grafbase stop failed!', error.message)
@@ -53,7 +51,7 @@ export async function start() {
     let up = null
     while (!up) {
       const p = await find('port', 4000)
-      if (p.length > 0) up = p[0].pid
+      if (p && p.length > 0) up = p[0].pid
     }
     // console.log('grafbase dev')
   } catch (error) {

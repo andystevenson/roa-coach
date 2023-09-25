@@ -1,11 +1,10 @@
-import Schema from '../../../grafbase/src/Schema.mjs'
 import schema from '../../../grafbase/schema.graphql?raw'
+import Schema from '../../grafbase/Schema.mjs'
 import TypeHTML from './TypeHTML.mjs'
-import { ordinalDateTime } from '../../../grafbase/src/dates.mjs'
+import { ordinalDateTime, today } from '../../grafbase/dates.mjs'
 import { apiFetch } from './utilities.mjs'
 import { offline } from './network-status.mjs'
 import { Page } from './page-info.mjs'
-import { today } from '../../../grafbase/src/dates.mjs'
 
 const API = '/api/roa'
 
@@ -62,7 +61,7 @@ class PageController {
     this.html = this.htmls[this.typeName]
   }
 
-  #addModalEventListeners(dialog) {
+  #addModalEventListeners(dialog, mode) {
     const close = document.getElementById('close-dialog')
     close.addEventListener('click', this.close.bind(this))
 
@@ -75,6 +74,14 @@ class PageController {
     const submit = document.getElementById('submit-action')
     submit.addEventListener('click', this.submit.bind(this))
 
+    const details = dialog.querySelectorAll('.dialog-details')
+
+    details.forEach((detail) => {
+      mode === 'update'
+        ? detail.addEventListener('toggle', this.#detailsUpdate.bind(this))
+        : detail.addEventListener('toggle', this.#detailsCreate.bind(this))
+    })
+
     const collections = Array.from(
       dialog.querySelectorAll('.add-to-collection'),
     )
@@ -84,11 +91,83 @@ class PageController {
     )
   }
 
-  #showModal(e) {
+  async #detailsCreate(e) {
+    const details = e.target
+    const open = details.open
+    const field = details.dataset.field
+    console.log('detailsCreate', this.#isCreate(), field, open)
+  }
+
+  #form() {
+    const forms = document.forms
+    if (document.forms.length > 1) console.warn('multiple forms!!!', forms)
+    return forms[0]
+  }
+
+  #formElements(names) {
+    const form = this.#form()
+    const elements = names
+      .map((name) => [name, form.elements[name].value])
+      .reduce((all, [name, value]) => {
+        all[name] = value
+        return all
+      }, {})
+
+    return elements
+  }
+
+  async #detailsUpdate(e) {
+    const details = e.target
+    const summary = details.querySelector('summary')
+    const field = details.dataset.field
+    const open = details.open
+    const content = details.querySelector('.details-content')
+
+    try {
+      // only action read request on open
+      if (open) {
+        // const data = this.formData(details)
+        let { id, type } = this.#formElements(['id', 'type'])
+
+        const fieldType = this.fields[field]
+        const element = fieldType.element
+        const html = this.htmls[element]
+
+        const request = { id, action: field, type, subaction: 'list' }
+        const response = await apiFetch(API, request)
+
+        console.log(`${this.typeName}.${field} fetched ${response.length}`)
+        response.forEach((object) => {
+          html.details(field, content, object)
+          const added = content.firstElementChild
+          summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
+          this.#addToEventListeners(added, object)
+        })
+        return
+      }
+
+      if (!open) {
+        // we need to purge read data and re-fetch on open because it may have been remotely changed
+        const wereFetched = Array.from(
+          content.querySelectorAll('[data-fetched]'),
+        )
+        console.log(
+          `${this.typeName}.${field} wereFetched ${wereFetched.length}`,
+        )
+        wereFetched.forEach((fetched) => fetched.remove())
+        return
+      }
+    } catch (error) {
+      console.log(`#detailsUpdate error`, error)
+      this.error(error)
+    }
+  }
+
+  #showModal(e, mode) {
     this.dialogs.innerHTML = ''
     this.dialogs.innerHTML = this.html.dialog()
     const dialog = this.dialogs.firstElementChild
-    this.#addModalEventListeners(dialog)
+    this.#addModalEventListeners(dialog, mode)
     dialog.showModal()
     // hack to test update modals
     // dialog.classList.add('update')
@@ -113,32 +192,53 @@ class PageController {
     this.exitErrorDialog.addEventListener('click', this.close.bind(this))
   }
 
-  #correctDateTimeValues(data, form) {
+  #correctDateTimeValues(request, form) {
     const times = Array.from(form.querySelectorAll('input[type="time"]'))
     times.forEach((time) => {
-      const { id, value } = time
+      const { name, value } = time
+      if (!(name in request)) return
+
       const [hour, minute] = value.split(':')
       const newTime = today.hour(+hour).minute(+minute).toISOString()
-      data.set(id, newTime)
-      console.log('#correctDateTimeValues', id, value, newTime, data.get(id))
+      request[name] = newTime
+      console.log('#correctDateTimeValues', name, value, newTime, request[name])
     })
+    return request
   }
 
   #stripEmptyFields(formData) {
     // TODO: hmmm, not sure this shouldn't be field validated for nullable etc
-    const stripThese = Array.from(formData.entries())
+    let dataEntries = formData.entries()
+    let entries = Array.from(dataEntries)
+
+    entries
       .filter(([_, value]) => !value)
       .forEach(([name]) => formData.delete(name))
+
+    // strip anything that starts with ignore
+    console.log('#strip pre', Object.fromEntries(formData.entries()))
+    dataEntries = formData.entries()
+    entries = Array.from(dataEntries)
+    entries
+      .filter(([name]) => name.startsWith('ignore-'))
+      .forEach(([name]) => formData.delete(name))
+
+    console.log('#strip post', Object.fromEntries(formData.entries()))
+
+    const request = Object.fromEntries(formData.entries())
+
+    return request
   }
 
   #fill(form, article, from) {
-    //  fill in the modal with data from
+    //  fill in the modal form with data from
+    const { id } = from
+    form.dataset.parent = id
     const keys = Object.keys(from)
     keys.forEach((key) => {
       const value = from[key]
       const dKey = form.querySelector(`[name="${key}"]`)
       const aKey = article.querySelector(`[data-name="${key}"]`)
-      console.log('fill ', key, value, dKey, aKey)
       if (key === 'createdAt' || key === 'updatedAt') {
         dKey.value = ordinalDateTime(value)
         return
@@ -187,16 +287,20 @@ class PageController {
       const request = { id: article.id, type: this.typeName, action: 'read' }
       const response = await apiFetch(API, request)
 
-      this.#showModal(e)
+      const mode = 'update'
+      this.#showModal(e, mode)
       const form = this.dialogs.firstElementChild.querySelector('form')
 
       const action = form.querySelector('[name="action"]')
-      action.value = 'update'
+      action.value = mode
 
       const dialog = form.closest('dialog')
-      dialog.classList.add('update')
+      dialog.classList.add(mode)
 
       this.#fill(form, article, response)
+      const { id } = response
+      const details = Array.from(form.querySelectorAll('details'))
+      details.forEach((detail) => (detail.dataset.parent = id))
     } catch (error) {
       console.log('read error', error)
     }
@@ -215,8 +319,8 @@ class PageController {
 
   append(element) {
     const html = this.html.from(element)
-    this.elements.insertAdjacentHTML('beforeend', html)
-    const added = this.elements.lastElementChild
+    this.elements.insertAdjacentHTML('afterbegin', html)
+    const added = this.elements.firstElementChild
     this.#elementEventListeners(added)
     added.scrollIntoView({ behavior: 'smooth' })
   }
@@ -267,21 +371,24 @@ class PageController {
     }
   }
 
-  formData(form) {
+  formData(element) {
+    const form = element.closest('form')
+    console.log('formData', this.#form(), form)
     const data = new FormData(form)
     // strip system attributes from any request
     data.delete('createdAt')
     data.delete('updatedAt')
     // strip file input from request as it relates to internal image reader
     data.delete('file')
-    this.#stripEmptyFields(data)
-    this.#correctDateTimeValues(data, form)
-    return Object.fromEntries(data.entries())
+    let request = this.#stripEmptyFields(data)
+    request = this.#correctDateTimeValues(request, form)
+    return request
   }
 
   close(e) {
     const closeButton = e.target.closest('button')
     const dialog = closeButton.closest('dialog')
+    console.log('in close', { closeButton, dialog })
     dialog.close()
   }
 
@@ -304,15 +411,17 @@ class PageController {
       console.log('delete', { response })
       this.close(e)
     } catch (error) {
-      this.error(`delete failed on ${id}`)
+      this.error(error)
     }
   }
 
-  #isCreate(form) {
+  #isCreate() {
+    const form = this.#form()
     return form.querySelector('[name="action"]').value === 'create'
   }
 
-  #isUpdate(form) {
+  #isUpdate() {
+    const form = this.#form()
     return form.querySelector('[name="action"]').value === 'update'
   }
 
@@ -320,7 +429,7 @@ class PageController {
     e.preventDefault()
     console.log(`submit called`, e.target, this)
     const submitButton = e.target.closest('button')
-    const form = submitButton.closest('form')
+    const form = this.#form()
     const valid = form.reportValidity()
 
     if (valid) {
@@ -331,12 +440,12 @@ class PageController {
         const response = await apiFetch(API, request)
         console.log('submit response', response, uploaded)
 
-        const isCreateAction = this.#isCreate(form)
+        const isCreateAction = this.#isCreate()
         if (isCreateAction) {
           this.append(response)
         }
 
-        const isUpdateAction = this.#isUpdate(form)
+        const isUpdateAction = this.#isUpdate()
         if (isUpdateAction) {
           const { id } = response
           const article = document.getElementById(id)
@@ -441,20 +550,139 @@ class PageController {
     const summary = details.querySelector('summary')
 
     const content = details.querySelector('.details-content')
+    const type = details.dataset.type
     const field = details.dataset.field
-    const fieldType = this.fields[field]
-    const element = fieldType.element
-    const html = this.htmls[element]
-    console.log('addToCollection', field, element, html)
+
+    const elementType = this.htmls[type].fields[field].element
+    let html = this.htmls[elementType]
+    console.log('addToCollection', field, type, html, elementType)
     html.details(field, content)
-    const added = content.lastElementChild
+    const added = content.firstElementChild
     summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
     this.#addToEventListeners(added)
   }
 
-  #addToEventListeners(element) {
+  #addToEventListeners(element, object) {
+    const isCreate = this.#isCreate()
+    isCreate
+      ? element.addEventListener(
+          'toggle',
+          this.#detailsElementCreate.bind(this),
+        )
+      : element.addEventListener(
+          'toggle',
+          this.#detailsElementUpdate.bind(this),
+        )
+
     const deleteButton = element.querySelector('.delete-from-collection')
-    deleteButton.addEventListener('click', this.deleteFromCollection.bind(this))
+    deleteButton?.addEventListener(
+      'click',
+      this.deleteFromCollection.bind(this),
+    )
+
+    // if the element has collections add event listeners to it
+    const details = Array.from(element.querySelectorAll('details'))
+    details.forEach((detail) => {
+      this.#addToEventListeners(detail, object)
+      const add = detail.querySelector('.add-to-collection')
+      add.addEventListener('click', this.addToCollection.bind(this))
+    })
+
+    // if an object was given, watch for change events
+    if (object) {
+      const inputs = Array.from(
+        element.querySelectorAll('input,textarea,select'),
+      )
+      inputs.forEach((input) => {
+        if (input.dataset.system) {
+          console.log('#addTo skipping', input.name)
+          return
+        }
+        input.addEventListener('change', (e) => {
+          const element = e.target
+          const section = element.closest('fieldset')
+          const id = section.firstElementChild
+
+          const begin = section.closest('input[data-element-begin]')
+          console.log('begin', begin)
+          if (begin) {
+            // denotes an element with collections inside
+            const end = begin.nextElementSibling.nextElementSibling
+            console.log('end', end)
+            begin.name = `update-${begin.name.split('-').slice(1).join('-')}`
+            end.name = `update-${end.name.split('-').slice(1).join('-')}`
+          }
+          element.name = `update-${element.name.split('-').slice(1).join('-')}`
+          id.name = `update-${id.name.split('-').slice(1).join('-')}`
+
+          const { name, value } = element
+          console.log('#addTo change', name, value)
+        })
+      })
+    }
+  }
+
+  async #detailsElementCreate(e) {
+    const details = e.target
+    console.log('detailsElementCreate', this.#isCreate(), details.open)
+  }
+
+  async #detailsElementUpdate(e) {
+    const details = e.target
+    const { type, field } = details.dataset
+
+    // if field is not present we're simply opening the containing details
+    if (!field) return
+
+    const summary = details.firstElementChild
+    const content = details.querySelector('.details-content')
+    const open = details.open
+
+    const id = details.parentElement.parentElement.id
+
+    const action = field
+    const subaction = 'list'
+    const request = { action, subaction, type, id }
+
+    console.log('detailsElementUpdate', this.#isUpdate(), {
+      details,
+      open,
+      type,
+      field,
+      id,
+      request,
+    })
+
+    try {
+      // only action read request on open
+      if (open) {
+        const elementType = this.htmls[type].fields[field].element
+        let html = this.htmls[elementType]
+        const response = await apiFetch(API, request)
+
+        console.log(`${type}.${field} fetched ${response.length}`)
+        response.forEach((object) => {
+          html.details(field, content, object)
+          const added = content.firstElementChild
+          summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
+          this.#addToEventListeners(added, object)
+        })
+        return
+      }
+
+      if (!open) {
+        // we need to purge read data and re-fetch on open because it may have been remotely changed
+        const wereFetched = Array.from(
+          content.querySelectorAll('[data-fetched]'),
+        )
+        console.log(`${type}.${field} wereFetched ${wereFetched.length}`)
+        wereFetched.forEach((fetched) => fetched.remove())
+        return
+      }
+    } catch (error) {
+      console.error('#detailsElementUpdate', error)
+      this.error(error)
+    }
   }
 
   deleteFromCollection(e) {
@@ -464,8 +692,7 @@ class PageController {
     const dialogDetail = element.closest('.dialog-details')
     const summary = dialogDetail.querySelector('summary')
     const field = dialogDetail.dataset.field
-    const form = deleteButton.closest('form')
-    const isCreateAction = this.#isCreate(form)
+    const isCreateAction = this.#isCreate()
     console.log({
       element,
       content,
@@ -474,11 +701,50 @@ class PageController {
       field,
       isCreateAction,
     })
+
     if (isCreateAction) {
       // element can simply be removed
       element.remove()
       const count = content.children.length
       summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
+    }
+
+    if (!isCreateAction) {
+      const fetched = element.dataset.fetched
+
+      if (!fetched) {
+        element.remove()
+        const toBeDeleted = Array.from(
+          content.querySelectorAll('[data-deleted]'),
+        ).length
+        const count = content.children.length - toBeDeleted
+        summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
+        return
+      }
+      // it can simply be removed
+
+      if (fetched) {
+        // mark it's id as deleted, remove from display, and purge the other inputs so they don't go in formData
+        element.style.display = 'none'
+        element.dataset.deleted = true
+        const elementDetailsContent = element.querySelector(
+          '.element-details-content',
+        )
+        const idInput = elementDetailsContent.firstElementChild
+        const name = idInput.name
+        const parts = name.split('-').slice(1).join('-')
+        idInput.name = `delete-${parts}`
+        const deleteInputs = Array.from(elementDetailsContent.children).slice(1)
+        deleteInputs.forEach((input) => input.remove())
+
+        // count the number marked for deletion
+        const toBeDeleted = Array.from(
+          content.querySelectorAll('[data-deleted]'),
+        ).length
+        const count = content.children.length - toBeDeleted
+        summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
+        return
+      }
     }
   }
 }

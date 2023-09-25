@@ -4,8 +4,10 @@ class Schema {
     this.rawTypes = Schema.fromRaw(schema)
     this.types = []
     this.enums = []
+    this.relations = null
     this.parse()
     this.#enums()
+    this.#relations()
     // inspect(this.types)
   }
 
@@ -165,10 +167,12 @@ class Schema {
           return {
             name,
             type,
+            bareType: type.replace('!', ''),
             nullable,
             collection,
             builtin,
             element,
+            reference: !collection && !nullable && !builtin,
             ...Schema.parseDirectives(directives),
           }
         }),
@@ -190,6 +194,71 @@ class Schema {
 
   enum(name) {
     return this.enums.find((type) => type.name === name)
+  }
+
+  type(name) {
+    return this.types.find((type) => type.name === name)
+  }
+
+  fieldOfType(typeName, fieldType) {
+    const type = this.type(typeName)
+    const field = type?.fields.find(
+      (field) => field.element === fieldType || field.bareType === fieldType,
+    )
+    return field
+  }
+
+  #relations() {
+    this.types.forEach((type) => {
+      const { typedef } = type
+      if (typedef === 'enum') return
+      type.fields.forEach((field) => {
+        const { bareType, collection, element, builtin, isenum, system } = field
+
+        const ignore = builtin || isenum || system
+
+        if (ignore) return
+
+        const fType = collection
+          ? this.fieldOfType(element, type.name)
+          : this.fieldOfType(bareType, type.name)
+
+        if (fType) {
+          if (collection && fType.collection) field.relation = 'many-to-many'
+          if (collection && !fType.collection) field.relation = 'one-to-many'
+          if (!collection && fType.collection) field.relation = 'many-to-one'
+          if (!collection && !fType.collection) field.relation = 'one-to-one'
+          return
+          // it is a simple link relation
+        }
+        field.relation = 'link'
+      })
+    })
+
+    const relations = this.types
+      .filter((type) => type.fields.find((field) => field.relation))
+      .map((type) => {
+        const { name } = type
+        const relations = type.fields
+          .filter((field) => field.relation)
+          .map((field) => {
+            const { name, bareType, collection, element, relation } = field
+            const type = collection ? element : bareType
+            return { name, type, relation }
+          })
+        return { name, relations }
+      })
+      .map((relative) => {
+        let { name, relations } = relative
+        let all = relations.reduce((object, next) => {
+          let { name: fieldName, type, relation } = next
+          object[name] ??= {}
+          object[name][fieldName] = { type, relation }
+          return object
+        }, {})
+        return all
+      })
+    this.relations = relations
   }
 
   parse() {

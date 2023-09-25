@@ -1,5 +1,7 @@
 .Session-details {
   .element-details-content {
+    display: grid;
+    gap: var(--size-2);
     grid-auto-flow: unset;
     grid-template-columns: 1fr 1fr 1fr;
 

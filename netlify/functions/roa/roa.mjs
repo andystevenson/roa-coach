@@ -1,9 +1,9 @@
 import 'dotenv/config'
-import client from '../../../grafbase/src/GrafbaseClient.mjs'
-import '../../../grafbase/src/GrafbaseEvents.mjs'
+import client from '../../../src/grafbase/GrafbaseClient.mjs'
+import '../../../src/grafbase/GrafbaseEvents.mjs'
 
 const Headers = { 'Content-Type': 'application/json' }
-const FunctionName = 'roa-player'
+const FunctionName = 'roa'
 
 const Allow = `POST,PUT,DELETE`
 const validateAction = (method, action) => {

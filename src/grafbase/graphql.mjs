@@ -28,6 +28,7 @@ const graphql = async (query, variables = null) => {
       // console.warn({ data, errors })
 
       const key = Object.keys(data)[0]
+
       if (data && data[key]) {
         if (key.endsWith('Collection')) return edgesToData(data[key])
 

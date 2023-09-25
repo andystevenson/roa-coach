@@ -16,6 +16,8 @@ type Coach @model {
   bio: String @length(max: 2048)
   image: URL
   thumbnail: URL
+  sessions: [SessionCoach]
+  programmes: [ProgrammeCoach]
 }
 
 enum Role {
@@ -74,6 +76,8 @@ type Player @model {
   image: URL
   thumbnail: URL
   notes: [PlayerNote]
+  sessions: [SessionAttendee]
+  payments: [Payment]
 }
 
 type PlayerNote @model {
@@ -122,8 +126,8 @@ type SessionAttendee @model {
 }
 
 type SessionNote @model {
-  note: String @length(max: 2048)
   session: Session!
+  note: String @length(max: 2048)
 }
 
 type ProgrammeCoach @model {
@@ -132,8 +136,8 @@ type ProgrammeCoach @model {
 }
 
 type ProgrammeNote @model {
-  note: String @length(max: 2048)
   programme: Programme!
+  note: String @length(max: 2048)
 }
 
 enum Day {

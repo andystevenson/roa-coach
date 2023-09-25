@@ -1,7 +1,8 @@
 import startCase from 'lodash.startcase'
-import { today } from '../../../grafbase/src/dates.mjs'
+import { today } from '../../grafbase/dates.mjs'
 import { singular } from 'pluralize'
 import { v4 as uuid } from 'uuid'
+import dayjs from 'dayjs'
 
 const labelCase = (label) => {
   if (label === 'dob') return startCase('date of birth')
@@ -17,6 +18,7 @@ class TypeHTML {
     this.types = types
     this.enums = enums
     this.fields = {}
+    this.hasCollections = false
     this.#fields()
     this.#htmlTemplates()
     // console.log('TypeHTML', this)
@@ -31,7 +33,10 @@ class TypeHTML {
   // private functions
 
   #fields() {
-    this.type.fields.forEach((field) => (this.fields[field.name] = field))
+    this.type.fields.forEach((field) => {
+      this.fields[field.name] = field
+      if (field.collection) this.hasCollections = true
+    })
   }
 
   #htmlEnum(field) {
@@ -147,16 +152,16 @@ class TypeHTML {
     const fValue = this.#htmlInputValue(field)
 
     if (name === 'id') {
-      field.html = `<input ${fId} name="${name}" type="hidden" data-system data-type="ID" readonly tabindex="-1" ${fValue} >`
+      field.html = `<input ${fId} name="${name}" type="hidden" data-system=true data-type="ID" readonly tabindex="-1" ${fValue} >`
     }
 
     if (name === 'createdAt') {
-      const attributes = `${fId} name="${name}" type="text" data-system data-type="DateTime" tabindex="-1" readonly ${fValue}`
+      const attributes = `${fId} name="${name}" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
       field.html = `<div><span class="bicp">&#xF7DB;</span><input ${attributes}></div>`
     }
 
     if (name === 'updatedAt') {
-      const attributes = `${fId} name="${name}" type="text" data-system data-type="DateTime" tabindex="-1" readonly ${fValue}`
+      const attributes = `${fId} name="${name}" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
       field.html = `<div><input ${attributes}><span class="bicp">&#xF13A;</span></div>`
     }
   }
@@ -250,13 +255,12 @@ class TypeHTML {
     const { name } = field
     const one = singular(name)
     const id = `${this.typeName}-${name}`
-    const fId = `id="${id}"`
     const isClass = `class="${id} dialog-details"`
-    const fField = `data-field=${name}`
+    const fField = `data-type=${this.typeName} data-field=${name}`
     const add = `<button type="button" class="add-to-collection" title="add ${one}"><span class="bicp">&#xF4FA;</span></button>`
     const content = `<section class="details-content"></section>${add}`
 
-    const details = `<details ${fId} ${isClass} ${fField}><summary>${name}</summary>${content}</details>`
+    const details = `<details ${isClass} ${fField}><summary>${name}</summary>${content}</details>`
     field.html = details
   }
 
@@ -351,7 +355,18 @@ class TypeHTML {
     return this.type.dialog
   }
 
-  details(collection, content) {
+  #nth(element) {
+    let nth = ''
+    let e = element.closest('[data-nth]')
+    while (e) {
+      const n = e.dataset.nth
+      nth = nth ? `${n}:${nth}` : `${n}`
+      e = e.parentElement.closest('[data-nth]')
+    }
+    return nth
+  }
+
+  details(collection, content, from) {
     const one = singular(collection)
     const fields = this.type.fields
       .filter((field) => field.html)
@@ -359,30 +374,54 @@ class TypeHTML {
       .join('')
     const summary = `<summary>${one}</summary>`
     const deleteMe = `<button type="button" class="delete-from-collection" title="delete ${one}"><span class="bicp">&#xF78B;</span></button>`
+    const markAsFetched = from ? 'data-fetched=true' : ''
+    const fId = from ? `id="${from.id}"` : ''
 
-    const inner = `${summary}<section class="element-details-content">${fields}</section>${deleteMe}`
-    const details = `<details class="${this.typeName}-details element-details">${inner}</details>`
-    content.insertAdjacentHTML('beforeend', details)
-    const newDetails = content.lastElementChild
-    this.#updateIds(newDetails)
+    const nth = content.children.length
+
+    const inner = `${summary}<fieldset class="element-details-content">${fields}</fieldset>${deleteMe}`
+    const details = `<details ${fId} class="${this.typeName}-details element-details" ${markAsFetched} data-type=${this.typeName} open>${inner}</details>`
+    content.insertAdjacentHTML('afterbegin', details)
+    const newDetails = content.firstElementChild
+    const parentDetails = newDetails.parentElement.parentElement
+    newDetails.dataset.nth = nth
+    newDetails.dataset.pid = parentDetails.dataset.parent
+      ? parentDetails.dataset.parent
+      : ''
+    newDetails.dataset.ptype = parentDetails.dataset.type
+    newDetails.dataset.pfield = parentDetails.dataset.field
+    newDetails.dataset.pnth = parentDetails.dataset.nth
+      ? parentDetails.dataset.nth
+      : 0
+    this.#updateIds(newDetails, from)
   }
 
-  #updateIds(element) {
-    const parent = element.parentElement
-    const nth = parent.children.length - 1
+  #updateIds(element, from) {
+    let nth = this.#nth(element)
+    console.log('updateIds', { nth })
     const inputs = Array.from(element.querySelectorAll('input,textarea,select'))
     inputs.forEach((input) => {
       const label = input.closest('label')
       const { name } = input
-      const id = `${this.typeName}-${nth}-${name}`
+
+      const prefix = from ? `ignore-${from.id}` : this.typeName
+      const id = `${prefix}-${nth}-${name}`
       input.id = id
       input.name = id
       // special case for automatically generating uuids
       if (input.dataset.uuid) input.value = uuid()
       if (label) label.htmlFor = id
-      console.log('updateIds', input, label)
+
+      if (from && name in from) {
+        let value = from[name]
+        if (input.type === 'time') {
+          const date = dayjs(value)
+          console.log('updateIds', name, value, date.format('HH:mm'))
+          value = date.format('HH:mm')
+        }
+        input.value = value
+      }
     })
-    console.log('#updateIds', nth, inputs)
   }
 }
 

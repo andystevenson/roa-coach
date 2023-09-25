@@ -19,12 +19,15 @@
 
   [data-name='image'],
   [data-name='thumbnail'] {
-    display: block;
+    display: inline-flex;
     grid-area: content;
     padding-block: unset;
     padding-inline: unset;
     margin-block: var(--size-2);
     overflow: hidden;
+    img {
+      inline-size: 100%;
+    }
   }
 
   [data-name='thumbnail'] {
@@ -57,6 +60,7 @@
   .element {
     --_grid-template-columns: 3ch 20ch 20ch 60ch;
     max-inline-size: 100%;
+    min-block-size: unset;
     grid-auto-flow: column;
     align-items: center;
     margin-inline-start: var(--size-2);
@@ -150,6 +154,9 @@
 }
 
 .element-details-content {
+  border: unset;
+  padding-inline: unset;
+  padding-block: unset;
   grid-auto-flow: column;
 
   // hide createdAt, updatedAt
