@@ -17,15 +17,15 @@
     "@andystevenson/lib": "^0.2.16",
     "@andystevenson/sass": "^0.1.14",
     "@andystevenson/theme-toggle": "^0.1.5",
-    "@clerk/clerk-js": "^4.54.2",
-    "@types/node": "^20.4.5",
-    "autoprefixer": "^10.4.14",
+    "@clerk/clerk-js": "^4.58.1",
+    "@types/node": "^20.7.0",
+    "autoprefixer": "^10.4.16",
     "cheerio": "^1.0.0-rc.12",
-    "cloudinary": "^1.40.0",
+    "cloudinary": "^1.41.0",
     "color-2-name": "^1.1.1",
     "common-tags": "^1.8.2",
     "cssnano": "^6.0.1",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "find-process": "^1.4.7",
@@ -39,18 +39,18 @@
     "lodash.range": "^3.2.0",
     "lodash.snakecase": "^4.1.1",
     "lodash.startcase": "^4.4.0",
-    "open-props": "^1.5.10",
+    "open-props": "^1.5.16",
     "pluralize": "^8.0.0",
-    "postcss-custom-media": "^10.0.0",
+    "postcss-custom-media": "^10.0.1",
     "postcss-jit-props": "^1.0.13",
-    "sass": "^1.64.1",
-    "stripe": "^12.16.0",
-    "uuid": "^9.0.0"
+    "sass": "^1.68.0",
+    "stripe": "^13.7.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2",
-    "grafbase": "^0.30.0",
+    "@faker-js/faker": "^8.1.0",
+    "grafbase": "^0.35.1",
     "nodemon": "^3.0.1",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.5"
   }
 }
