@@ -17,7 +17,7 @@
       "request": "launch",
       "name": "stand alone test",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/grafbase/src/standalone-test.mjs"
+      "program": "${workspaceFolder}/src/grafbase/standalone-test.mjs"
     }
   ]
 }

@@ -1,5 +1,4 @@
-import client from '../grafbase/GrafbaseClient.mjs'
-import { inspect } from '../grafbase/utilities.mjs'
+import { client } from '../js/ROAclient.mjs'
 import * as T from './templates.mjs'
 
 // HOF to generate a some function
@@ -20,7 +19,8 @@ const HOF = ({ type, min: defaultMin, max: defaultMax }) => {
 }
 
 const coaches = HOF({ type: 'Coach', min: 1, max: 6 })
+const alumni = HOF({ type: 'Alumni', min: 1, max: 20 })
 const programmes = HOF({ type: 'Programme', min: 1, max: 3 })
 const players = HOF({ type: 'Player', min: 1, max: 20 })
 const sessions = HOF({ type: 'Session', min: 1, max: 4 })
-export { coaches, programmes, players, sessions }
+export { coaches, alumni, programmes, players, sessions }

@@ -5,6 +5,7 @@ import { ordinalDateTime, today } from '../../grafbase/dates.mjs'
 import { apiFetch } from './utilities.mjs'
 import { offline } from './network-status.mjs'
 import { Page } from './page-info.mjs'
+import isEmpty from 'lodash.isempty'
 
 const API = '/api/roa'
 
@@ -32,18 +33,17 @@ class PageController {
     this.#enums()
     this.#fields()
     this.#htmls()
-    this.#addEventListeners()
+    this.#addPageListeners()
     console.log('PageController', this)
   }
 
-  // private functions
   #types() {
     this.schema.types.forEach((type) => {
       this.types[type.name] = type
     })
     this.type = this.types[this.typeName]
   }
-
+  f
   #enums() {
     this.schema.enums.forEach((type) => {
       this.enums[type.name] = type
@@ -61,7 +61,13 @@ class PageController {
     this.html = this.htmls[this.typeName]
   }
 
-  #addModalEventListeners(dialog, mode) {
+  // #addDialogListeners()
+  // attach event listeners to all the key dialog buttons.
+  // attach event listeners to all the dialog-inputs of the form
+  // attach event listeners to all details within the dialog-collections
+
+  #addDialogListeners(dialog, mode) {
+    //
     const close = document.getElementById('close-dialog')
     close.addEventListener('click', this.close.bind(this))
 
@@ -73,6 +79,13 @@ class PageController {
 
     const submit = document.getElementById('submit-action')
     submit.addEventListener('click', this.submit.bind(this))
+
+    const form = this.#form()
+
+    if (mode === 'update') {
+      const dialogInputs = form.querySelector('.dialog-inputs')
+      this.#addInputChangeListeners(dialogInputs)
+    }
 
     const details = dialog.querySelectorAll('.dialog-details')
 
@@ -104,18 +117,6 @@ class PageController {
     return forms[0]
   }
 
-  #formElements(names) {
-    const form = this.#form()
-    const elements = names
-      .map((name) => [name, form.elements[name].value])
-      .reduce((all, [name, value]) => {
-        all[name] = value
-        return all
-      }, {})
-
-    return elements
-  }
-
   async #detailsUpdate(e) {
     const details = e.target
     const summary = details.querySelector('summary')
@@ -126,36 +127,20 @@ class PageController {
     try {
       // only action read request on open
       if (open) {
-        // const data = this.formData(details)
-        let { id, type } = this.#formElements(['id', 'type'])
+        let { id, type } = this.#form().dataset
 
         const fieldType = this.fields[field]
         const element = fieldType.element
         const html = this.htmls[element]
 
         const request = { id, action: field, type, subaction: 'list' }
-        const response = await apiFetch(API, request)
+        await this.#addFetched(html, request, field, content, summary)
 
-        console.log(`${this.typeName}.${field} fetched ${response.length}`)
-        response.forEach((object) => {
-          html.details(field, content, object)
-          const added = content.firstElementChild
-          summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
-          this.#addToEventListeners(added, object)
-        })
         return
       }
 
       if (!open) {
-        // we need to purge read data and re-fetch on open because it may have been remotely changed
-        const wereFetched = Array.from(
-          content.querySelectorAll('[data-fetched]'),
-        )
-        console.log(
-          `${this.typeName}.${field} wereFetched ${wereFetched.length}`,
-        )
-        wereFetched.forEach((fetched) => fetched.remove())
-        return
+        this.#removeFetched(content)
       }
     } catch (error) {
       console.log(`#detailsUpdate error`, error)
@@ -163,17 +148,15 @@ class PageController {
     }
   }
 
-  #showModal(e, mode) {
+  #showModal(e, mode = 'create') {
     this.dialogs.innerHTML = ''
-    this.dialogs.innerHTML = this.html.dialog()
+    this.dialogs.innerHTML = this.html.dialog(mode)
     const dialog = this.dialogs.firstElementChild
-    this.#addModalEventListeners(dialog, mode)
+    this.#addDialogListeners(dialog, mode)
     dialog.showModal()
-    // hack to test update modals
-    // dialog.classList.add('update')
   }
 
-  #addEventListeners() {
+  #addPageListeners() {
     window.addEventListener('load', this.fetch.bind(this))
 
     this.create.addEventListener('click', this.#showModal.bind(this))
@@ -192,53 +175,17 @@ class PageController {
     this.exitErrorDialog.addEventListener('click', this.close.bind(this))
   }
 
-  #correctDateTimeValues(request, form) {
-    const times = Array.from(form.querySelectorAll('input[type="time"]'))
-    times.forEach((time) => {
-      const { name, value } = time
-      if (!(name in request)) return
-
-      const [hour, minute] = value.split(':')
-      const newTime = today.hour(+hour).minute(+minute).toISOString()
-      request[name] = newTime
-      console.log('#correctDateTimeValues', name, value, newTime, request[name])
-    })
-    return request
-  }
-
-  #stripEmptyFields(formData) {
-    // TODO: hmmm, not sure this shouldn't be field validated for nullable etc
-    let dataEntries = formData.entries()
-    let entries = Array.from(dataEntries)
-
-    entries
-      .filter(([_, value]) => !value)
-      .forEach(([name]) => formData.delete(name))
-
-    // strip anything that starts with ignore
-    console.log('#strip pre', Object.fromEntries(formData.entries()))
-    dataEntries = formData.entries()
-    entries = Array.from(dataEntries)
-    entries
-      .filter(([name]) => name.startsWith('ignore-'))
-      .forEach(([name]) => formData.delete(name))
-
-    console.log('#strip post', Object.fromEntries(formData.entries()))
-
-    const request = Object.fromEntries(formData.entries())
-
-    return request
-  }
-
   #fill(form, article, from) {
     //  fill in the modal form with data from
     const { id } = from
-    form.dataset.parent = id
+    form.id = id
+    form.dataset.id = id
     const keys = Object.keys(from)
     keys.forEach((key) => {
       const value = from[key]
       const dKey = form.querySelector(`[name="${key}"]`)
       const aKey = article.querySelector(`[data-name="${key}"]`)
+
       if (key === 'createdAt' || key === 'updatedAt') {
         dKey.value = ordinalDateTime(value)
         return
@@ -275,8 +222,8 @@ class PageController {
         return
       }
 
-      aKey.textContent = value
-      dKey.value = value
+      if (aKey) aKey.textContent = value
+      if (dKey) dKey.value = value
     })
   }
 
@@ -284,18 +231,16 @@ class PageController {
     const article = e.target.closest('article')
     try {
       // make a read request for the element being updated
-      const request = { id: article.id, type: this.typeName, action: 'read' }
+      const request = {
+        id: article.id.replace('-article', ''),
+        type: this.typeName,
+        action: 'read',
+      }
       const response = await apiFetch(API, request)
 
       const mode = 'update'
       this.#showModal(e, mode)
-      const form = this.dialogs.firstElementChild.querySelector('form')
-
-      const action = form.querySelector('[name="action"]')
-      action.value = mode
-
-      const dialog = form.closest('dialog')
-      dialog.classList.add(mode)
+      const form = this.#form()
 
       this.#fill(form, article, response)
       const { id } = response
@@ -309,9 +254,9 @@ class PageController {
   #elementEventListeners(element) {
     // element is a HTMLElement!
     const article = element
-    const name = element.querySelector('[data-name="name"]')
-    const image = element.querySelector('[data-name="image"]')
-    const thumbnail = element.querySelector('[data-name="thumbnail"]')
+    const name = article.querySelector('[data-name="name"]')
+    const image = article.querySelector('[data-name="image"]')
+    const thumbnail = article.querySelector('[data-name="thumbnail"]')
     name?.addEventListener('click', this.update.bind(this))
     image?.addEventListener('click', this.update.bind(this))
     thumbnail?.addEventListener('click', this.update.bind(this))
@@ -319,14 +264,13 @@ class PageController {
 
   append(element) {
     const html = this.html.from(element)
-    this.elements.insertAdjacentHTML('afterbegin', html)
-    const added = this.elements.firstElementChild
+    this.elements.insertAdjacentHTML('beforeend', html)
+    const added = this.elements.lastElementChild
     this.#elementEventListeners(added)
     added.scrollIntoView({ behavior: 'smooth' })
   }
 
   load(elements) {
-    console.log('loading', elements)
     this.elements.innerHTML = elements
       .map((element) => this.html.from(element))
       .join('')
@@ -336,7 +280,8 @@ class PageController {
     )
   }
 
-  // method
+  // cloudinary()
+  // saves an image to the cloudinary repository
   async cloudinary(request, form) {
     // upload the image into cloudinary
     const imageButton = form.querySelector('button.image')
@@ -357,13 +302,14 @@ class PageController {
     return uploaded
   }
 
+  // fetch()
+  // fetch the current list of objects for this page
+  // TODO: put it in a worker thread?
   async fetch() {
     // fetch the current list of elements of (this.type)
-    console.log('fetching data...')
     const request = { action: 'list', type: this.typeName }
     try {
       const response = await apiFetch(API, request)
-      console.log('fetch', { request, response })
       this.load(response)
     } catch (error) {
       console.error(`${this.typeName} fetch failed`, error)
@@ -371,44 +317,139 @@ class PageController {
     }
   }
 
-  formData(element) {
-    const form = element.closest('form')
-    console.log('formData', this.#form(), form)
-    const data = new FormData(form)
-    // strip system attributes from any request
-    data.delete('createdAt')
-    data.delete('updatedAt')
-    // strip file input from request as it relates to internal image reader
-    data.delete('file')
-    let request = this.#stripEmptyFields(data)
-    request = this.#correctDateTimeValues(request, form)
+  // request() creation. A vital part of the DOM interface.
+  // request(), #requestType(), #requestField(), #requestInputs() recursively build up the
+  // required ROAclient.invoke() formatted request.
+
+  #requestInputs(request, inputs) {
+    for (const input of inputs) {
+      const { type, value } = input
+
+      // ignore the name attribute of the input because this could be mangled for
+      // multiple instances of the same input in a collection
+      const name = input.dataset.name
+
+      // if name is undefined, skip it as it is being used for internal purposes
+      if (!name) continue
+
+      // these are grafbase generated so ignore them
+      if (name === 'createdAt' || name === 'updatedAt') continue
+
+      // type="time" inputs need to be updated to an ISO date time string because
+      // grafbase doesn't have a Time type.
+
+      if (type === 'time') {
+        const [hour, minute] = value.split(':')
+        const newTime = today.hour(+hour).minute(+minute).toISOString()
+        request[name] = newTime
+        continue
+      }
+
+      request[name] = value
+    }
+  }
+
+  #inputs(element) {
+    return Array.from(element.querySelectorAll('input,select,textarea'))
+  }
+
+  #requestField(request, field) {
+    const name = field.dataset.field
+    const selector =
+      ':scope > .details-content > .element-details > .element-details-content'
+    let fieldsets = Array.from(field.querySelectorAll(selector)).filter(
+      (fieldset) => !fieldset.dataset.ignore,
+    )
+    if (fieldsets.length === 0) return
+
+    request[name] = { create: [], update: [], delete: [] }
+    for (const fieldset of fieldsets) {
+      const { update, deleted } = fieldset.dataset
+
+      const element = {}
+      this.#requestType(element, fieldset)
+      //
+      if (update) {
+        request[name].update.push(element)
+        continue
+      }
+
+      if (deleted) {
+        request[name].delete.push(element)
+        continue
+      }
+
+      // this is a create request
+      request[name].create.push(element)
+    }
+
+    if (request[name].create.length === 0) delete request[name].create
+    if (request[name].update.length === 0) delete request[name].update
+    if (request[name].delete.length === 0) delete request[name].delete
+    if (isEmpty(request[name])) delete request[name]
+  }
+
+  #requestType(request, start) {
+    const { type, update, deleted, ignore } = start.dataset
+    let fieldset = start.querySelector('.dialog-inputs')
+    if (!fieldset) return
+    if (ignore) return
+
+    // this edge case handles the form inputs, which can still be ignored, even if the form
+    // is marked as update due to a lower level update.
+
+    const ignoreInputs = fieldset.dataset.ignore
+    if (!ignoreInputs) {
+      let inputs = this.#inputs(fieldset)
+      if (update) inputs = inputs.filter((input) => input.dataset.update)
+      if (deleted) inputs = inputs.filter((input) => input.dataset.deleted)
+      this.#requestInputs(request, inputs)
+    }
+
+    let collections = start.querySelector('.dialog-collections')
+    if (collections) {
+      const selector = `[data-type="${type}"][data-field]`
+      const fields = Array.from(collections.querySelectorAll(selector))
+      for (const field of fields) {
+        this.#requestField(request, field)
+      }
+    }
+  }
+
+  request() {
+    const form = this.#form()
+    const { type, action, id } = form.dataset
+    const request =
+      action === 'create' ? { type, action } : { id, type, action }
+    this.#requestType(request, form)
+
     return request
   }
 
+  // close()
+  // closes the modal dialog.
   close(e) {
     const closeButton = e.target.closest('button')
     const dialog = closeButton.closest('dialog')
-    console.log('in close', { closeButton, dialog })
     dialog.close()
   }
 
+  // cancel()
+  // simply closes the modal dialog.
   cancel(e) {
     this.close(e)
   }
 
   async delete(e) {
-    console.log(`delete called`, e.target, this)
-    const deleteButton = e.target.closest('button')
-    const form = deleteButton.closest('form')
-    const id = form.querySelector('[name="id"]').value
-    const request = { action: 'delete', type: this.typeName, id }
+    const form = this.#form()
+    const id = form.getAttribute('id')
     if (!id) return
 
     try {
+      const request = { action: 'delete', type: this.typeName, id }
       const response = await apiFetch(API, request)
-      const article = document.getElementById(id)
+      const article = document.getElementById(`${id}-article`)
       article?.remove()
-      console.log('delete', { response })
       this.close(e)
     } catch (error) {
       this.error(error)
@@ -417,23 +458,22 @@ class PageController {
 
   #isCreate() {
     const form = this.#form()
-    return form.querySelector('[name="action"]').value === 'create'
+    return form.dataset.action === 'create'
   }
 
   #isUpdate() {
     const form = this.#form()
-    return form.querySelector('[name="action"]').value === 'update'
+    return form.dataset.action === 'update'
   }
 
   async submit(e) {
     e.preventDefault()
     console.log(`submit called`, e.target, this)
-    const submitButton = e.target.closest('button')
     const form = this.#form()
     const valid = form.reportValidity()
 
     if (valid) {
-      const request = this.formData(form)
+      const request = this.request()
       console.log('submit request', request)
       try {
         const uploaded = await this.cloudinary(request, form)
@@ -448,7 +488,7 @@ class PageController {
         const isUpdateAction = this.#isUpdate()
         if (isUpdateAction) {
           const { id } = response
-          const article = document.getElementById(id)
+          const article = document.getElementById(`${id}-article`)
           this.#fill(form, article, response)
         }
 
@@ -466,6 +506,8 @@ class PageController {
     this.errorDialog.showModal()
   }
 
+  // error()
+  // tries to analyse the error message sent and turn it into something useful for the user
   error(error) {
     let { message, cause } = error
     console.log(`error`, { message, cause })
@@ -500,7 +542,6 @@ class PageController {
     // prettify timeout errors
     if (message.toLowerCase().includes('timeout')) {
       message = `db server timed out, which means the action may not have completed`
-      // Elements.error.textContent = message
       this.#error(message)
       return
     }
@@ -555,11 +596,15 @@ class PageController {
 
     const elementType = this.htmls[type].fields[field].element
     let html = this.htmls[elementType]
-    console.log('addToCollection', field, type, html, elementType)
-    html.details(field, content)
-    const added = content.firstElementChild
-    summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
+    const added = html.details(field, content)
+    const fieldset = added.closest('fieldset')
+    fieldset && this.#markAs(fieldset.firstElementChild, 'update')
     this.#addToEventListeners(added)
+
+    const form = this.#form()
+    delete form.dataset.ignore
+    this.#collectionCount(content, summary)
+    added.scrollIntoView({ behavior: 'smooth' })
   }
 
   #addToEventListeners(element, object) {
@@ -588,38 +633,38 @@ class PageController {
       add.addEventListener('click', this.addToCollection.bind(this))
     })
 
-    // if an object was given, watch for change events
-    if (object) {
-      const inputs = Array.from(
-        element.querySelectorAll('input,textarea,select'),
-      )
-      inputs.forEach((input) => {
-        if (input.dataset.system) {
-          console.log('#addTo skipping', input.name)
-          return
-        }
-        input.addEventListener('change', (e) => {
-          const element = e.target
-          const section = element.closest('fieldset')
-          const id = section.firstElementChild
+    // if an object was given, watch for change events, and mark them accordingly
+    if (object) this.#addInputChangeListeners(element)
+  }
 
-          const begin = section.closest('input[data-element-begin]')
-          console.log('begin', begin)
-          if (begin) {
-            // denotes an element with collections inside
-            const end = begin.nextElementSibling.nextElementSibling
-            console.log('end', end)
-            begin.name = `update-${begin.name.split('-').slice(1).join('-')}`
-            end.name = `update-${end.name.split('-').slice(1).join('-')}`
-          }
-          element.name = `update-${element.name.split('-').slice(1).join('-')}`
-          id.name = `update-${id.name.split('-').slice(1).join('-')}`
+  // #addInputChangeListeners(element)
+  // installs listeners to watch for change events on elements inputs
 
-          const { name, value } = element
-          console.log('#addTo change', name, value)
-        })
-      })
-    }
+  #addInputChangeListeners(element) {
+    const inputs = this.#inputs(element)
+
+    inputs.forEach((input) => {
+      // skip readonly system inputs (id, createdAt, updatedAt)
+      if (input.dataset.system) return
+      input.addEventListener('change', this.#inputChange.bind(this))
+    })
+  }
+
+  // #inputChange()
+  // watch for a change event on an input mark the form, fieldset and its parent as updated.
+  // this ensures that when an update request is sent, only those fields and objects
+  // actually updated are sent in the request.active
+
+  #inputChange(e) {
+    const element = e.target
+    const fieldset = element.closest('fieldset')
+    const parent = fieldset.parentElement
+    const id = fieldset.firstElementChild
+    const form = this.#form()
+    id.dataset.update = true
+    element.dataset.update = true
+
+    this.#markAs(fieldset, 'update')
   }
 
   async #detailsElementCreate(e) {
@@ -644,45 +689,46 @@ class PageController {
     const subaction = 'list'
     const request = { action, subaction, type, id }
 
-    console.log('detailsElementUpdate', this.#isUpdate(), {
-      details,
-      open,
-      type,
-      field,
-      id,
-      request,
-    })
-
     try {
       // only action read request on open
       if (open) {
         const elementType = this.htmls[type].fields[field].element
         let html = this.htmls[elementType]
-        const response = await apiFetch(API, request)
-
-        console.log(`${type}.${field} fetched ${response.length}`)
-        response.forEach((object) => {
-          html.details(field, content, object)
-          const added = content.firstElementChild
-          summary.innerHTML = `${field}<sup>(${content.children.length})</sup>`
-          this.#addToEventListeners(added, object)
-        })
-        return
+        await this.#addFetched(html, request, field, content, summary)
       }
 
       if (!open) {
-        // we need to purge read data and re-fetch on open because it may have been remotely changed
-        const wereFetched = Array.from(
-          content.querySelectorAll('[data-fetched]'),
-        )
-        console.log(`${type}.${field} wereFetched ${wereFetched.length}`)
-        wereFetched.forEach((fetched) => fetched.remove())
-        return
+        this.#removeFetched(content)
       }
     } catch (error) {
       console.error('#detailsElementUpdate', error)
       this.error(error)
     }
+  }
+
+  async #addFetched(html, request, field, content, summary) {
+    // if there are any elements in the content, keep a copy of them so we can insert them
+    // after the fetched objects
+
+    const children = Array.from(content.children).map((child) =>
+      content.removeChild(child),
+    )
+    const response = await apiFetch(API, request)
+
+    response.forEach((object) => {
+      const added = html.details(field, content, object)
+      this.#addToEventListeners(added, object)
+      this.#collectionCount(content, summary)
+    })
+
+    children.forEach((child) => content.appendChild(child))
+  }
+
+  #removeFetched(content) {
+    // we need to purge read data and re-fetch on open because it may have been remotely changed
+    const wereFetched = Array.from(content.querySelectorAll('[data-fetched]'))
+    wereFetched.forEach((fetched) => fetched.remove())
+    return
   }
 
   deleteFromCollection(e) {
@@ -691,61 +737,61 @@ class PageController {
     const content = element.parentElement
     const dialogDetail = element.closest('.dialog-details')
     const summary = dialogDetail.querySelector('summary')
-    const field = dialogDetail.dataset.field
     const isCreateAction = this.#isCreate()
-    console.log({
-      element,
-      content,
-      dialogDetail,
-      summary,
-      field,
-      isCreateAction,
-    })
 
-    if (isCreateAction) {
+    const fetched = element.dataset.fetched
+
+    if (isCreateAction || !fetched) {
       // element can simply be removed
       element.remove()
-      const count = content.children.length
-      summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
+      this.#collectionCount(content, summary)
+      return
     }
 
-    if (!isCreateAction) {
-      const fetched = element.dataset.fetched
+    // we're in an update
 
-      if (!fetched) {
-        element.remove()
-        const toBeDeleted = Array.from(
-          content.querySelectorAll('[data-deleted]'),
-        ).length
-        const count = content.children.length - toBeDeleted
-        summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
-        return
-      }
-      // it can simply be removed
+    // mark it's id as deleted, remove from display, and purge the other inputs
+    // as they are not required for the delete
+    element.style.display = 'none'
+    element.dataset.deleted = true
+    const dialogInputs = element.querySelector('.dialog-inputs')
 
-      if (fetched) {
-        // mark it's id as deleted, remove from display, and purge the other inputs so they don't go in formData
-        element.style.display = 'none'
-        element.dataset.deleted = true
-        const elementDetailsContent = element.querySelector(
-          '.element-details-content',
-        )
-        const idInput = elementDetailsContent.firstElementChild
-        const name = idInput.name
-        const parts = name.split('-').slice(1).join('-')
-        idInput.name = `delete-${parts}`
-        const deleteInputs = Array.from(elementDetailsContent.children).slice(1)
-        deleteInputs.forEach((input) => input.remove())
+    // update the id field as deleted!
+    dialogInputs.firstElementChild.dataset.deleted = true
 
-        // count the number marked for deletion
-        const toBeDeleted = Array.from(
-          content.querySelectorAll('[data-deleted]'),
-        ).length
-        const count = content.children.length - toBeDeleted
-        summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
-        return
-      }
+    const deleteInputs = Array.from(dialogInputs.children).slice(1)
+    deleteInputs.forEach((input) => input.remove())
+
+    this.#markAs(dialogInputs, 'deleted')
+    this.#collectionCount(content, summary)
+  }
+
+  #collectionCount(content, summary) {
+    // update the details count
+    const toBeDeleted = Array.from(
+      content.querySelectorAll(':scope > [data-deleted]'),
+    ).length
+    const count = content.children.length - toBeDeleted
+    const field = summary.textContent.split('(')[0]
+    summary.innerHTML = count ? `${field}<sup>(${count})</sup>` : field
+  }
+
+  #markAs(fieldset, something) {
+    if (this.#isCreate()) return
+    delete fieldset.dataset.ignore
+    delete fieldset.dataset.update
+    delete fieldset.dataset.deleted
+    fieldset.dataset[something] = true
+    let parent = fieldset.parentElement
+    parent.dataset[something] = true
+    while (parent) {
+      delete parent.dataset.ignore
+      delete parent.dataset.update
+      if (!parent.dataset.deleted) parent.dataset.update = true
+      parent = parent.parentElement.closest('fieldset')
     }
+    const form = this.#form()
+    delete form.dataset.ignore
   }
 }
 

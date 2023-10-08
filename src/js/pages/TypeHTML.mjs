@@ -58,7 +58,7 @@ class TypeHTML {
     const fId = `id=${id}`
     const fFor = `for=${id}`
     const fLabel = `<span>${labelCase(name)}</span>`
-    const select = `<label ${fFor}>${fLabel}<select ${fId} name="${name}">${options}</select></label>`
+    const select = `<label ${fFor}>${fLabel}<select ${fId} name="${name}" data-name="${name}">${options}</select></label>`
     field.html = select
   }
 
@@ -117,7 +117,7 @@ class TypeHTML {
     const fId = `id=${id}`
     const fFor = `for=${id}`
     const isClass = `class="${this.typeName}-${name}"`
-    const fName = `name="${name}"`
+    const fName = `name="${name}" data-name="${name}"`
     const fValue = this.#htmlInputValue(field)
     const fTitle = `title="Please provide a useful ${name}..."`
     const fPlaceholder = `placeholder="Please provide a useful ${name}..."`
@@ -152,16 +152,16 @@ class TypeHTML {
     const fValue = this.#htmlInputValue(field)
 
     if (name === 'id') {
-      field.html = `<input ${fId} name="${name}" type="hidden" data-system=true data-type="ID" readonly tabindex="-1" ${fValue} >`
+      field.html = `<input ${fId} name="${name}" data-name="${name}" type="hidden" data-system=true data-type="ID" readonly tabindex="-1" ${fValue} >`
     }
 
     if (name === 'createdAt') {
-      const attributes = `${fId} name="${name}" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
+      const attributes = `${fId} name="${name}" data-name="${name}" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
       field.html = `<div><span class="bicp">&#xF7DB;</span><input ${attributes}></div>`
     }
 
     if (name === 'updatedAt') {
-      const attributes = `${fId} name="${name}" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
+      const attributes = `${fId} name="${name}" data-name="name" type="text" data-system=true data-type="DateTime" tabindex="-1" readonly ${fValue}`
       field.html = `<div><input ${attributes}><span class="bicp">&#xF13A;</span></div>`
     }
   }
@@ -183,7 +183,7 @@ class TypeHTML {
                     <div><span class="bicp">&#xF4FA;</span><span>${name}</span></div>
                     <span class="error-message"></span>
                     <input type="file" accept="image/*" name="file" hidden>
-                    <input type="hidden" name="${name}" value="${def}">
+                    <input type="hidden" name="${name}" data-name="${name}" value="${def}">
                   </button>`
   }
 
@@ -224,7 +224,7 @@ class TypeHTML {
     const fFor = `for="${id}"`
     const fTitle = labelCase(name)
     const fId = `id="${id}"`
-    const fName = `name="${name}"`
+    const fName = `name="${name}" data-name="${name}"`
     const fType = `type="${this.#htmlInputType(field)}"`
     const fPattern = this.#htmlInputPattern(field)
     const fMinMaxStep = this.#htmlMinMaxStep(field)
@@ -254,8 +254,7 @@ class TypeHTML {
   #htmlCollection(field) {
     const { name } = field
     const one = singular(name)
-    const id = `${this.typeName}-${name}`
-    const isClass = `class="${id} dialog-details"`
+    const isClass = `class="dialog-details"`
     const fField = `data-type=${this.typeName} data-field=${name}`
     const add = `<button type="button" class="add-to-collection" title="add ${one}"><span class="bicp">&#xF4FA;</span></button>`
     const content = `<section class="details-content"></section>${add}`
@@ -314,19 +313,23 @@ class TypeHTML {
       })
       .join('')
 
-    const attributes = `id="${id}" class="${this.typeName}-element element"`
+    const attributes = `id="${id}-article" class="${this.typeName}-element element"`
     const article = `<article ${attributes}>${fields}</article>`
     return article
   }
 
-  dialog() {
+  dialog(mode) {
     console.log('htmlDialog', this.type)
     if (this.type.typedef === 'enum') return null
 
-    if (this.type.dialog) return this.type.dialog
-
     const elements = this.type.fields
-      .filter((field) => !field.collection)
+      .filter((field) => !field.collection && !field.system)
+      .filter((field) => field.html)
+      .map((field) => field.html)
+      .join('')
+
+    const systems = this.type.fields
+      .filter((field) => mode === 'update' && field.system)
       .filter((field) => field.html)
       .map((field) => field.html)
       .join('')
@@ -337,63 +340,80 @@ class TypeHTML {
       .map((field) => field.html)
       .join('')
 
-    const collections = `<section class="${this.typeName}-collections dialog-collections">${collectionsHTML}</section>`
-    const p = `<p>${this.typeName}</p>`
+    const typeName = this.typeName
+    const collections = `<section class="dialog-collections">${collectionsHTML}</section>`
+    const p = `<p>${typeName}</p>`
     const close = `<button type="button" id="close-dialog"><span class="bicp">&#xF623;</span></button>`
-    const header = `<header>${p}${close}</header>`
+    const header =
+      mode === 'update'
+        ? `<header>${p}${close}<fieldset class="system">${systems}</fieldset></header>`
+        : `<header>${p}${close}</header>`
     const cancel = `<button type="button" id="cancel-action"><span class="bicp">&#xF623;</span><span>cancel</span></button>`
     const deleteMe = `<button type="button" id="delete-action"><span class="bicp">&#xF78B;</span><span>delete</span></button>`
     const submit = `<button type="submit" id="submit-action"><span class="bicp">&#xF4FA;</span><span>submit</span></button>`
     const footer = `<footer>${cancel}${deleteMe}${submit}</footer>`
-    const action = `<input type="hidden" name="action" value="create">`
-    const typeField = `<input type="hidden" name="type" value="${this.typeName}">`
-    const contents = `${action}${typeField}${elements}`
-    const inputs = `<section class="${this.typeName}-inputs dialog-inputs">${contents}</section>`
-    const form = `<form>${header}${inputs}${collections}${footer}</form>`
+    const contents = `${elements}`
+    const ignore = mode === 'update' ? `data-ignore=true` : ''
+    const inputs = `<fieldset class="dialog-inputs" ${ignore}>${contents}</fieldset>`
+    const form = `<form class="${typeName} ${mode}" data-type="${typeName}" data-action="${mode}" ${ignore}>${header}${inputs}${collections}${footer}</form>`
 
-    this.type.dialog = `<dialog class="dialog" id="${this.typeName}-dialog">${form}</dialog>`
+    this.type.dialog = `<dialog class="dialog">${form}</dialog>`
     return this.type.dialog
   }
 
-  #nth(element) {
-    let nth = ''
-    let e = element.closest('[data-nth]')
-    while (e) {
-      const n = e.dataset.nth
-      nth = nth ? `${n}:${nth}` : `${n}`
-      e = e.parentElement.closest('[data-nth]')
-    }
-    return nth
-  }
-
-  details(collection, content, from) {
+  details(collection, content, from, where = 'beforeend') {
     const one = singular(collection)
     const fields = this.type.fields
+      .filter((field) => !field.collection)
+      .filter((field) => (from && field.system) || !field.system)
       .filter((field) => field.html)
       .map((field) => field.html)
       .join('')
+
+    const collectionsHTML = this.type.fields
+      .filter((field) => field.collection)
+      .filter((field) => field.html)
+      .map((field) => field.html)
+      .join('')
+
     const summary = `<summary>${one}</summary>`
     const deleteMe = `<button type="button" class="delete-from-collection" title="delete ${one}"><span class="bicp">&#xF78B;</span></button>`
     const markAsFetched = from ? 'data-fetched=true' : ''
     const fId = from ? `id="${from.id}"` : ''
+    const collections = collectionsHTML
+      ? `<section class="dialog-collections">${collectionsHTML}</section>`
+      : ''
 
     const nth = content.children.length
 
-    const inner = `${summary}<fieldset class="element-details-content">${fields}</fieldset>${deleteMe}`
-    const details = `<details ${fId} class="${this.typeName}-details element-details" ${markAsFetched} data-type=${this.typeName} open>${inner}</details>`
-    content.insertAdjacentHTML('afterbegin', details)
-    const newDetails = content.firstElementChild
-    const parentDetails = newDetails.parentElement.parentElement
-    newDetails.dataset.nth = nth
-    newDetails.dataset.pid = parentDetails.dataset.parent
-      ? parentDetails.dataset.parent
-      : ''
-    newDetails.dataset.ptype = parentDetails.dataset.type
-    newDetails.dataset.pfield = parentDetails.dataset.field
-    newDetails.dataset.pnth = parentDetails.dataset.nth
-      ? parentDetails.dataset.nth
-      : 0
-    this.#updateIds(newDetails, from)
+    const ignore = from ? `data-ignore=true` : ''
+    const attributes = `class="element-details-content" data-type=${this.typeName} data-nth="${nth}" ${ignore}`
+
+    const inner = `${summary}
+                  <fieldset ${fId} ${attributes}>
+                    <fieldset class="dialog-inputs" ${ignore}>${fields}</fieldset>
+                    ${collections}
+                  </fieldset>
+                  ${deleteMe}`
+    const details = `<details class="element-details" ${markAsFetched} open>${inner}</details>`
+    content.insertAdjacentHTML(where, details)
+    const added =
+      where === 'beforeend'
+        ? content.lastElementChild
+        : content.firstElementChild
+    const fieldset = added.querySelector('fieldset')
+    this.#updateIds(fieldset, from)
+    return added
+  }
+
+  #nth(element) {
+    let nth = element.dataset.nth
+    let fieldset = element.parentElement.closest('fieldset')
+    while (fieldset) {
+      nth = `${fieldset.dataset.nth}-${nth}`
+      fieldset = fieldset.parentElement.closest('fieldset')
+    }
+    return nth
   }
 
   #updateIds(element, from) {
@@ -404,8 +424,7 @@ class TypeHTML {
       const label = input.closest('label')
       const { name } = input
 
-      const prefix = from ? `ignore-${from.id}` : this.typeName
-      const id = `${prefix}-${nth}-${name}`
+      const id = `${this.typeName}-${nth}-${name}`
       input.id = id
       input.name = id
       // special case for automatically generating uuids

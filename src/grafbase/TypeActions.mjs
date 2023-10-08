@@ -4,11 +4,10 @@ import graphql from './graphql.mjs'
 import { inspect } from './utilities.mjs'
 
 class TypeActions {
-  constructor(type, schema, actions, emitter) {
+  constructor(type, schema, actions) {
     this.type = type
     this.schema = schema
     this.actions = actions
-    this.emitter = emitter
     this.name = type.name
     this.typename = camelCase(type.name)
     this.idprefix = this.typename.toLowerCase()
@@ -26,13 +25,28 @@ class TypeActions {
       (field) => !(field.system || field.collection),
     )
     this.responseFieldsNames = this.responseFields.join(' ')
+    this.referenceFields = type.fields
+      .filter((field) => field.reference)
+      .map((field) => field.name)
+    this.referenceFieldNames = this.referenceFields
+      .map((field) => `${field} { id }`)
+      .join(' ')
+    this.responseFieldsWithoutCollections = `${this.responseFieldsNames} ${this.referenceFieldNames}`
+
+    // store event callbacks
+    this.events = {}
     this.#addCollectionActions()
   }
 
   // private functions
 
-  #emit(object) {
-    this.emitter.emit(`${this.name}.${object.name}`, object)
+  on(eventName, fn) {
+    this.events[eventName] = fn
+  }
+
+  async #event(eventName, args) {
+    const fn = this.events[eventName]
+    if (fn) return await fn(args)
   }
 
   #addCollectionActions() {
@@ -43,6 +57,11 @@ class TypeActions {
       this[name] = async function (request) {
         const typedef = collection
         const element = this.actions[typedef.element]
+
+        if (typeof request === 'string') {
+          // an id passed directly
+          request = { id: request }
+        }
         let response = { id: request.id }
         let r = request[name] // the case for multiple collections update
         if (!r) r = request // the case for single collection update
@@ -58,13 +77,22 @@ class TypeActions {
           if (subaction) count = count + 1
           return count
         }, 0)
-        if (n === 0) subactions.list = []
+        if (n === 0) subactions.list = true
 
         if (subactions.list) {
           // list is a singleton action
-          const list = await this.list({ id: request.id, select: [name] })
-          response = list[name]
-          this.#emit({ name, request, response, type: this })
+
+          const list = await this.list({
+            id: request.id,
+            // select: subactions.list,
+            select: [
+              subactions.list === true ? name : { [name]: subactions.list },
+            ],
+          })
+          response = list ? (list[name] ? list[name] : list) : []
+
+          await this.#event(name, { request, response, type: this })
+
           return response
         }
 
@@ -73,7 +101,8 @@ class TypeActions {
           const select = { id: request.id, select: [{ [name]: ['id'] }] }
           const ids = await this.ids(select)
           response = ids[name]
-          this.#emit({ name, request, response, type: this })
+
+          await this.#event(name, { request, response, type: this })
 
           return response
         }
@@ -90,7 +119,8 @@ class TypeActions {
           const deleteMany = await element.deleteMany(ids)
 
           response = deleteMany
-          this.#emit({ name, request, response, type: this })
+
+          await this.#event(name, { request, response, type: this })
 
           return response
         }
@@ -158,8 +188,24 @@ class TypeActions {
           }
         }
 
-        this.#emit({ name, request, response, type: this })
+        // gather whatever resulted from the various actions
+        let current = []
+        if (response.create) {
+          current = response.create
+        }
 
+        if (response.update) {
+          current = current.concat(response.update)
+        }
+
+        if (response.delete && !response.create && !response.update) {
+          // special case... ignore them for updates but if solely requested
+          // show what has been deleted
+          current = response.delete
+        }
+        response = current
+
+        await this.#event(name, { request, response, type: this })
         return response
       }
       this.collectionActions[name] = this[name]
@@ -195,6 +241,9 @@ class TypeActions {
 
     const values = this.inputFields.reduce((inputs, field) => {
       const { name } = field
+
+      // skip reference fields we don't update them
+      if (field.reference) return inputs
 
       if (name in request) {
         let value = request[name]
@@ -282,26 +331,11 @@ class TypeActions {
 
   async #collections(request, parent) {
     for (const action in this.collectionActions) {
-      if (action in request) {
-        if (parent && request[action].create) {
-          request[action].create.forEach((object) => {
-            object.id = parent.id
-            object.type = this.name
-          })
-        }
-        const run = this.collectionActions[action].bind(this)
-        const response = await run(request)
-        // annotate the response with collection responses
-        if (parent) {
-          if (this.#isSimpleCreateAction(request[action])) {
-            parent[action] = response.create
-            continue
-          }
-
-          // the response may be multiples
-          parent[action] = response
-        }
-      }
+      const run = this.collectionActions[action].bind(this)
+      const cRequest = { id: parent.id, [action]: [] }
+      if (action in request) cRequest[action] = request[action]
+      const response = await run(cRequest)
+      parent[action] = response
     }
   }
 
@@ -317,7 +351,7 @@ class TypeActions {
       ${this.collectionName}(first: 100) {
         edges {
           node {
-            ${this.responseFieldsNames}
+            ${this.responseFieldsWithoutCollections}
           }
         }
       }
@@ -325,7 +359,7 @@ class TypeActions {
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `list`, request: {}, response, type: this })
+    await this.#event('list', { request: {}, response, type: this })
 
     return result
   }
@@ -356,7 +390,7 @@ class TypeActions {
         const { collection, element, reference } = legit
         if (collection) {
           const actions = this.actions[element]
-          const names = actions.responseFieldsNames
+          const names = actions.responseFieldsWithoutCollections
           const cField = stripIndent`${field}(first: 100) {
                                 edges { node { ${names}  }}
                               }`
@@ -425,7 +459,7 @@ class TypeActions {
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `list`, request: fields, response, type: this })
+    await this.#event('list', { request: fields, response, type: this })
 
     return result
   }
@@ -444,7 +478,7 @@ class TypeActions {
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `list`, request, response, type: this })
+    await this.#event('list', { request, response, type: this })
 
     return result
   }
@@ -454,28 +488,28 @@ class TypeActions {
     //        [property | collection | {collection {[property | collection | collection{}]}}] |
 
     // simple case of list everything
-    if (!from) return this.#listCollection()
+    if (!from) return await this.#listCollection()
 
     // determine how to process based on arguments
     const argsType = typeof from
 
     if (argsType === 'string') {
-      return this.#listCollectionField(from)
+      return await this.#listCollectionField(from)
     }
 
     if (Array.isArray(from)) {
-      return this.#listCollectionFields(from)
+      return await this.#listCollectionFields(from)
     }
 
     if (argsType === 'object') {
       if (from.id) {
         if (from.select) {
           // selecting a subset of fields
-          return this.#listFromObject(from)
+          return await this.#listFromObject(from)
         }
 
         // return the default object
-        return this.read(from)
+        return await this.read(from)
       }
     }
 
@@ -485,7 +519,7 @@ class TypeActions {
       ${this.collectionName}(first: 100) {
         edges {
           node {
-            ${this.responseFieldsNames}
+            ${this.responseFieldsWithoutCollections}
           }
         }
       }
@@ -494,7 +528,7 @@ class TypeActions {
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `list`, request: {}, response, type: this })
+    await this.#event('list', { request: {}, response, type: this })
 
     return result
   }
@@ -513,7 +547,7 @@ class TypeActions {
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `exists`, request, response, type: this })
+    await this.#event('exists', { request, response, type: this })
 
     return result
   }
@@ -525,7 +559,7 @@ class TypeActions {
     mutation ${this.name}Create {
       ${this.typename}Create(${input}) {
         ${this.typename} {
-          ${this.responseFieldsNames}
+          ${this.responseFieldsWithoutCollections}
         }
       }
     }`
@@ -534,7 +568,8 @@ class TypeActions {
     await this.#collections(request, created)
 
     const response = created
-    this.#emit({ name: `create`, request, response, type: this })
+
+    await this.#event('create', { request, response, type: this })
 
     return created
   }
@@ -550,7 +585,7 @@ class TypeActions {
     mutation ${this.name}CreateMany {
       ${this.typename}CreateMany(${input}) {
         ${this.collectionName} {
-          ${this.responseFieldsNames}
+          ${this.responseFieldsWithoutCollections}
         }
       }
     }`
@@ -573,7 +608,8 @@ class TypeActions {
     }
 
     const response = result
-    this.#emit({ name: `createMany`, request, response, type: this })
+
+    await this.#event('createMany', { request, response, type: this })
 
     return result
   }
@@ -583,14 +619,14 @@ class TypeActions {
     const query = stripIndent`
     query ${this.name} {
       ${this.typename}(${read}) {
-        ${this.responseFieldsNames}
+        ${this.responseFieldsWithoutCollections}
       }
     }`
 
     let result = await graphql(query)
     const response = result
 
-    this.#emit({ name: `read`, request, response, type: this })
+    await this.#event('read', { request, response, type: this })
 
     return result
   }
@@ -602,7 +638,7 @@ class TypeActions {
     mutation ${this.name}Update {
       ${this.typename}Update(${update}) {
         ${this.typename} {
-          ${this.responseFieldsNames}
+          ${this.responseFieldsWithoutCollections}
         }
       }
     }`
@@ -611,7 +647,8 @@ class TypeActions {
     await this.#collections(request, updated)
 
     const response = updated
-    this.#emit({ name: `update`, request, response, type: this })
+
+    await this.#event('update', { request, response, type: this })
 
     return updated
   }
@@ -624,7 +661,8 @@ class TypeActions {
         const result = await this.update(object)
         response.push(result)
       }
-      this.#emit({ name: `updateMany`, request, response, type: this })
+
+      await this.#event('updateMany', { request, response, type: this })
 
       return response
     }
@@ -639,14 +677,15 @@ class TypeActions {
     mutation ${this.name}UpdateMany {
       ${this.typename}UpdateMany(${input}) {
         ${this.collectionName} {
-          ${this.responseFieldsNames}
+          ${this.responseFieldsWithoutCollections}
         }
       }
     }`
 
     let result = await graphql(mutation)
     const response = result
-    this.#emit({ name: `updateMany`, request, response, type: this })
+
+    await this.#event(`updateMany`, { request, response, type: this })
 
     return result
   }
@@ -667,7 +706,7 @@ class TypeActions {
     // delete all the collections if there are any
     let deletes = null
     if (this.hasCollections()) {
-      deletes = {}
+      deletes = { id }
       await this.#collections(this.#deleteAllRequest(request), deletes)
     }
 
@@ -680,8 +719,9 @@ class TypeActions {
 
     let deleted = await graphql(mutation)
 
-    const response = deletes ? { deleted, ...deletes } : deleted
-    this.#emit({ name: `delete`, request, response, type: this })
+    const response = deletes ? { ...deletes } : deleted
+
+    await this.#event('delete', { request, response, type: this })
 
     return response
   }
@@ -714,7 +754,8 @@ class TypeActions {
 
     const response = deletes
     deletes = this.#deleteIds(deletes)
-    this.#emit({ name: `deleteMany`, request, response, type: this })
+
+    await this.#event('deleteMany', { request, response, type: this })
 
     return deletes
   }

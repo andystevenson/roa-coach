@@ -24,7 +24,7 @@ const Template = {
   },
 
   mobile() {
-    return faker.phone.number('###########')
+    return faker.helpers.fromRegExp('[0-9]{9,11}')
   },
 
   member() {

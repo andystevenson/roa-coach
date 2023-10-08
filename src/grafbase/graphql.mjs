@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import fetch from 'node-fetch'
 import process from 'node:process'
 import endpoint from './endpoint.mjs'
 import { inspect, edgesToData } from './utilities.mjs'
@@ -24,7 +25,10 @@ const graphql = async (query, variables = null) => {
 
       // console.warn({ data, errors })
       // if we got errors let the application deal with it
-      if (errors) throw Error(`db failed`, { cause: analyse(errors) })
+      if (errors) {
+        console.error({ query, errors })
+        throw Error(`db failed`, { cause: analyse(errors) })
+      }
       // console.warn({ data, errors })
 
       const key = Object.keys(data)[0]

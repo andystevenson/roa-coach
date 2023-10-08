@@ -57,7 +57,6 @@ type Programme @model {
   launched: Launched @default(value: InDevelopment)
   description: String @length(max: 2048)
   image: URL
-  stripe: ID
   days: [ProgrammeDay]
   prices: [Price]
   coaches: [ProgrammeCoach]
@@ -92,7 +91,7 @@ enum PaymentType {
 
 type Payment @model {
   programme: Programme!
-  player: Player
+  player: Player!
   booking: String! @unique
   email: Email
   date: Date
@@ -101,7 +100,6 @@ type Payment @model {
   quantity: Int @default(value: 1)
   unitPrice: Float
   paymentType: PaymentType @default(value: Online)
-  stripe: ID
 }
 
 type Session @model {
@@ -110,7 +108,7 @@ type Session @model {
   startTime: DateTime!
   endTime: DateTime!
   description: String @length(max: 2048)
-  hosts: [SessionCoach]
+  coaches: [SessionCoach]
   attendees: [SessionAttendee]
   notes: [SessionNote]
 }
@@ -167,5 +165,4 @@ type Price @model {
   unitPrice: Float @default(value: 20.00)
   threshold: Int @default(value: 1)
   member: Member @default(value: Member)
-  stripe: ID
 }

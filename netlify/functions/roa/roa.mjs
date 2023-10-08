@@ -1,6 +1,5 @@
 import 'dotenv/config'
-import client from '../../../src/grafbase/GrafbaseClient.mjs'
-import '../../../src/grafbase/GrafbaseEvents.mjs'
+import { client } from '../../../src/js/ROAclient.mjs'
 
 const Headers = { 'Content-Type': 'application/json' }
 const FunctionName = 'roa'

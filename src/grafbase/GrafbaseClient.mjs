@@ -1,13 +1,11 @@
 import GrafbaseSchema from './GrafbaseSchema.mjs'
 import TypeActions from './TypeActions.mjs'
-import EventEmitter from 'node:events'
 
 class GrafbaseClient {
   constructor(schema) {
     this.schema = schema
     this.modelTypes = this.schema.types.filter((type) => type.model)
     this.actions = {}
-    this.emitter = new EventEmitter({ captureRejections: true })
     this.#init()
   }
 
@@ -23,7 +21,6 @@ class GrafbaseClient {
           type,
           this.schema,
           this.actions,
-          this.emitter,
         )),
     )
   }
@@ -65,5 +62,4 @@ class GrafbaseClient {
   }
 }
 
-const client = new GrafbaseClient(GrafbaseSchema)
-export default client
+export { GrafbaseClient, GrafbaseSchema }
