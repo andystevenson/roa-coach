@@ -1,0 +1,21 @@
+label.relation {
+  display: flex;
+  border: 1px solid var(--gray-5);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-2);
+  padding-inline: var(--size-2);
+
+  background-color: transparent;
+
+  span {
+    display: none;
+  }
+
+  input[type='text'] {
+    background-color: transparent;
+    inline-size: min-content;
+    white-space: nowrap;
+    padding-inline-start: var(--size-1);
+    padding-inline-end: unset;
+  }
+}

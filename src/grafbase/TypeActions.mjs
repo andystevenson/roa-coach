@@ -12,24 +12,36 @@ class TypeActions {
     this.typename = camelCase(type.name)
     this.idprefix = this.typename.toLowerCase()
     this.collectionName = this.typename + 'Collection'
+
     this.fields = type.fields.reduce((fields, field) => {
       fields[field.name] = field
       return fields
     }, {})
+
     this.collections = type.fields.filter((field) => field.collection)
     this.collectionActions = {}
+
     this.responseFields = type.fields
       .filter((field) => !field.collection && (field.builtin || field.isenum))
       .map((field) => field.name)
+    this.responseFieldsNames = this.responseFields.join(' ')
+
     this.inputFields = type.fields.filter(
       (field) => !(field.system || field.collection),
     )
-    this.responseFieldsNames = this.responseFields.join(' ')
-    this.referenceFields = type.fields
-      .filter((field) => field.reference)
-      .map((field) => field.name)
+
+    this.referenceFields = type.fields.filter((field) => field.reference)
     this.referenceFieldNames = this.referenceFields
-      .map((field) => `${field} { id }`)
+      .map((field) => {
+        // TODO: unsafe
+        const { bareType, name } = field
+        const fieldType = this.schema.type(bareType)
+        const uniques = fieldType.fields
+          .filter((f) => f.unique)
+          .map((f) => f.name)
+          .join(' ')
+        return `${name} { id ${uniques} }`
+      })
       .join(' ')
     this.responseFieldsWithoutCollections = `${this.responseFieldsNames} ${this.referenceFieldNames}`
 
@@ -130,7 +142,7 @@ class TypeActions {
           // therefore it is not a singleton request
           const { id } = request
 
-          // the objects in the create request... don't yet know their parent.active
+          // the objects in the create request... don't yet know their parent.
           // if we do populate the object so they understand what parent to link to
           if (id) {
             subactions.create.forEach((newObject) => {
@@ -224,13 +236,15 @@ class TypeActions {
   }
 
   #updateValue(value, field) {
-    const { type, builtin, isenum } = field
+    const { bareType, builtin, isenum } = field
 
     if (isenum) return value
     if (!builtin) return `{link: "${value}"}`
-    if (type === 'Boolean' || type === 'Boolean!') return value
-    if (type === 'Float' || type === 'Float!') return `{set: ${+value}}`
-    if (type === 'Int' || type === 'Int!') return `{set: ${+value}}`
+    if (bareType === 'Boolean') return value
+    if (bareType === 'Float') return `{set: ${+value}}`
+    if (bareType === 'Int') return `{set: ${+value}}`
+    if (bareType === 'Email') return value ? `"${value}"` : null
+    if (bareType === 'URL') return value ? `"${value}"` : null
     return value === null ? null : `"${value}"`
   }
 
@@ -261,36 +275,41 @@ class TypeActions {
   }
 
   #inputValue(value, field) {
-    const { type, builtin, isenum } = field
+    const { bareType, builtin, isenum } = field
 
     if (isenum) return value
     if (!builtin) return `{link: "${value}"}`
-    if (type === 'Boolean' || type === 'Boolean!') return value
-    if (type === 'Float' || type === 'Float!') return +value
-    if (type === 'Int' || type === 'Int!') return +value
+    if (bareType === 'Boolean') return value
+    if (bareType === 'Float') return +value
+    if (bareType === 'Int') return +value
+    if (bareType === 'Email') return value ? `"${value}"` : null
+    if (bareType === 'URL') return value ? `"${value}"` : null
     return value === null ? null : `"${value}"`
   }
 
   #input(request = {}) {
     // gather the inputs from the request
-    const { type } = request
+    const { type, id } = request
     const values = this.inputFields.reduce((inputs, field) => {
       const { name, nullable } = field
 
       if (name in request) {
         let value = request[name]
+        // missing input
+        if (id && !nullable && !value) {
+          if (`${type}!` === field.type) {
+            // we have a relation link to parent... fill it in!
+            value = id
+          }
+        }
         inputs.push([name, this.#inputValue(value, field)])
         return inputs
       }
 
-      // missing input
-      if (!nullable) {
+      if (id && !nullable) {
         if (`${type}!` === field.type) {
           // we have a relation link to parent... fill it in!
-          const { id } = request
-          if (id) {
-            inputs.push([name, this.#inputValue(id, field)])
-          }
+          inputs.push([name, this.#inputValue(id, field)])
         }
       }
       return inputs
@@ -821,7 +840,10 @@ class TypeActions {
       this.#mapCollectionIds(ids)
       return ids
     }
-    return []
+
+    // return all the ids of objects of this type
+    let ids = await this.list('id')
+    return ids.map((object) => object.id)
   }
 
   async clean() {

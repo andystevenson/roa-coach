@@ -2,10 +2,30 @@
   .Coach-image {
     --_image-row-end: span 5;
   }
-
-  .listview {
+  .list-view {
     .element {
-      --_grid-template-columns: 3ch 20ch 14ch 25ch 12ch 22ch;
+      --_thumbnail-size: 30px;
+      --_name-size: 207px;
+      --_role-size: 120px;
+      --_email-size: 290px;
+      --_mobile-size: 110px;
+      --_bio-size: 221px;
+
+      --_grid-template-columns: var(--_thumbnail-size) var(--_name-size)
+        var(--_role-size) var(--_email-size) var(--_mobile-size)
+        var(--_bio-size);
+    }
+  }
+
+  [for$='coach'] {
+    display: none;
+  }
+
+  [for$='programme'] {
+    display: flex;
+
+    span {
+      display: none;
     }
   }
 }

@@ -1,9 +1,14 @@
 nav {
   --_speed: 200ms;
+  --_transition: right var(--_speed) ease-in-out, left var(--_speed) ease-in-out;
+  --_color: var(--green-10);
   ul {
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    justify-content: center;
     gap: var(--size-fluid-2);
+
     a {
       position: relative;
 
@@ -13,9 +18,8 @@ nav {
         inset: 0;
         right: 50%;
         left: 50%;
-        border-block-end: 4px double var(--green-10);
-        transition: right var(--_speed) ease-in-out,
-          left var(--_speed) ease-in-out;
+        border-block-end: 4px double var(--_color);
+        transition: var(--_transition);
       }
 
       &:hover::after {
@@ -30,9 +34,8 @@ nav {
           content: '';
           position: absolute;
           inset: 0;
-          border-block-end: 2px solid var(--green-10);
-          transition: right var(--_speed) ease-in-out,
-            left var(--_speed) ease-in-out;
+          border-block-end: 2px solid var(--_color);
+          transition: var(--_transition);
         }
 
         &:hover::after {

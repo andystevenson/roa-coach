@@ -75,7 +75,7 @@ type Player @model {
   image: URL
   thumbnail: URL
   notes: [PlayerNote]
-  sessions: [SessionAttendee]
+  sessions: [SessionPlayer]
   payments: [Payment]
 }
 
@@ -109,7 +109,7 @@ type Session @model {
   endTime: DateTime!
   description: String @length(max: 2048)
   coaches: [SessionCoach]
-  attendees: [SessionAttendee]
+  players: [SessionPlayer]
   notes: [SessionNote]
 }
 
@@ -118,7 +118,7 @@ type SessionCoach @model {
   coach: Coach!
 }
 
-type SessionAttendee @model {
+type SessionPlayer @model {
   session: Session!
   player: Player!
 }

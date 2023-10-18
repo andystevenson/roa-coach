@@ -44,6 +44,7 @@
     "node-fetch": "^3.3.2",
     "open-props": "^1.5.16",
     "pluralize": "^8.0.0",
+    "postcss-clean": "^1.2.2",
     "postcss-custom-media": "^10.0.1",
     "postcss-jit-props": "^1.0.13",
     "sass": "^1.68.0",
@@ -52,7 +53,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
-    "grafbase": "^0.35.1",
+    "grafbase": "^0.38.0",
     "nodemon": "^3.0.1",
     "vitest": "^0.34.5"
   }

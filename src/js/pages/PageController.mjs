@@ -22,6 +22,7 @@ class PageController {
     this.create = document.getElementById('create')
     this.dialogs = document.getElementById('dialogs')
     this.search = document.getElementById('search')
+    this.gridview = document.getElementById('grid-view')
     this.listview = document.getElementById('list-view')
     this.personview = document.getElementById('person-view')
     this.elements = document.getElementById('elements')
@@ -123,6 +124,9 @@ class PageController {
     const field = details.dataset.field
     const open = details.open
     const content = details.querySelector('.details-content')
+    const parent = details.parentElement.closest('[data-type]')
+    const parentType = parent.dataset.type
+    console.log('detailsUpdate', { parentType })
 
     try {
       // only action read request on open
@@ -133,8 +137,15 @@ class PageController {
         const element = fieldType.element
         const html = this.htmls[element]
 
-        const request = { id, action: field, type, subaction: 'list' }
-        await this.#addFetched(html, request, field, content, summary)
+        const request = { id, type, action: field }
+        await this.#addFetched(
+          parentType,
+          html,
+          request,
+          field,
+          content,
+          summary,
+        )
 
         return
       }
@@ -163,12 +174,26 @@ class PageController {
 
     this.search.addEventListener('input', this.filter.bind(this))
 
+    this.gridview.addEventListener('click', () => {
+      this.elements.classList.add('grid-view')
+      this.elements.classList.remove('person-view')
+      this.elements.classList.remove('list-view')
+      this.elements.classList.remove('media-scroller')
+    })
+
     this.listview.addEventListener('click', () => {
-      this.elements.classList.add('listview')
+      this.elements.classList.add('list-view')
+      this.elements.classList.remove('media-scroller')
+      this.elements.classList.remove('person-view')
+      this.elements.classList.remove('grid-view')
     })
 
     this.personview.addEventListener('click', () => {
-      this.elements.classList.remove('listview')
+      this.elements.classList.add('person-view')
+      this.elements.classList.add('media-scroller')
+
+      this.elements.classList.remove('list-view')
+      this.elements.classList.remove('grid-view')
     })
 
     this.closeErrorDialog.addEventListener('click', this.close.bind(this))
@@ -284,11 +309,11 @@ class PageController {
   // saves an image to the cloudinary repository
   async cloudinary(request, form) {
     // upload the image into cloudinary
-    const imageButton = form.querySelector('button.image')
+    const image = form.querySelector('[data-name=image]')
 
-    const updated = imageButton.dataset.updated
+    const update = image.dataset.update
 
-    if (!updated) {
+    if (!update) {
       console.log('image did not update')
       // nothing to upload to cloudinary
       return null
@@ -585,18 +610,28 @@ class PageController {
     })
   }
 
-  addToCollection(e) {
+  async #selectCoaches(html, content) {
+    console.log('selectCoaches')
+    const request = { type: 'Coach', action: 'ids' }
+    const response = await apiFetch(API, request)
+    console.log('selectCoaches', { request, response })
+  }
+
+  async addToCollection(e) {
     const button = e.target.closest('button')
     const details = button.closest('details')
     const summary = details.querySelector('summary')
+    const parent = details.parentElement.closest('[data-type]')
+    const parentType = parent.dataset.type
+    console.log('addTo', { parentType })
 
     const content = details.querySelector('.details-content')
-    const type = details.dataset.type
-    const field = details.dataset.field
+    const { type, field } = details.dataset
 
     const elementType = this.htmls[type].fields[field].element
     let html = this.htmls[elementType]
-    const added = html.details(field, content)
+    if (field === 'coaches') await this.#selectCoaches(parent)
+    const added = html.details(parentType, field, content)
     const fieldset = added.closest('fieldset')
     fieldset && this.#markAs(fieldset.firstElementChild, 'update')
     this.#addToEventListeners(added)
@@ -658,9 +693,7 @@ class PageController {
   #inputChange(e) {
     const element = e.target
     const fieldset = element.closest('fieldset')
-    const parent = fieldset.parentElement
     const id = fieldset.firstElementChild
-    const form = this.#form()
     id.dataset.update = true
     element.dataset.update = true
 
@@ -682,19 +715,28 @@ class PageController {
     const summary = details.firstElementChild
     const content = details.querySelector('.details-content')
     const open = details.open
+    const parent = details.parentElement.closest('[data-type]')
+    const parentType = parent.dataset.type
+    console.log('detailsElementUpdate', { parentType })
 
     const id = details.parentElement.parentElement.id
 
     const action = field
-    const subaction = 'list'
-    const request = { action, subaction, type, id }
+    const request = { action, type, id }
 
     try {
       // only action read request on open
       if (open) {
         const elementType = this.htmls[type].fields[field].element
         let html = this.htmls[elementType]
-        await this.#addFetched(html, request, field, content, summary)
+        await this.#addFetched(
+          parentType,
+          html,
+          request,
+          field,
+          content,
+          summary,
+        )
       }
 
       if (!open) {
@@ -706,7 +748,7 @@ class PageController {
     }
   }
 
-  async #addFetched(html, request, field, content, summary) {
+  async #addFetched(parentType, html, request, field, content, summary) {
     // if there are any elements in the content, keep a copy of them so we can insert them
     // after the fetched objects
 
@@ -716,7 +758,7 @@ class PageController {
     const response = await apiFetch(API, request)
 
     response.forEach((object) => {
-      const added = html.details(field, content, object)
+      const added = html.details(parentType, field, content, object)
       this.#addToEventListeners(added, object)
       this.#collectionCount(content, summary)
     })
@@ -733,7 +775,7 @@ class PageController {
 
   deleteFromCollection(e) {
     const deleteButton = e.target.closest('button')
-    const element = deleteButton.closest('details')
+    const element = deleteButton.closest('.element-details')
     const content = element.parentElement
     const dialogDetail = element.closest('.dialog-details')
     const summary = dialogDetail.querySelector('summary')
@@ -782,12 +824,21 @@ class PageController {
     delete fieldset.dataset.update
     delete fieldset.dataset.deleted
     fieldset.dataset[something] = true
+    const id = fieldset.firstElementChild
+    id.dataset[something] = true
     let parent = fieldset.parentElement
     parent.dataset[something] = true
     while (parent) {
       delete parent.dataset.ignore
       delete parent.dataset.update
-      if (!parent.dataset.deleted) parent.dataset.update = true
+      if (!parent.dataset.deleted) {
+        parent.dataset.update = true
+        const detailsInput = parent.firstElementChild
+        delete detailsInput.dataset.ignore
+        detailsInput.dataset.update = true
+        const id = detailsInput.firstElementChild
+        id.dataset.update = true
+      }
       parent = parent.parentElement.closest('fieldset')
     }
     const form = this.#form()

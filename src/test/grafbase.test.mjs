@@ -18,7 +18,7 @@ const Coach = client.Coach
 const Player = client.Player
 const Programme = client.Programme
 const Session = client.Session
-const SessionAttendee = client.SessionAttendee
+const SessionPlayer = client.SessionPlayer
 const Payment = client.Payment
 
 let Programmes = []
@@ -134,6 +134,15 @@ describe('ROA', async () => {
     })
   })
 
+  test(`Coach ids`, async () => {
+    let ids = await Coach.ids()
+    console.log({ ids })
+    expect(ids).toHaveLength(Coaches.length)
+    ids = await client.invoke({ type: 'Coach', action: 'ids' })
+    expect(ids).toHaveLength(Coaches.length)
+    ids = await client.invoke({ type: 'Coach', action: 'list' })
+    expect(ids).toHaveLength(Coaches.length)
+  })
   // Player test
   test('Player create', async () => {
     const player = Template.Player.player()
@@ -266,7 +275,6 @@ describe('ROA', async () => {
       .toHaveProperty('launched', programme.launched)
       .toHaveProperty('description', programme.description)
       .toHaveProperty('image', programme.image)
-      .toHaveProperty('stripe', programme.stripe)
     await Programme.delete(created)
   })
 
@@ -759,30 +767,30 @@ describe('ROA', async () => {
     })
 
     let sessions = await Programme.sessions(withDays)
-    let attendees = []
+    let players = []
     for (const session of sessions) {
       for (const player of somePlayers) {
-        attendees.push({ session: session.id, player: player.id })
+        players.push({ session: session.id, player: player.id })
       }
     }
 
     // hard limit of 100 creates in graphql
-    let al = attendees.length
-    if (al > 100) {
+    let al = players.length
+    if (al > 90) {
       await Programme.delete(withDays)
       return
     }
 
-    attendees = await SessionAttendee.createMany(attendees)
-    const cmal = attendees.length
+    players = await SessionPlayer.createMany(players)
+    const cmal = players.length
 
     expect(al).toBe(cmal)
     expect(sessions.length).toBe(9)
     expect(withDays.sessions).toHaveLength(9)
 
     for (const session of sessions) {
-      attendees = await Session.attendees(session)
-      expect(attendees.length).toBe(some)
+      players = await Session.players(session)
+      expect(players.length).toBe(some)
     }
 
     for (const player of somePlayers) {

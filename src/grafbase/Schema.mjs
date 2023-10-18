@@ -235,6 +235,23 @@ class Schema {
       })
     })
 
+    // mark the type as relational, if it's only non-system fields are a relation
+
+    this.types
+      .filter((type) => type.fields.find((field) => field.relation))
+      .forEach((type) => {
+        const nFields = type.fields.length
+        let nRelations = 0
+        type.fields.forEach((field) => {
+          if (field.relation) nRelations += 1
+        })
+
+        if (nRelations === nFields - 3) {
+          // 3 is the number of system fields (id, createdAt, updatedAt)
+          type.relational = true
+        }
+      })
+
     const relations = this.types
       .filter((type) => type.fields.find((field) => field.relation))
       .map((type) => {

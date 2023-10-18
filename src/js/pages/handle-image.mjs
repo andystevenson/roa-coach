@@ -11,54 +11,6 @@ export const DefaultImage = DefaultPortrait
 export const DefaultThumbnail =
   'https://res.cloudinary.com/andystevenson/image/upload/e_blur:100,o_20,c_fill,f_auto,g_face:center,h_250,q_auto,w_250/v1691413940/roa/alumni-template.avif'
 
-// export const handleImage = () => {
-//   const HandleImageUpload = window.FileList && window.File && window.FileReader
-
-//   if (HandleImageUpload) {
-//     ImageElements.image.addEventListener('click', () =>
-//       ImageElements.selector.click(),
-//     )
-//     ImageElements.selector.addEventListener('change', (event) => {
-//       ImageElements.img.src = DefaultImage
-//       ImageElements.status.textContent = ''
-//       if (event.target.files.length < 1) return
-
-//       const file = event.target.files[0]
-//       if (!file.type) {
-//         ImageElements.status.textContent =
-//           'The File.type property does not appear to be supported on this browser!'
-//         return
-//       }
-
-//       if (!file.type.match('image.*')) {
-//         ImageElements.status.textContent =
-//           'The selected file does not appear to be an image.'
-//         return
-//       }
-
-//       const reader = new FileReader()
-//       reader.addEventListener('load', (event) => {
-//         ImageElements.img.src = event.target.result
-//         ImageElements.image.dataset.updated = true
-//       })
-//       reader.readAsDataURL(file)
-//     })
-//   }
-
-//   const setDefaultImage = () => {
-//     delete ImageElements.image.dataset.updated
-//     if (ImageElements.image) {
-//       if (offline()) {
-//         ImageElements.img.src = NetworkDownIcon
-//         return
-//       }
-//       ImageElements.img.src = ImageElements.default
-//     }
-//   }
-
-//   return setDefaultImage
-// }
-
 const handleImage = (e) => {
   const HandleImageUpload = window.FileList && window.File && window.FileReader
   if (!HandleImageUpload) return
@@ -94,7 +46,7 @@ const handleImage = (e) => {
     reader.addEventListener('load', (event) => {
       img.src = event.target.result
       image.value = img.src
-      button.dataset.updated = true
+      image.dataset.update = true
     })
     reader.readAsDataURL(newFile)
   })

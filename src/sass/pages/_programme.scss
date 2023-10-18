@@ -1,10 +1,10 @@
 .programme {
   .dialog {
-    max-inline-size: unset;
+    max-inline-size: 700px;
   }
 
   .dialog-inputs {
-    --_grid-layout: 30ch 45ch;
+    --_grid-layout: 1fr 1fr;
     --_grid-gap: var(--size-1) var(--size-3);
   }
 
@@ -12,17 +12,93 @@
     --_image-row-end: span 9;
   }
 
-  .element {
-    min-inline-size: 400px;
-    aspect-ratio: var(--ratio-portrait);
-    img {
-      inline-size: 100%;
+  .person-view {
+    .element {
+      min-inline-size: 400px;
+      aspect-ratio: var(--ratio-portrait);
+      img {
+        inline-size: 100%;
+      }
     }
   }
-  .listview {
+
+  .list-view {
     .element {
-      --_grid-template-columns: 20ch 5ch 8ch 10ch 10ch 60ch;
-      aspect-ratio: unset;
+      --_name-size: 210px;
+      --_category-size: 60px;
+      --_invite-size: 100px;
+      --_start-size: 100px;
+      --_end-size: 100px;
+      --_maxPerSession-size: 30px;
+      --_open-size: 60px;
+      --_launched-size: 120px;
+      --_description-size: 180px;
+
+      --_grid-template-columns: var(--_name-size) var(--_category-size)
+        var(--_invite-size) var(--_start-size) var(--_end-size)
+        var(--_maxPerSession-size) var(--_open-size) var(--_launched-size)
+        var(--_description-size);
     }
+  }
+
+  [data-type] .dialog-inputs {
+    > * {
+      grid-column: unset;
+    }
+  }
+
+  [data-type='ProgrammeDay'] .dialog-inputs {
+    --_grid-layout: repeat(3, 1fr);
+  }
+
+  [data-type='Price'] .dialog-inputs {
+    --_grid-layout: repeat(3, 1fr);
+  }
+
+  [data-type='Session'] {
+    grid-auto-flow: unset;
+    .dialog-inputs {
+      --_grid-layout: repeat(3, 1fr);
+
+      [for$='description'] {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .dialog-collections {
+      gap: var(--size-2);
+    }
+  }
+
+  [data-type='SessionNote'],
+  [data-type='ProgrammeNote'] {
+    span {
+      display: none;
+    }
+
+    [for] {
+      grid-column: 1 / -1;
+    }
+  }
+
+  [for$='programme'] {
+    display: none;
+  }
+
+  [for$='session'] {
+    display: none;
+  }
+
+  input[type='time'] {
+    --_offset: 80%;
+  }
+
+  input[type='date'] {
+    --_offset: 82%;
+  }
+
+  input[name='start'],
+  input[name='end'] {
+    --_offset: 90%;
   }
 }

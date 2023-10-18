@@ -1,4 +1,5 @@
 body {
+  container: body / inline-size;
   display: unset;
   place-items: unset;
   padding: unset;
@@ -179,8 +180,6 @@ form {
 }
 
 dialog {
-  min-inline-size: var(--size-content-3);
-  max-inline-size: var(--size-content-3);
   [id$='-close'] {
     position: absolute;
     top: 0px;
@@ -208,6 +207,7 @@ dialog {
 
 .bicp {
   font-family: 'bootstrap-icons';
+  font-size: var(--font-size-3);
 }
 
 :where(:not(:active):focus-visible) {

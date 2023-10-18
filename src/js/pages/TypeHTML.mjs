@@ -198,6 +198,30 @@ class TypeHTML {
     return null
   }
 
+  #htmlRelation(field) {
+    const { name, type } = field
+    const id = `${this.typeName}-${name}`
+    const isClass = `class="${id}"`
+    const fFor = `for="${id}"`
+    const fTitle = labelCase(name)
+    const fId = `id="${id}"`
+    const fName = `name="${name}" data-name="${name}"`
+    const fType = `type="text"`
+    const fDataType = `data-type="${type}"`
+    const fValue = ''
+    const attributes = [fId, isClass, fName, fType, fDataType, fValue]
+      .filter((attribute) => attribute)
+      .join(' ')
+    // checkbox is to be able to toggle it selected
+    // hidden is to store the id
+    field.html = `<label ${fFor} class='relation'>
+                    <span>${fTitle}</span>
+                    <input type="checkbox">
+                    <input type="hidden">
+                    <input ${attributes} readonly tabindex=-1>
+                  </label>`
+  }
+
   #htmlField(field) {
     const {
       name,
@@ -208,10 +232,12 @@ class TypeHTML {
       nullable,
       collection,
       isenum,
+      relation,
     } = field
     if (system) return this.#htmlSystemField(field)
     if (collection) return this.#htmlCollection(field)
     if (isenum) return this.#htmlEnum(field)
+    if (relation) return this.#htmlRelation(field)
     if (!builtin) return
 
     const bareType = type.replace('!', '')
@@ -361,7 +387,57 @@ class TypeHTML {
     return this.type.dialog
   }
 
-  details(collection, content, from, where = 'beforeend') {
+  relational(parentType, collection, content, from, where = 'beforeend') {
+    console.log('relational', { parentType, collection, content, from, where })
+    const one = singular(collection)
+
+    const fields = this.type.fields
+      .filter((field) => !field.collection)
+      .filter((field) => (from && field.system) || !field.system)
+      .filter((field) => field.html)
+      .map((field) => field.html)
+      .join('')
+
+    const relatives = this.type.fields.filter((field) => {
+      const { name, system, bareType, relation } = field
+      if (system) return false
+      if (relation && bareType === parentType) return false
+      return true
+    })
+
+    console.log({ relatives })
+    const markAsFetched = from ? 'data-fetched=true' : ''
+    const fId = from ? `id="${from.id}"` : ''
+
+    const nth = content.children.length
+
+    const ignore = `data-ignore=true`
+    const attributes = `class="element-details-content" data-type=${this.typeName} data-nth="${nth}" ${ignore}`
+
+    const deleteMe = `<button type="button" class="delete-from-collection" title="delete ${one}"><span class="bicp">&#xF78B;</span></button>`
+    const inner = `<fieldset ${fId} ${attributes} ${markAsFetched}>
+                        <fieldset class="dialog-inputs" ${ignore}>${fields}</fieldset>
+                      </fieldset>
+                      ${deleteMe}`
+
+    const section = `<section class="element-details" ${markAsFetched}>${inner}</section>`
+    content.insertAdjacentHTML(where, section)
+    const added =
+      where === 'beforeend'
+        ? content.lastElementChild
+        : content.firstElementChild
+    const fieldset = added.querySelector('fieldset')
+
+    this.#updateIds(fieldset, from)
+    return added
+  }
+
+  details(parentType, collection, content, from, where = 'beforeend') {
+    console.log('details', this)
+
+    if (this.type.relational) {
+      return this.relational(parentType, collection, content, from, where)
+    }
     const one = singular(collection)
     const fields = this.type.fields
       .filter((field) => !field.collection)
@@ -395,7 +471,7 @@ class TypeHTML {
                     ${collections}
                   </fieldset>
                   ${deleteMe}`
-    const details = `<details class="element-details" ${markAsFetched} open>${inner}</details>`
+    const details = `<details class="element-details" ${markAsFetched} >${inner}</details>`
     content.insertAdjacentHTML(where, details)
     const added =
       where === 'beforeend'
@@ -418,11 +494,13 @@ class TypeHTML {
 
   #updateIds(element, from) {
     let nth = this.#nth(element)
-    console.log('updateIds', { nth })
     const inputs = Array.from(element.querySelectorAll('input,textarea,select'))
     inputs.forEach((input) => {
       const label = input.closest('label')
       const { name } = input
+
+      if (!name) return
+      const field = this.fields[name]
 
       const id = `${this.typeName}-${nth}-${name}`
       input.id = id
@@ -435,8 +513,16 @@ class TypeHTML {
         let value = from[name]
         if (input.type === 'time') {
           const date = dayjs(value)
-          console.log('updateIds', name, value, date.format('HH:mm'))
           value = date.format('HH:mm')
+        }
+        if (field.relation) {
+          console.log('updateIds', { field, input, from, name, value })
+          const { id, name: relationName } = value
+          const idInput = input.previousElementSibling
+          idInput.value = id
+          const checkboxInput = idInput.previousElementSibling
+          checkboxInput.checked = true
+          value = relationName
         }
         input.value = value
       }

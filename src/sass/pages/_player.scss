@@ -5,3 +5,35 @@ label[for='Player-member'] {
 [id='Player-image'] {
   --_image-row-end: span 5;
 }
+
+.player {
+  .list-view {
+    .element {
+      --_thumbnail-size: 30px;
+      --_name-size: 207px;
+      --_dob-size: 100px;
+      --_email-size: 290px;
+      --_mobile-size: 110px;
+      --_member-size: 100px;
+      --_card-size: 80px;
+
+      --_grid-template-columns: var(--_thumbnail-size) var(--_name-size)
+        var(--_dob-size) var(--_email-size) var(--_mobile-size)
+        var(--_member-size) var(--_card-size);
+    }
+  }
+
+  [data-type='PlayerNote'] {
+    span {
+      display: none;
+    }
+
+    [for] {
+      grid-column: 1 / -1;
+    }
+  }
+
+  [for$='player'] {
+    display: none;
+  }
+}

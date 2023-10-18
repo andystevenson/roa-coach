@@ -5,17 +5,18 @@
   background-color: var(--surface-1);
   border-block-end: 1px solid var(--text-2);
   box-shadow: var(--shadow-3);
-  > section {
+  z-index: var(--layer-important);
+
+  > .contents {
     // background-color: burlywood;
     display: grid;
     align-items: center;
-    justify-content: space-between;
-    grid-auto-flow: column;
+    grid-template-columns: min-content 1fr;
   }
 
   #logo {
     img {
-      max-block-size: var(--size-fluid-4);
+      min-inline-size: var(--size-fluid-5);
     }
   }
 

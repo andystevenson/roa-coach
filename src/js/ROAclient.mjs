@@ -15,7 +15,7 @@ class ROAclient extends GrafbaseClient {
     this.ProgrammeCoach = this.actions.ProgrammeCoach
     this.Session = this.actions.Session
     this.SessionCoach = this.actions.SessionCoach
-    this.SessionAttendee = this.actions.SessionAttendee
+    this.SessionPlayer = this.actions.SessionPlayer
     this.Payment = this.actions.Payment
 
     this.Alumni.on('create', this.alumniCreate.bind(this))
@@ -130,7 +130,6 @@ class ROAclient extends GrafbaseClient {
   // Populate a Programme.session() for each of the days selected between the start and end of the programme.
   async programmeDayCreate({ response }) {
     const programmeDay = response
-    // inspect({ ['ProgrammeDay.create']: response })
     const pid = programmeDay.programme.id
     const programme = await this.Programme.read({ id: pid })
 

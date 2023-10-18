@@ -1,6 +1,11 @@
+#dialogs {
+  container: dialogs / inline-size;
+}
+
 .dialog {
-  --_image-row-start: 1;
-  --_image-row-end: span 4;
+  container: dialog / inline-size;
+  inline-size: 100%;
+  max-inline-size: 60ch;
 
   accent-color: transparent;
 
@@ -9,6 +14,8 @@
   }
 
   > form {
+    inline-size: 100%;
+
     > header {
       grid-template-columns: 1fr max-content;
       gap: unset;
@@ -47,8 +54,9 @@
     > footer {
       margin-block-start: var(--size-2);
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
 
       #delete-action {
         display: none;
@@ -56,17 +64,30 @@
           color: red;
         }
       }
+
+      @container dialog (min-width: 360px) {
+        justify-content: space-between;
+      }
     }
   }
 
   .dialog-inputs {
     border: unset;
     padding: unset;
-    --_grid-layout: 2fr 1fr;
-    --_grid-gap: var(--size-3) var(--size-3);
+
+    --_grid-layout: 1fr;
+    --_grid-gap: var(--size-3);
+    --_image-column-start: 1;
+    --_image-row-start: 1;
+    --_image-row-end: span 4;
+
     grid-template-columns: var(--_grid-layout);
     grid-auto-rows: min-content;
     gap: var(--_grid-gap);
+
+    @container dialog (min-width: 320px) {
+      --_grid-layout: 2fr 1fr;
+    }
 
     > * {
       grid-column: 1;
@@ -94,17 +115,25 @@
     }
 
     > [id$='-image'] {
-      grid-column: 2;
-      grid-row-start: var(--_image-row-start);
-      grid-row-end: var(--_image-row-end);
       overflow: hidden;
       position: relative;
+      // min-inline-size: 200px;
+      max-inline-size: 320px;
+      aspect-ratio: 1/2;
+      grid-column: var(--_image-column-start);
+
+      @container dialog (min-width: 320px) {
+        --_image-column-start: 2;
+        aspect-ratio: unset;
+        grid-row-start: var(--_image-row-start);
+        grid-row-end: var(--_image-row-end);
+      }
 
       > img {
         position: absolute;
         inset: 0;
-        width: 100%;
-        height: 100%;
+        inline-size: 100%;
+        block-size: 100%;
         object-fit: cover;
       }
 
@@ -119,6 +148,7 @@
     > [id$='-thumbnail'] {
       display: none;
     }
+
     > [for$='-psa'] {
       display: none;
     }
@@ -136,17 +166,15 @@
         outline: 1px solid var(--text-1);
       }
 
-      &:has(.add-to-collection) {
-        .add-to-collection {
-          position: absolute;
-          right: var(--size-2);
-          top: var(--size-2);
-        }
+      .add-to-collection {
+        position: absolute;
+        right: var(--size-2);
+        top: var(--size-2);
       }
     }
   }
 
-  & form.update {
+  & > form.update {
     --_image-row-start: 1;
 
     fieldset.system {
@@ -193,6 +221,7 @@
 #close-error-dialog,
 .add-to-collection,
 .delete-from-collection {
+  background-color: transparent;
   padding-block: unset;
   padding-inline: unset;
   border-radius: 50%;

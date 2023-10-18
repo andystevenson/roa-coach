@@ -4,23 +4,27 @@
 {% include "partials/body-header.njk" %}
 <main class="contents">
   <section id="create-controls">
-    {% set button = {name: "create", id: "create", icon: {name: '+'} } %}
+    {% set button = {name: "", id: "create", class: 'icon', title: 'create', icon: {name: '+'} } %}
     {% include "partials/button.njk" %}
     <section id="list-controls">
       <section id="search-control">
         <input type="search" placeholder="Search for a name..." id="search">
-        {% set button = {name: "", id: "open-search", class: "icon", icon: {name: 'search'}, tabindex: "-1" } %}
+        {% set button = {name: "", id: "open-search", class: "icon", title: 'search', icon: {name: 'search'} } %}
         {% include "partials/button.njk" %}
       </section>
-      {% set button = {name: "", id: "list-view", class: "icon", icon: {name: 'list'} } %}
+      {% set button = {name: "", id: "list-view", class: "icon", title: 'list-view', icon: {name: 'list'} } %}
       {% include "partials/button.njk" %}
-      {% set button = {name: "", id: "person-view", class: "icon", icon: {name: 'person'} } %}
+      
+      {% set button = {name: "", id: "grid-view", class: "icon", title: 'grid-view', icon: {name: 'grid'} } %}
+      {% include "partials/button.njk" %}
+
+      {% set button = {name: "", id: "person-view", class: "icon", title:'person-view', icon: {name: 'person'} } %}
       {% include "partials/button.njk" %}
     </section>
 
   </section>
   <section id="dialogs"></section>
-  <section id="elements" class="elements media-scroller"></section>
+  <section id="elements" class="elements media-scroller person-view"></section>
   {{content | safe}}
 </main>
 {% include "partials/body-footer.njk" %}
